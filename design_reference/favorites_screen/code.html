@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Favorites - CS Bouira</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;600&amp;family=JetBrains+Mono&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .filled-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+        body {
+            background-color: #111221;
+            color: #e1e0f6;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .glass-card {
+            background: rgba(21, 21, 31, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid #1A1A26;
+        }
+        .active-tab-indicator {
+            view-transition-name: active-tab;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.15; transform: scale(1); }
+            50% { opacity: 0.25; transform: scale(1.05); }
+        }
+        .primary-glow {
+            box-shadow: 0 0 20px rgba(178, 197, 255, 0.15);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary-container": "#002564",
+                      "secondary-container": "#494854",
+                      "inverse-on-surface": "#2e2f3f",
+                      "on-secondary-fixed-variant": "#464651",
+                      "surface-dim": "#111221",
+                      "on-primary-fixed-variant": "#0040a0",
+                      "on-tertiary": "#2f2f3c",
+                      "outline-variant": "#424655",
+                      "tertiary-fixed-dim": "#c7c5d5",
+                      "on-surface": "#e1e0f6",
+                      "primary-fixed-dim": "#b2c5ff",
+                      "secondary-fixed-dim": "#c7c5d3",
+                      "tertiary": "#c7c5d5",
+                      "on-secondary": "#302f3a",
+                      "on-primary-fixed": "#001847",
+                      "tertiary-fixed": "#e3e0f2",
+                      "on-secondary-container": "#b9b7c5",
+                      "secondary-fixed": "#e4e1ef",
+                      "error": "#ffb4ab",
+                      "error-container": "#93000a",
+                      "on-primary": "#002c72",
+                      "on-surface-variant": "#c2c6d8",
+                      "secondary": "#c7c5d3",
+                      "surface-container": "#1d1e2e",
+                      "on-tertiary-fixed": "#1a1a26",
+                      "background": "#111221",
+                      "surface-variant": "#323344",
+                      "surface-container-highest": "#323344",
+                      "outline": "#8c90a1",
+                      "on-secondary-fixed": "#1b1b25",
+                      "surface-bright": "#373849",
+                      "inverse-surface": "#e1e0f6",
+                      "surface-tint": "#b2c5ff",
+                      "surface-container-high": "#282939",
+                      "primary": "#b2c5ff",
+                      "primary-fixed": "#dae2ff",
+                      "primary-container": "#5a8cff",
+                      "surface": "#111221",
+                      "on-background": "#e1e0f6",
+                      "on-error-container": "#ffdad6",
+                      "inverse-primary": "#0056d1",
+                      "surface-container-low": "#191a2a",
+                      "surface-container-lowest": "#0c0d1c",
+                      "on-tertiary-container": "#292935",
+                      "on-tertiary-fixed-variant": "#464553",
+                      "on-error": "#690005",
+                      "tertiary-container": "#918f9f"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "24px",
+                      "stack-md": "16px",
+                      "unit": "4px",
+                      "margin-desktop": "32px",
+                      "stack-lg": "32px",
+                      "margin-mobile": "16px",
+                      "stack-sm": "8px",
+                      "container-max": "1280px"
+              },
+              "fontFamily": {
+                      "headline-lg": ["Manrope"],
+                      "body-lg": ["Inter"],
+                      "code-sm": ["jetbrainsMono"],
+                      "label-md": ["Inter"],
+                      "headline-md": ["Manrope"],
+                      "headline-lg-mobile": ["Manrope"],
+                      "display-lg": ["Manrope"],
+                      "body-md": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "code-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                      "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                      "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-32">
+<!-- Top AppBar (JSON Mapping) -->
+<header class="bg-background border-b border-outline-variant/30 sticky top-0 z-50">
+<div class="flex justify-between items-center w-full px-margin-mobile py-4 max-w-container-max mx-auto">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary hover:bg-surface-variant/50 p-2 rounded-full transition-colors active:scale-95">arrow_back</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">CS Bouira</h1>
+</div>
+<button class="material-symbols-outlined text-primary hover:bg-surface-variant/50 p-2 rounded-full transition-colors active:scale-95">more_vert</button>
+</div>
+</header>
+<main class="max-w-container-max mx-auto px-margin-mobile mt-stack-md">
+<!-- Tab Navigation -->
+<div class="flex items-center gap-stack-md mb-stack-lg border-b border-outline-variant/10">
+<button class="relative pb-stack-sm font-label-md text-label-md transition-colors text-primary font-bold" id="tab-modules" onclick="switchTab('modules')">
+                Modules
+                <div class="absolute bottom-0 left-0 w-full h-[2px] bg-primary rounded-full active-tab-indicator" id="indicator-modules"></div>
+</button>
+<button class="relative pb-stack-sm font-label-md text-label-md transition-colors text-on-surface-variant hover:text-primary" id="tab-files" onclick="switchTab('files')">
+                Files
+                <div class="absolute bottom-0 left-0 w-full h-[2px] bg-primary rounded-full hidden active-tab-indicator" id="indicator-files"></div>
+</button>
+</div>
+<!-- Modules Grid (Active Tab) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter" id="content-modules">
+<!-- Module Card 1 -->
+<div class="glass-card rounded-xl p-stack-md flex flex-col gap-stack-sm group hover:border-primary/50 transition-all duration-300">
+<div class="flex justify-between items-start">
+<span class="px-3 py-1 bg-primary/10 text-primary font-label-md text-label-md rounded-full">L2 - SEM 1</span>
+<button class="material-symbols-outlined filled-icon text-primary active:scale-90 transition-transform" onclick="this.closest('.glass-card').remove(); checkEmpty();">star</button>
+</div>
+<h3 class="font-headline-md text-headline-md mt-2">Architecture des Ordinateurs</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Principles of logic gates, CPU architecture, and assembly language programming for computer science students.</p>
+<div class="mt-4 flex items-center justify-between border-t border-outline-variant/10 pt-4">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-background bg-surface-container flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a female professor with a friendly expression, wearing modern glasses and a dark blazer, set against a blurred academic background in a clean fintech color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCal3A2UnuoRp-EK3wyon0ogrkGxYWBhzbD09iDPPtRsohGBgEBa2IYQOt0wpjpHWTclg8YGtdVp9qvkR-_H6RRqKx_DPKUhaH73NdihKSpK-CXG-9_ir7th6B3sJKLQTnsDVcISDctHtQ_H6CkExNFmP0hhtkPfS0YDv8kxSdg3IXgeNjIrfIlBUqz7D7lZwG5LYghScsfw6QF2aat9JRbOjWUAtBa0iv0Aybp4Pn_Gp4Ux_sL1am8bxLef5Sj9aWEy7_c4ZRbNmuW"/>
+</div>
+<div class="w-8 h-8 rounded-full border-2 border-background bg-surface-container flex items-center justify-center overflow-hidden">
+<span class="text-[10px] font-bold text-primary">+3</span>
+</div>
+</div>
+<button class="font-label-md text-label-md text-primary hover:underline">View Module</button>
+</div>
+</div>
+<!-- Module Card 2 -->
+<div class="glass-card rounded-xl p-stack-md flex flex-col gap-stack-sm group hover:border-primary/50 transition-all duration-300">
+<div class="flex justify-between items-start">
+<span class="px-3 py-1 bg-primary/10 text-primary font-label-md text-label-md rounded-full">L3 - SEM 2</span>
+<button class="material-symbols-outlined filled-icon text-primary active:scale-90 transition-transform" onclick="this.closest('.glass-card').remove(); checkEmpty();">star</button>
+</div>
+<h3 class="font-headline-md text-headline-md mt-2">Systèmes d'Exploitation</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">In-depth study of process management, memory allocation, file systems, and concurrency in modern OS.</p>
+<div class="mt-4 flex items-center justify-between border-t border-outline-variant/10 pt-4">
+<span class="font-label-md text-label-md text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">description</span> 12 Files
+                    </span>
+<button class="font-label-md text-label-md text-primary hover:underline">View Module</button>
+</div>
+</div>
+<!-- Module Card 3 -->
+<div class="glass-card rounded-xl p-stack-md flex flex-col gap-stack-sm group hover:border-primary/50 transition-all duration-300">
+<div class="flex justify-between items-start">
+<span class="px-3 py-1 bg-primary/10 text-primary font-label-md text-label-md rounded-full">M1 - SEM 1</span>
+<button class="material-symbols-outlined filled-icon text-primary active:scale-90 transition-transform" onclick="this.closest('.glass-card').remove(); checkEmpty();">star</button>
+</div>
+<h3 class="font-headline-md text-headline-md mt-2">Machine Learning</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Introduction to statistical learning methods, neural networks, and deep learning architectures.</p>
+<div class="mt-4 flex items-center justify-between border-t border-outline-variant/10 pt-4">
+<span class="font-label-md text-label-md text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">group</span> 248 Students
+                    </span>
+<button class="font-label-md text-label-md text-primary hover:underline">View Module</button>
+</div>
+</div>
+</div>
+<!-- Empty State Variant (Hidden by default) -->
+<div class="hidden flex-col items-center justify-center text-center py-20 animate-fade-in" id="empty-state">
+<div class="relative mb-stack-lg">
+<div class="absolute inset-0 bg-primary blur-3xl opacity-10 animate-pulse"></div>
+<div class="w-24 h-24 rounded-full bg-surface-container flex items-center justify-center border border-outline-variant/20">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant">folder_off</span>
+</div>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Nothing saved yet</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-[280px] mb-8">Start exploring modules and files to build your personalized resource list.</p>
+<button class="primary-glow px-8 py-3 bg-primary text-on-primary font-label-md text-label-md rounded-xl hover:scale-[1.02] active:scale-95 transition-all">
+                Browse Home
+            </button>
+</div>
+<!-- Files Content (Initially Hidden) -->
+<div class="hidden space-y-stack-md" id="content-files">
+<!-- File Item -->
+<div class="glass-card rounded-xl p-4 flex items-center gap-4 hover:border-primary/50 transition-all">
+<div class="w-12 h-12 rounded-lg bg-error-container/20 flex items-center justify-center text-error">
+<span class="material-symbols-outlined">picture_as_pdf</span>
+</div>
+<div class="flex-1 min-w-0">
+<h4 class="font-label-md text-label-md text-on-surface truncate">Algorithmics_Cheat_Sheet.pdf</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">L1 • 2.4 MB</p>
+</div>
+<button class="material-symbols-outlined filled-icon text-primary p-2">star</button>
+</div>
+<!-- File Item -->
+<div class="glass-card rounded-xl p-4 flex items-center gap-4 hover:border-primary/50 transition-all">
+<div class="w-12 h-12 rounded-lg bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">description</span>
+</div>
+<div class="flex-1 min-w-0">
+<h4 class="font-label-md text-label-md text-on-surface truncate">Theory_of_Computation_Notes.docx</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">L3 • 845 KB</p>
+</div>
+<button class="material-symbols-outlined filled-icon text-primary p-2">star</button>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar (JSON Mapping) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-3 pb-safe bg-surface-container border-t border-outline-variant/20 shadow-lg md:hidden rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-md text-label-md">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="font-label-md text-label-md">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">add</span>
+<span class="font-label-md text-label-md">Upload</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container/20 text-primary rounded-xl px-3 py-1 active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined filled-icon">favorite</span>
+<span class="font-label-md text-label-md">Favs</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md">Profile</span>
+</a>
+</nav>
+<script>
+        function switchTab(tab) {
+            const modulesTab = document.getElementById('tab-modules');
+            const filesTab = document.getElementById('tab-files');
+            const modulesIndicator = document.getElementById('indicator-modules');
+            const filesIndicator = document.getElementById('indicator-files');
+            const modulesContent = document.getElementById('content-modules');
+            const filesContent = document.getElementById('content-files');
+            const emptyState = document.getElementById('empty-state');
+
+            if (tab === 'modules') {
+                modulesTab.classList.add('text-primary', 'font-bold');
+                modulesTab.classList.remove('text-on-surface-variant');
+                filesTab.classList.remove('text-primary', 'font-bold');
+                filesTab.classList.add('text-on-surface-variant');
+                
+                modulesIndicator.classList.remove('hidden');
+                filesIndicator.classList.add('hidden');
+                
+                modulesContent.classList.remove('hidden');
+                filesContent.classList.add('hidden');
+            } else {
+                filesTab.classList.add('text-primary', 'font-bold');
+                filesTab.classList.remove('text-on-surface-variant');
+                modulesTab.classList.remove('text-primary', 'font-bold');
+                modulesTab.classList.add('text-on-surface-variant');
+                
+                filesIndicator.classList.remove('hidden');
+                modulesIndicator.classList.add('hidden');
+                
+                filesContent.classList.remove('hidden');
+                modulesContent.classList.add('hidden');
+            }
+            checkEmpty();
+        }
+
+        function checkEmpty() {
+            const modulesContent = document.getElementById('content-modules');
+            const filesContent = document.getElementById('content-files');
+            const emptyState = document.getElementById('empty-state');
+            
+            const isModulesVisible = !modulesContent.classList.contains('hidden');
+            const isFilesVisible = !filesContent.classList.contains('hidden');
+            
+            if (isModulesVisible && modulesContent.children.length === 0) {
+                emptyState.classList.remove('hidden');
+                emptyState.classList.add('flex');
+            } else if (isFilesVisible && filesContent.children.length === 0) {
+                emptyState.classList.remove('hidden');
+                emptyState.classList.add('flex');
+            } else {
+                emptyState.classList.add('hidden');
+                emptyState.classList.remove('flex');
+            }
+        }
+
+        // Handle micro-interactions
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.classList.add('scale-95');
+                setTimeout(() => btn.classList.remove('scale-95'), 100);
+            });
+        });
+    </script>
+</body></html>

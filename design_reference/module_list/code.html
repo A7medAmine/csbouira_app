@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>CS Bouira - Module List</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;600;700&family=JetBrains+Mono&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Manrope:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-container": "#002564",
+                        "secondary-container": "#494854",
+                        "inverse-on-surface": "#2e2f3f",
+                        "on-secondary-fixed-variant": "#464651",
+                        "surface-dim": "#111221",
+                        "on-primary-fixed-variant": "#0040a0",
+                        "on-tertiary": "#2f2f3c",
+                        "outline-variant": "#424655",
+                        "tertiary-fixed-dim": "#c7c5d5",
+                        "on-surface": "#e1e0f6",
+                        "primary-fixed-dim": "#b2c5ff",
+                        "secondary-fixed-dim": "#c7c5d3",
+                        "tertiary": "#c7c5d5",
+                        "on-secondary": "#302f3a",
+                        "on-primary-fixed": "#001847",
+                        "tertiary-fixed": "#e3e0f2",
+                        "on-secondary-container": "#b9b7c5",
+                        "secondary-fixed": "#e4e1ef",
+                        "error": "#ffb4ab",
+                        "error-container": "#93000a",
+                        "on-primary": "#002c72",
+                        "on-surface-variant": "#c2c6d8",
+                        "secondary": "#c7c5d3",
+                        "surface-container": "#1d1e2e",
+                        "on-tertiary-fixed": "#1a1a26",
+                        "background": "#111221",
+                        "surface-variant": "#323344",
+                        "surface-container-highest": "#323344",
+                        "outline": "#8c90a1",
+                        "on-secondary-fixed": "#1b1b25",
+                        "surface-bright": "#373849",
+                        "inverse-surface": "#e1e0f6",
+                        "surface-tint": "#b2c5ff",
+                        "surface-container-high": "#282939",
+                        "primary": "#b2c5ff",
+                        "primary-fixed": "#dae2ff",
+                        "primary-container": "#5a8cff",
+                        "surface": "#111221",
+                        "on-background": "#e1e0f6",
+                        "on-error-container": "#ffdad6",
+                        "inverse-primary": "#0056d1",
+                        "surface-container-low": "#191a2a",
+                        "surface-container-lowest": "#0c0d1c",
+                        "on-tertiary-container": "#292935",
+                        "on-tertiary-fixed-variant": "#464553",
+                        "on-error": "#690005",
+                        "tertiary-container": "#918f9f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "stack-md": "16px",
+                        "unit": "4px",
+                        "margin-desktop": "32px",
+                        "stack-lg": "32px",
+                        "margin-mobile": "16px",
+                        "stack-sm": "8px",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Manrope"],
+                        "body-lg": ["Inter"],
+                        "code-sm": ["jetbrainsMono"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Manrope"],
+                        "headline-lg-mobile": ["Manrope"],
+                        "display-lg": ["Manrope"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "code-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(21, 21, 31, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(66, 70, 85, 0.3);
+        }
+        .active-nav-pill {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        body {
+            background-color: #111221;
+            color: #e1e0f6;
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md text-body-md antialiased overflow-x-hidden">
+<!-- Top App Bar -->
+<header class="fixed top-0 left-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-outline-variant/30 px-margin-mobile py-4 flex justify-between items-center">
+<div class="flex items-center gap-4">
+<button class="p-2 -ml-2 rounded-full hover:bg-surface-variant/50 transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-primary" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Licence 1 / S1</h1>
+</div>
+<button class="p-2 rounded-full hover:bg-surface-variant/50 transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="more_vert">more_vert</span>
+</button>
+</header>
+<main class="pt-24 pb-32 px-margin-mobile max-w-container-max mx-auto">
+<!-- Search & Filter Row -->
+<div class="flex items-center gap-stack-md mb-stack-lg">
+<div class="relative flex-1">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+<input class="w-full pl-12 pr-4 py-3 bg-surface-container rounded-xl border border-outline-variant/30 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-outline/50 font-body-md text-body-md" placeholder="Search modules..." type="text"/>
+</div>
+<button class="bg-surface-container border border-outline-variant/30 p-3 rounded-xl hover:bg-surface-variant transition-colors group">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors" data-icon="filter_list">filter_list</span>
+</button>
+</div>
+<!-- Section Header -->
+<div class="mb-stack-md flex justify-between items-end">
+<div>
+<p class="font-label-md text-label-md text-primary tracking-widest uppercase mb-1">Core Curriculum</p>
+<h2 class="font-headline-md text-headline-md">Active Modules</h2>
+</div>
+<p class="text-on-surface-variant font-label-md text-label-md">7 Total</p>
+</div>
+<!-- Module List -->
+<div class="space-y-4">
+<!-- Module Card 1 -->
+<div class="glass-card rounded-2xl p-4 flex items-center justify-between group cursor-pointer hover:border-primary/50 transition-all duration-300">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-xl bg-primary-container/20 flex items-center justify-center border border-primary/20 group-hover:bg-primary-container/30 transition-colors">
+<span class="font-headline-md text-primary font-bold">A1</span>
+</div>
+<div>
+<h3 class="font-headline-md text-on-surface group-hover:text-primary transition-colors">Analyse 1</h3>
+<div class="flex items-center gap-2 mt-1">
+<span class="material-symbols-outlined text-outline text-[16px]" data-icon="folder_open">folder_open</span>
+<span class="font-label-md text-label-md text-on-surface-variant">8 Folders</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant mx-1"></span>
+<span class="font-label-md text-label-md text-on-surface-variant">Core</span>
+</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary group-hover:translate-x-1 transition-all" data-icon="chevron_right">chevron_right</span>
+</div>
+<!-- Module Card 2 -->
+<div class="glass-card rounded-2xl p-4 flex items-center justify-between group cursor-pointer hover:border-primary/50 transition-all duration-300">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-xl bg-primary-container/20 flex items-center justify-center border border-primary/20 group-hover:bg-primary-container/30 transition-colors">
+<span class="font-headline-md text-primary font-bold">AL</span>
+</div>
+<div>
+<h3 class="font-headline-md text-on-surface group-hover:text-primary transition-colors">Algèbre 1</h3>
+<div class="flex items-center gap-2 mt-1">
+<span class="material-symbols-outlined text-outline text-[16px]" data-icon="folder_open">folder_open</span>
+<span class="font-label-md text-label-md text-on-surface-variant">6 Folders</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant mx-1"></span>
+<span class="font-label-md text-label-md text-on-surface-variant">Core</span>
+</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary group-hover:translate-x-1 transition-all" data-icon="chevron_right">chevron_right</span>
+</div>
+<!-- Module Card 3 -->
+<div class="glass-card rounded-2xl p-4 flex items-center justify-between group cursor-pointer hover:border-primary/50 transition-all duration-300">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-xl bg-primary-container/20 flex items-center justify-center border border-primary/20 group-hover:bg-primary-container/30 transition-colors">
+<span class="font-headline-md text-primary font-bold">AP</span>
+</div>
+<div>
+<h3 class="font-headline-md text-on-surface group-hover:text-primary transition-colors">Algo & Prog 1</h3>
+<div class="flex items-center gap-2 mt-1">
+<span class="material-symbols-outlined text-outline text-[16px]" data-icon="folder_open">folder_open</span>
+<span class="font-label-md text-label-md text-on-surface-variant">12 Folders</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant mx-1"></span>
+<span class="font-label-md text-label-md text-on-surface-variant">Major</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="bg-primary/10 text-primary px-2 py-0.5 rounded text-[10px] font-bold uppercase">New</span>
+<span class="material-symbols-outlined text-outline group-hover:text-primary group-hover:translate-x-1 transition-all" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<!-- Module Card 4 -->
+<div class="glass-card rounded-2xl p-4 flex items-center justify-between group cursor-pointer hover:border-primary/50 transition-all duration-300">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-xl bg-primary-container/20 flex items-center justify-center border border-primary/20 group-hover:bg-primary-container/30 transition-colors">
+<span class="font-headline-md text-primary font-bold">SM</span>
+</div>
+<div>
+<h3 class="font-headline-md text-on-surface group-hover:text-primary transition-colors">Structure Machine</h3>
+<div class="flex items-center gap-2 mt-1">
+<span class="material-symbols-outlined text-outline text-[16px]" data-icon="folder_open">folder_open</span>
+<span class="font-label-md text-label-md text-on-surface-variant">5 Folders</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant mx-1"></span>
+<span class="font-label-md text-label-md text-on-surface-variant">Technical</span>
+</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary group-hover:translate-x-1 transition-all" data-icon="chevron_right">chevron_right</span>
+</div>
+<!-- Module Card 5 -->
+<div class="glass-card rounded-2xl p-4 flex items-center justify-between group cursor-pointer hover:border-primary/50 transition-all duration-300">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-xl bg-primary-container/20 flex items-center justify-center border border-primary/20 group-hover:bg-primary-container/30 transition-colors">
+<span class="font-headline-md text-primary font-bold">TE</span>
+</div>
+<div>
+<h3 class="font-headline-md text-on-surface group-hover:text-primary transition-colors">Terminologie</h3>
+<div class="flex items-center gap-2 mt-1">
+<span class="material-symbols-outlined text-outline text-[16px]" data-icon="folder_open">folder_open</span>
+<span class="font-label-md text-label-md text-on-surface-variant">3 Folders</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant mx-1"></span>
+<span class="font-label-md text-label-md text-on-surface-variant">Transversal</span>
+</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary group-hover:translate-x-1 transition-all" data-icon="chevron_right">chevron_right</span>
+</div>
+<!-- Module Card 6 -->
+<div class="glass-card rounded-2xl p-4 flex items-center justify-between group cursor-pointer hover:border-primary/50 transition-all duration-300">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-xl bg-primary-container/20 flex items-center justify-center border border-primary/20 group-hover:bg-primary-container/30 transition-colors">
+<span class="font-headline-md text-primary font-bold">PH</span>
+</div>
+<div>
+<h3 class="font-headline-md text-on-surface group-hover:text-primary transition-colors">Physique 1</h3>
+<div class="flex items-center gap-2 mt-1">
+<span class="material-symbols-outlined text-outline text-[16px]" data-icon="folder_open">folder_open</span>
+<span class="font-label-md text-label-md text-on-surface-variant">7 Folders</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant mx-1"></span>
+<span class="font-label-md text-label-md text-on-surface-variant">Science</span>
+</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary group-hover:translate-x-1 transition-all" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<!-- Visual Anchor (Bento Style Info) -->
+<div class="mt-stack-lg grid grid-cols-2 gap-4">
+<div class="glass-card p-4 rounded-2xl border-l-4 border-l-primary">
+<span class="material-symbols-outlined text-primary mb-2" data-icon="schedule" style="font-variation-settings: 'FILL' 1;">schedule</span>
+<p class="font-label-md text-label-md text-on-surface-variant">Next Exam</p>
+<p class="font-headline-md text-on-surface">Oct 12</p>
+</div>
+<div class="glass-card p-4 rounded-2xl">
+<span class="material-symbols-outlined text-tertiary mb-2" data-icon="cloud_download">cloud_download</span>
+<p class="font-label-md text-label-md text-on-surface-variant">Available Offline</p>
+<p class="font-headline-md text-on-surface">42 Files</p>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-3 pb-safe bg-surface-container dark:bg-surface-container border-t border-outline-variant/20 shadow-lg md:hidden rounded-t-xl">
+<a class="flex flex-col items-center justify-center bg-primary-container/20 dark:bg-primary-container/30 text-primary dark:text-primary rounded-xl px-3 py-1 scale-95 transition-transform duration-150 active-nav-pill" href="#">
+<span class="material-symbols-outlined" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-md text-label-md">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-3 py-1 hover:text-primary dark:hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="font-label-md text-label-md">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-3 py-1 hover:text-primary dark:hover:text-primary transition-colors" href="#">
+<div class="bg-primary text-on-primary-container p-2 rounded-lg -mt-8 shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</div>
+<span class="font-label-md text-label-md mt-1">Upload</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-3 py-1 hover:text-primary dark:hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+<span class="font-label-md text-label-md">Favs</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-3 py-1 hover:text-primary dark:hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-md text-label-md">Profile</span>
+</a>
+</nav>
+<script>
+        // Simple scale interaction for cards
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('touchstart', () => {
+                card.style.transform = 'scale(0.98)';
+            });
+            card.addEventListener('touchend', () => {
+                card.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body></html>

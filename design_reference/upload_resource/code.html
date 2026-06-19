@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Upload Resource - CS Bouira</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-container": "#002564",
+                    "secondary-container": "#494854",
+                    "inverse-on-surface": "#2e2f3f",
+                    "on-secondary-fixed-variant": "#464651",
+                    "surface-dim": "#111221",
+                    "on-primary-fixed-variant": "#0040a0",
+                    "on-tertiary": "#2f2f3c",
+                    "outline-variant": "#424655",
+                    "tertiary-fixed-dim": "#c7c5d5",
+                    "on-surface": "#e1e0f6",
+                    "primary-fixed-dim": "#b2c5ff",
+                    "secondary-fixed-dim": "#c7c5d3",
+                    "tertiary": "#c7c5d5",
+                    "on-secondary": "#302f3a",
+                    "on-primary-fixed": "#001847",
+                    "tertiary-fixed": "#e3e0f2",
+                    "on-secondary-container": "#b9b7c5",
+                    "secondary-fixed": "#e4e1ef",
+                    "error": "#ffb4ab",
+                    "error-container": "#93000a",
+                    "on-primary": "#002c72",
+                    "on-surface-variant": "#c2c6d8",
+                    "secondary": "#c7c5d3",
+                    "surface-container": "#1d1e2e",
+                    "on-tertiary-fixed": "#1a1a26",
+                    "background": "#111221",
+                    "surface-variant": "#323344",
+                    "surface-container-highest": "#323344",
+                    "outline": "#8c90a1",
+                    "on-secondary-fixed": "#1b1b25",
+                    "surface-bright": "#373849",
+                    "inverse-surface": "#e1e0f6",
+                    "surface-tint": "#b2c5ff",
+                    "surface-container-high": "#282939",
+                    "primary": "#b2c5ff",
+                    "primary-fixed": "#dae2ff",
+                    "primary-container": "#5a8cff",
+                    "surface": "#111221",
+                    "on-background": "#e1e0f6",
+                    "on-error-container": "#ffdad6",
+                    "inverse-primary": "#0056d1",
+                    "surface-container-low": "#191a2a",
+                    "surface-container-lowest": "#0c0d1c",
+                    "on-tertiary-container": "#292935",
+                    "on-tertiary-fixed-variant": "#464553",
+                    "on-error": "#690005",
+                    "tertiary-container": "#918f9f"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "stack-md": "16px",
+                    "unit": "4px",
+                    "margin-desktop": "32px",
+                    "stack-lg": "32px",
+                    "margin-mobile": "16px",
+                    "stack-sm": "8px",
+                    "container-max": "1280px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Manrope"],
+                    "body-lg": ["Inter"],
+                    "code-sm": ["jetbrainsMono"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Manrope"],
+                    "headline-lg-mobile": ["Manrope"],
+                    "display-lg": ["Manrope"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "code-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #0D0D14;
+            color: #e1e0f6;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .glass-card {
+            background: rgba(21, 21, 31, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(26, 26, 38, 1);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #424655;
+            border-radius: 10px;
+        }
+        input:focus, select:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(178, 197, 255, 0.1);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md text-body-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top AppBar -->
+<header class="fixed top-0 left-0 w-full z-50 bg-background dark:bg-background border-b border-outline-variant/30 flex justify-between items-center px-margin-mobile py-4">
+<div class="flex items-center gap-3">
+<button class="p-2 -ml-2 rounded-full hover:bg-surface-variant/50 transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Share a Resource</h1>
+</div>
+<button class="p-2 -mr-2 rounded-full hover:bg-surface-variant/50 transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-primary">more_vert</span>
+</button>
+</header>
+<main class="pt-20 pb-32 px-margin-mobile max-w-2xl mx-auto">
+<!-- Header Section -->
+<section class="mb-stack-lg">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-2">Contribute to Hub</h2>
+<p class="text-on-surface-variant font-body-md">Help your fellow students by uploading verified academic materials.</p>
+</section>
+<!-- Main Form -->
+<form class="space-y-stack-lg">
+<!-- User Info (Prefilled) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-primary ml-1">FULL NAME</label>
+<div class="bg-surface-container-low border border-outline-variant/30 rounded-xl px-4 py-3 flex items-center gap-3 text-on-surface-variant opacity-80">
+<span class="material-symbols-outlined text-outline">person</span>
+<span class="font-body-md">Sami Haddad</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-primary ml-1">EMAIL ADDRESS</label>
+<div class="bg-surface-container-low border border-outline-variant/30 rounded-xl px-4 py-3 flex items-center gap-3 text-on-surface-variant opacity-80">
+<span class="material-symbols-outlined text-outline">alternate_email</span>
+<span class="font-body-md">s.haddad@univ-bouira.dz</span>
+</div>
+</div>
+</div>
+<!-- File Type Segmented Control -->
+<div class="space-y-3">
+<label class="font-label-md text-label-md text-primary ml-1 uppercase">Resource Category</label>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+<label class="relative group cursor-pointer">
+<input checked="" class="peer sr-only" name="file_type" type="radio"/>
+<div class="glass-card text-center py-3 rounded-xl transition-all peer-checked:bg-primary-container/20 peer-checked:border-primary peer-checked:text-primary hover:bg-surface-variant/30">
+<span class="font-label-md block">Cours</span>
+</div>
+</label>
+<label class="relative group cursor-pointer">
+<input class="peer sr-only" name="file_type" type="radio"/>
+<div class="glass-card text-center py-3 rounded-xl transition-all peer-checked:bg-primary-container/20 peer-checked:border-primary peer-checked:text-primary hover:bg-surface-variant/30">
+<span class="font-label-md block">Summary</span>
+</div>
+</label>
+<label class="relative group cursor-pointer">
+<input class="peer sr-only" name="file_type" type="radio"/>
+<div class="glass-card text-center py-3 rounded-xl transition-all peer-checked:bg-primary-container/20 peer-checked:border-primary peer-checked:text-primary hover:bg-surface-variant/30">
+<span class="font-label-md block">TP/TD</span>
+</div>
+</label>
+<label class="relative group cursor-pointer">
+<input class="peer sr-only" name="file_type" type="radio"/>
+<div class="glass-card text-center py-3 rounded-xl transition-all peer-checked:bg-primary-container/20 peer-checked:border-primary peer-checked:text-primary hover:bg-surface-variant/30">
+<span class="font-label-md block">Exam</span>
+</div>
+</label>
+</div>
+</div>
+<!-- Module Selection with Autocomplete UI -->
+<div class="space-y-2 relative">
+<label class="font-label-md text-label-md text-primary ml-1 uppercase">Module Name</label>
+<div class="relative group">
+<input class="w-full bg-surface-container border border-outline-variant/30 focus:border-primary rounded-xl px-4 py-3 text-on-surface placeholder:text-on-surface-variant/50 transition-all" placeholder="e.g. Algorithms &amp; Data Structures" type="text"/>
+<div class="absolute right-3 top-3.5">
+<span class="material-symbols-outlined text-outline">search</span>
+</div>
+</div>
+<!-- Mockup of Suggestions -->
+<div class="absolute z-10 w-full mt-1 bg-surface-container-high border border-outline-variant/30 rounded-xl shadow-2xl hidden group-focus-within:block overflow-hidden">
+<div class="px-4 py-3 hover:bg-primary-container/10 cursor-pointer border-b border-outline-variant/10 text-on-surface-variant font-body-md">Advanced Algorithms</div>
+<div class="px-4 py-3 hover:bg-primary-container/10 cursor-pointer border-b border-outline-variant/10 text-on-surface-variant font-body-md">Database Systems (SQL)</div>
+<div class="px-4 py-3 hover:bg-primary-container/10 cursor-pointer text-on-surface-variant font-body-md">Machine Learning Basics</div>
+</div>
+</div>
+<!-- Grade & Semester -->
+<div class="grid grid-cols-2 gap-stack-md">
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-primary ml-1 uppercase">Grade</label>
+<div class="relative">
+<select class="w-full bg-surface-container border border-outline-variant/30 focus:border-primary rounded-xl px-4 py-3 text-on-surface appearance-none transition-all">
+<option>L1</option>
+<option>L2</option>
+<option selected="">L3</option>
+<option>M1</option>
+<option>M2</option>
+</select>
+<div class="absolute right-3 top-3.5 pointer-events-none">
+<span class="material-symbols-outlined text-outline">expand_more</span>
+</div>
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-primary ml-1 uppercase">Semester</label>
+<div class="relative">
+<select class="w-full bg-surface-container border border-outline-variant/30 focus:border-primary rounded-xl px-4 py-3 text-on-surface appearance-none transition-all">
+<option selected="">S1</option>
+<option>S2</option>
+</select>
+<div class="absolute right-3 top-3.5 pointer-events-none">
+<span class="material-symbols-outlined text-outline">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+<!-- File Upload Dropzone -->
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-primary ml-1 uppercase">File Attachment</label>
+<div class="relative w-full h-48 rounded-2xl border-2 border-dashed border-outline-variant/50 flex flex-col items-center justify-center bg-surface-container-low group hover:border-primary/50 transition-all cursor-pointer overflow-hidden">
+<div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="relative flex flex-col items-center gap-3">
+<div class="w-14 h-14 rounded-full bg-primary-container/20 flex items-center justify-center text-primary mb-1">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">cloud_upload</span>
+</div>
+<p class="font-headline-md text-on-surface">Tap to choose a file</p>
+<p class="text-label-md text-on-surface-variant font-label-md">PDF, DOCX, ZIP (MAX. 25MB)</p>
+</div>
+<input class="absolute inset-0 opacity-0 cursor-pointer" type="file"/>
+</div>
+</div>
+<!-- CTA Button -->
+<div class="pt-stack-md">
+<button class="w-full bg-surface-variant text-on-surface-variant/40 py-4 rounded-xl font-headline-md flex items-center justify-center gap-2 cursor-not-allowed border border-outline-variant/20 shadow-inner group transition-all" disabled="" type="submit">
+<span class="material-symbols-outlined text-on-surface-variant/20">send</span>
+                    Upload Resource
+                </button>
+<p class="text-center text-label-md text-on-surface-variant/50 mt-4 px-8">
+                    By uploading, you agree to the community guidelines and academic integrity policy of CS Bouira.
+                </p>
+</div>
+</form>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface-container dark:bg-surface-container border-t border-outline-variant/20 shadow-lg px-2 py-3 pb-safe flex justify-around items-center rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-3 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-md text-label-md">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-3 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="font-label-md text-label-md">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container/20 dark:bg-primary-container/30 text-primary dark:text-primary rounded-xl px-3 py-1 scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+<span class="font-label-md text-label-md">Upload</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-3 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">favorite</span>
+<span class="font-label-md text-label-md">Favs</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-3 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md">Profile</span>
+</a>
+</nav>
+<script>
+        // Simple logic to simulate primary button activation when fields are touched (mockup)
+        const inputs = document.querySelectorAll('input, select');
+        const submitBtn = document.querySelector('button[type="submit"]');
+        
+        inputs.forEach(input => {
+            input.addEventListener('change', () => {
+                // In a real app, validation would happen here
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('bg-surface-variant', 'text-on-surface-variant/40', 'cursor-not-allowed');
+                submitBtn.classList.add('bg-primary-container', 'text-on-primary-container', 'hover:opacity-90', 'active:scale-95');
+                submitBtn.querySelector('span').classList.remove('text-on-surface-variant/20');
+                submitBtn.querySelector('span').classList.add('text-on-primary-container');
+            });
+        });
+    </script>
+</body></html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CS Bouira | Loading...</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;600&amp;family=JetBrains+Mono&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-container": "#002564",
+                    "secondary-container": "#494854",
+                    "inverse-on-surface": "#2e2f3f",
+                    "on-secondary-fixed-variant": "#464651",
+                    "surface-dim": "#111221",
+                    "on-primary-fixed-variant": "#0040a0",
+                    "on-tertiary": "#2f2f3c",
+                    "outline-variant": "#424655",
+                    "tertiary-fixed-dim": "#c7c5d5",
+                    "on-surface": "#e1e0f6",
+                    "primary-fixed-dim": "#b2c5ff",
+                    "secondary-fixed-dim": "#c7c5d3",
+                    "tertiary": "#c7c5d5",
+                    "on-secondary": "#302f3a",
+                    "on-primary-fixed": "#001847",
+                    "tertiary-fixed": "#e3e0f2",
+                    "on-secondary-container": "#b9b7c5",
+                    "secondary-fixed": "#e4e1ef",
+                    "error": "#ffb4ab",
+                    "error-container": "#93000a",
+                    "on-primary": "#002c72",
+                    "on-surface-variant": "#c2c6d8",
+                    "secondary": "#c7c5d3",
+                    "surface-container": "#1d1e2e",
+                    "on-tertiary-fixed": "#1a1a26",
+                    "background": "#0D0D14", /* Requested custom dark background */
+                    "surface-variant": "#323344",
+                    "surface-container-highest": "#323344",
+                    "outline": "#8c90a1",
+                    "on-secondary-fixed": "#1b1b25",
+                    "surface-bright": "#373849",
+                    "inverse-surface": "#e1e0f6",
+                    "surface-tint": "#b2c5ff",
+                    "surface-container-high": "#282939",
+                    "primary": "#b2c5ff",
+                    "primary-fixed": "#dae2ff",
+                    "primary-container": "#5a8cff",
+                    "surface": "#111221",
+                    "on-background": "#e1e0f6",
+                    "on-error-container": "#ffdad6",
+                    "inverse-primary": "#0056d1",
+                    "surface-container-low": "#191a2a",
+                    "surface-container-lowest": "#0c0d1c",
+                    "on-tertiary-container": "#292935",
+                    "on-tertiary-fixed-variant": "#464553",
+                    "on-error": "#690005",
+                    "tertiary-container": "#918f9f",
+                    "accent-glow": "#1A6FFF" /* Requested electric blue */
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "stack-md": "16px",
+                    "unit": "4px",
+                    "margin-desktop": "32px",
+                    "stack-lg": "32px",
+                    "margin-mobile": "16px",
+                    "stack-sm": "8px",
+                    "container-max": "1280px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Manrope"],
+                    "body-lg": ["Inter"],
+                    "code-sm": ["JetBrains Mono"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Manrope"],
+                    "headline-lg-mobile": ["Manrope"],
+                    "display-lg": ["Manrope"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.15); }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-pulse-glow {
+            animation: pulse-glow 4s ease-in-out infinite;
+        }
+        .animate-float {
+            animation: float 5s ease-in-out infinite;
+        }
+        .animate-fade-in-up {
+            animation: fade-in-up 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        
+        .bg-noise {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background overflow-hidden selection:bg-primary/30">
+<!-- Splash Screen Container -->
+<main class="relative h-screen w-screen flex flex-col items-center justify-center p-gutter overflow-hidden">
+<!-- Subtle Ambient Background Effects -->
+<div class="absolute inset-0 z-0 bg-noise pointer-events-none"></div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-accent-glow/5 rounded-full blur-[120px] pointer-events-none"></div>
+<!-- Central Identity Cluster -->
+<div class="relative z-10 flex flex-col items-center">
+<!-- Glow & Logo Wrapper -->
+<div class="relative mb-stack-lg animate-float">
+<!-- Electric Blue Glow behind logo -->
+<div class="absolute inset-0 bg-accent-glow/40 rounded-full blur-[40px] animate-pulse-glow"></div>
+<!-- App Logo Container -->
+<div class="relative flex items-center justify-center w-24 h-24 md:w-32 md:h-32 bg-surface-container/60 backdrop-blur-xl border border-outline-variant/30 rounded-3xl shadow-2xl overflow-hidden group">
+<span class="material-symbols-outlined text-accent-glow text-5xl md:text-6xl transition-all duration-700 group-hover:scale-110" style="font-variation-settings: 'FILL' 1;">
+                        terminal
+                    </span>
+<!-- Digital Glint Overlay -->
+<div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+</div>
+</div>
+<!-- App Name -->
+<div class="text-center animate-fade-in-up delay-100">
+<h1 class="font-display-lg text-display-lg text-white tracking-tighter mb-2">
+                    CS Bouira
+                </h1>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-[0.3em] opacity-60">
+                    The Resource Hub
+                </p>
+</div>
+</div>
+<!-- Progress Indicator -->
+<div class="absolute bottom-16 w-48 h-1 bg-surface-variant/30 rounded-full overflow-hidden animate-fade-in-up delay-200">
+<div class="h-full bg-accent-glow shadow-[0_0_12px_rgba(26,111,255,0.6)] w-0 transition-all duration-[3000ms] ease-out" id="progress-bar"></div>
+</div>
+<!-- Footer Credits -->
+<div class="absolute bottom-margin-mobile md:bottom-margin-desktop animate-fade-in-up delay-200 opacity-40">
+<p class="font-body-md text-body-md">Department of Computer Science</p>
+</div>
+</main>
+<script>
+        // Micro-interaction: Progress bar simulation and page transition logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const progressBar = document.getElementById('progress-bar');
+            
+            // Start the loading simulation
+            setTimeout(() => {
+                progressBar.style.width = '100%';
+            }, 100);
+
+            // Subtle mouse tracking glow effect
+            document.addEventListener('mousemove', (e) => {
+                const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
+                const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
+                
+                const logoWrapper = document.querySelector('.animate-float');
+                if (logoWrapper) {
+                    logoWrapper.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                }
+            });
+            
+            // Redirect simulation (logic for the developer to implement)
+            // setTimeout(() => {
+            //     window.location.href = '/home'; 
+            // }, 3500);
+        });
+    </script>
+</body></html>

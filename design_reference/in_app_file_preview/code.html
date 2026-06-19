@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CS Bouira - File Preview</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Manrope:wght@600;700;800&amp;family=JetBrains+Mono&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-container": "#002564",
+                    "secondary-container": "#494854",
+                    "inverse-on-surface": "#2e2f3f",
+                    "on-secondary-fixed-variant": "#464651",
+                    "surface-dim": "#111221",
+                    "on-primary-fixed-variant": "#0040a0",
+                    "on-tertiary": "#2f2f3c",
+                    "outline-variant": "#424655",
+                    "tertiary-fixed-dim": "#c7c5d5",
+                    "on-surface": "#e1e0f6",
+                    "primary-fixed-dim": "#b2c5ff",
+                    "secondary-fixed-dim": "#c7c5d3",
+                    "tertiary": "#c7c5d5",
+                    "on-secondary": "#302f3a",
+                    "on-primary-fixed": "#001847",
+                    "tertiary-fixed": "#e3e0f2",
+                    "on-secondary-container": "#b9b7c5",
+                    "secondary-fixed": "#e4e1ef",
+                    "error": "#ffb4ab",
+                    "error-container": "#93000a",
+                    "on-primary": "#002c72",
+                    "on-surface-variant": "#c2c6d8",
+                    "secondary": "#c7c5d3",
+                    "surface-container": "#1d1e2e",
+                    "on-tertiary-fixed": "#1a1a26",
+                    "background": "#111221",
+                    "surface-variant": "#323344",
+                    "surface-container-highest": "#323344",
+                    "outline": "#8c90a1",
+                    "on-secondary-fixed": "#1b1b25",
+                    "surface-bright": "#373849",
+                    "inverse-surface": "#e1e0f6",
+                    "surface-tint": "#b2c5ff",
+                    "surface-container-high": "#282939",
+                    "primary": "#b2c5ff",
+                    "primary-fixed": "#dae2ff",
+                    "primary-container": "#5a8cff",
+                    "surface": "#111221",
+                    "on-background": "#e1e0f6",
+                    "on-error-container": "#ffdad6",
+                    "inverse-primary": "#0056d1",
+                    "surface-container-low": "#191a2a",
+                    "surface-container-lowest": "#0c0d1c",
+                    "on-tertiary-container": "#292935",
+                    "on-tertiary-fixed-variant": "#464553",
+                    "on-error": "#690005",
+                    "tertiary-container": "#918f9f"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "stack-md": "16px",
+                    "unit": "4px",
+                    "margin-desktop": "32px",
+                    "stack-lg": "32px",
+                    "margin-mobile": "16px",
+                    "stack-sm": "8px",
+                    "container-max": "1280px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Manrope"],
+                    "body-lg": ["Inter"],
+                    "code-sm": ["jetbrainsMono"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Manrope"],
+                    "headline-lg-mobile": ["Manrope"],
+                    "display-lg": ["Manrope"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "code-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+
+        .pdf-canvas {
+            background-image: radial-gradient(#1A1A26 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        .glass-panel {
+            background: rgba(21, 21, 31, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(66, 70, 85, 0.3);
+        }
+
+        .progress-shimmer {
+            background: linear-gradient(90deg, transparent, rgba(178, 197, 255, 0.4), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite linear;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .active-interaction:active {
+            transform: scale(0.98);
+            transition: transform 0.1s ease-out;
+        }
+
+        /* Hide Scrollbars */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface selection:bg-primary/30 no-scrollbar overflow-hidden">
+<!-- Header Navigation -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile py-4 bg-background border-b border-outline-variant/30">
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-variant/50 transition-colors active-interaction">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<div class="flex flex-col">
+<h1 class="font-headline-md text-headline-md text-primary font-bold truncate max-w-[180px] md:max-w-md">Introduction to C...</h1>
+<span class="font-label-md text-label-md text-on-surface-variant">Chapter 01 • PDF</span>
+</div>
+</div>
+<div class="flex items-center gap-1 md:gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-variant/50 transition-colors active-interaction" title="Favorite">
+<span class="material-symbols-outlined text-on-surface-variant">favorite</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-variant/50 transition-colors active-interaction" title="Share">
+<span class="material-symbols-outlined text-on-surface-variant">share</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-variant/50 transition-colors active-interaction" title="Download">
+<span class="material-symbols-outlined text-on-surface-variant">download</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-variant/50 transition-colors active-interaction">
+<span class="material-symbols-outlined text-on-surface-variant">more_vert</span>
+</button>
+</div>
+</header>
+<!-- Main Content: PDF Viewer -->
+<main class="relative w-full h-screen pt-20 pb-24 overflow-auto flex flex-col items-center bg-surface-container-lowest pdf-canvas">
+<!-- Interaction Hint (Pinch-to-zoom) -->
+<div class="absolute top-24 z-10 flex items-center gap-2 px-4 py-2 rounded-full glass-panel opacity-80 animate-pulse transition-opacity duration-500" id="zoom-hint">
+<span class="material-symbols-outlined text-primary text-sm">pinch</span>
+<span class="font-label-md text-label-md text-on-surface">Pinch to zoom</span>
+</div>
+<!-- PDF Page Placeholder -->
+<div class="w-full max-w-3xl px-margin-mobile flex flex-col items-center gap-8 py-8">
+<div class="relative w-full aspect-[1/1.414] bg-white rounded-lg shadow-2xl overflow-hidden group">
+<div class="absolute inset-0 bg-[#f8f9fa] flex flex-col p-12 md:p-16">
+<!-- Faux PDF Content Rendering -->
+<div class="w-24 h-4 bg-primary/20 rounded mb-8"></div>
+<div class="w-full h-12 bg-on-primary-container/10 rounded mb-12"></div>
+<div class="space-y-4">
+<div class="w-full h-4 bg-surface-variant/30 rounded"></div>
+<div class="w-full h-4 bg-surface-variant/30 rounded"></div>
+<div class="w-[90%] h-4 bg-surface-variant/30 rounded"></div>
+<div class="w-[95%] h-4 bg-surface-variant/30 rounded"></div>
+</div>
+<div class="mt-16 w-full h-48 bg-surface-variant/10 rounded-xl border border-dashed border-outline-variant/30 flex items-center justify-center">
+<div class="w-full h-full bg-cover bg-center rounded-xl opacity-80 grayscale mix-blend-multiply" data-alt="A clean, technical digital illustration showing an abstract computer science algorithm diagram with nodes and connecting lines, rendered in a professional blue and slate gray palette with soft glowing highlights, fitting a modern dark-themed fintech aesthetic for an academic document." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDWVHg21t_Z7lF_8f3Bp7o4jX_CjivOq9_t-3Dv4zm72ljJDK9Wwar41dVENQNLme3ZHTgiDCu2-gsjSQl-xiuEq4T76HpnmwZ14VmgWVmsNroybLppDCWqbg70UeVNFXo4kBJorC6VF7AXRhjY6ha_F1t3Zl5HYA_d2a_PiDXEIT5TbFfyi44YpF2Xa9pcgEwq8e_gOZqy25VRi6ezSdnKegQuE7LefevC0w6dx2mHdWqFNJLoqaAvfrk_eh6WekDGvvOxkVUCx8tV')"></div>
+</div>
+<div class="mt-12 space-y-4">
+<div class="w-full h-4 bg-surface-variant/30 rounded"></div>
+<div class="w-full h-4 bg-surface-variant/30 rounded"></div>
+<div class="w-[60%] h-4 bg-surface-variant/30 rounded"></div>
+</div>
+<!-- Page Number Faux Footer -->
+<div class="absolute bottom-8 left-1/2 -translate-x-1/2 font-label-md text-slate-400">
+                        3
+                    </div>
+</div>
+<!-- Interaction Overlay -->
+<div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-all duration-300 pointer-events-none"></div>
+</div>
+<!-- Page 4 Preview (Peek) -->
+<div class="relative w-[90%] aspect-[1/1.414] bg-white rounded-lg shadow-xl opacity-40 translate-y-4 pointer-events-none">
+<div class="absolute inset-0 bg-[#f8f9fa] flex flex-col p-12">
+<div class="w-32 h-6 bg-surface-variant/20 rounded mb-10"></div>
+<div class="w-full h-4 bg-surface-variant/10 rounded mb-4"></div>
+<div class="w-full h-4 bg-surface-variant/10 rounded mb-4"></div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Page Indicator -->
+<div class="fixed bottom-24 left-1/2 -translate-x-1/2 z-40">
+<div class="px-6 py-2 rounded-full glass-panel shadow-lg flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors active-interaction">chevron_left</button>
+<span class="font-label-md text-label-md text-on-surface font-bold tracking-widest uppercase">3 / 12</span>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors active-interaction">chevron_right</button>
+</div>
+</div>
+<!-- Downloading Snackbar / Progress Bar -->
+<div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-32px)] max-w-md" id="snackbar">
+<div class="p-4 rounded-xl glass-panel shadow-2xl flex flex-col gap-3 transition-transform duration-300">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary animate-bounce">download</span>
+<span class="font-body-md text-body-md text-on-surface">Downloading Introduction to C...</span>
+</div>
+<span class="font-label-md text-label-md text-primary font-bold">45%</span>
+</div>
+<div class="relative w-full h-1.5 bg-surface-variant/50 rounded-full overflow-hidden">
+<div class="absolute top-0 left-0 h-full w-[45%] bg-primary rounded-full transition-all duration-500" id="progress-bar">
+<div class="w-full h-full progress-shimmer"></div>
+</div>
+</div>
+<div class="flex justify-end">
+<button class="px-3 py-1 text-primary font-label-md text-label-md hover:bg-primary/10 rounded-lg transition-colors" onclick="hideSnackbar()">CANCEL</button>
+</div>
+</div>
+</div>
+<!-- Subtle Ambient Backdrop Shadow -->
+<div class="fixed inset-0 pointer-events-none shadow-[inset_0_0_150px_rgba(0,0,0,0.6)]"></div>
+<script>
+        // Simulate progress for the snackbar
+        let progress = 45;
+        const bar = document.getElementById('progress-bar');
+        const percentageText = document.querySelector('.text-primary.font-bold');
+        
+        const interval = setInterval(() => {
+            if (progress < 98) {
+                progress += Math.random() * 2;
+                bar.style.width = `${progress}%`;
+                percentageText.innerText = `${Math.floor(progress)}%`;
+            } else {
+                clearInterval(interval);
+                setTimeout(() => {
+                    hideSnackbar();
+                }, 1500);
+            }
+        }, 800);
+
+        function hideSnackbar() {
+            const snackbar = document.getElementById('snackbar');
+            snackbar.style.transform = 'translateY(150%)';
+            setTimeout(() => snackbar.remove(), 500);
+        }
+
+        // Hide zoom hint after a few seconds
+        setTimeout(() => {
+            const hint = document.getElementById('zoom-hint');
+            if (hint) {
+                hint.style.opacity = '0';
+                setTimeout(() => hint.remove(), 1000);
+            }
+        }, 5000);
+
+        // Simple scale effect on scroll
+        const main = document.querySelector('main');
+        main.addEventListener('scroll', () => {
+            // Optional: add visual dynamics on scroll if needed
+        });
+    </script>
+</body></html>

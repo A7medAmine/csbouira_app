@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>CS Bouira - Semester Selection</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;600&amp;family=JetBrains+Mono&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-container": "#002564",
+                    "secondary-container": "#494854",
+                    "inverse-on-surface": "#2e2f3f",
+                    "on-secondary-fixed-variant": "#464651",
+                    "surface-dim": "#111221",
+                    "on-primary-fixed-variant": "#0040a0",
+                    "on-tertiary": "#2f2f3c",
+                    "outline-variant": "#424655",
+                    "tertiary-fixed-dim": "#c7c5d5",
+                    "on-surface": "#e1e0f6",
+                    "primary-fixed-dim": "#b2c5ff",
+                    "secondary-fixed-dim": "#c7c5d3",
+                    "tertiary": "#c7c5d5",
+                    "on-secondary": "#302f3a",
+                    "on-primary-fixed": "#001847",
+                    "tertiary-fixed": "#e3e0f2",
+                    "on-secondary-container": "#b9b7c5",
+                    "secondary-fixed": "#e4e1ef",
+                    "error": "#ffb4ab",
+                    "error-container": "#93000a",
+                    "on-primary": "#002c72",
+                    "on-surface-variant": "#c2c6d8",
+                    "secondary": "#c7c5d3",
+                    "surface-container": "#1d1e2e",
+                    "on-tertiary-fixed": "#1a1a26",
+                    "background": "#111221",
+                    "surface-variant": "#323344",
+                    "surface-container-highest": "#323344",
+                    "outline": "#8c90a1",
+                    "on-secondary-fixed": "#1b1b25",
+                    "surface-bright": "#373849",
+                    "inverse-surface": "#e1e0f6",
+                    "surface-tint": "#b2c5ff",
+                    "surface-container-high": "#282939",
+                    "primary": "#b2c5ff",
+                    "primary-fixed": "#dae2ff",
+                    "primary-container": "#5a8cff",
+                    "surface": "#111221",
+                    "on-background": "#e1e0f6",
+                    "on-error-container": "#ffdad6",
+                    "inverse-primary": "#0056d1",
+                    "surface-container-low": "#191a2a",
+                    "surface-container-lowest": "#0c0d1c",
+                    "on-tertiary-container": "#292935",
+                    "on-tertiary-fixed-variant": "#464553",
+                    "on-error": "#690005",
+                    "tertiary-container": "#918f9f"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "stack-md": "16px",
+                    "unit": "4px",
+                    "margin-desktop": "32px",
+                    "stack-lg": "32px",
+                    "margin-mobile": "16px",
+                    "stack-sm": "8px",
+                    "container-max": "1280px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Manrope"],
+                    "body-lg": ["Inter"],
+                    "code-sm": ["jetbrainsMono"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Manrope"],
+                    "headline-lg-mobile": ["Manrope"],
+                    "display-lg": ["Manrope"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "code-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      body {
+        background-color: #111221;
+        color: #e1e0f6;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .glass-card {
+        background: rgba(21, 21, 31, 0.8);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(66, 70, 85, 0.3);
+      }
+      .active-scale:active {
+        transform: scale(0.96);
+      }
+      .gradient-mesh {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        background: radial-gradient(circle at 10% 10%, rgba(178, 197, 255, 0.05) 0%, transparent 40%),
+                    radial-gradient(circle at 90% 90%, rgba(90, 140, 255, 0.05) 0%, transparent 40%);
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md text-body-md antialiased">
+<div class="gradient-mesh"></div>
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-outline-variant/30 px-margin-mobile py-4 flex justify-between items-center">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary hover:bg-surface-variant/50 p-2 rounded-full transition-colors active-scale">arrow_back</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Licence 1</h1>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant p-2 hover:bg-surface-variant/50 rounded-full transition-colors active-scale">more_vert</button>
+</header>
+<main class="pt-24 pb-32 px-margin-mobile max-w-container-max mx-auto">
+<!-- Path Info Section -->
+<section class="mb-stack-lg">
+<span class="font-label-md text-label-md text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20">Academic Year 2023/2024</span>
+<p class="mt-4 font-body-md text-on-surface-variant max-w-md">
+                Select a semester to access courses, tutorials, and academic materials for your first year of Computer Science.
+            </p>
+</section>
+<!-- Semester Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter mb-gutter">
+<!-- Semester 1 Card -->
+<button class="glass-card p-6 rounded-xl flex flex-col items-start text-left active-scale transition-all duration-300 hover:border-primary/50 group relative overflow-hidden">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-colors"></div>
+<div class="w-12 h-12 bg-primary-container/20 rounded-lg flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">filter_1</span>
+</div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-on-surface mb-1">Semester 1</h2>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">auto_stories</span>
+<span class="font-label-md text-label-md">12 Modules</span>
+</div>
+<div class="mt-8 flex items-center gap-2 text-primary font-label-md">
+                    Explore Resources
+                    <span class="material-symbols-outlined text-sm transition-transform group-hover:translate-x-1">arrow_forward</span>
+</div>
+</button>
+<!-- Semester 2 Card -->
+<button class="glass-card p-6 rounded-xl flex flex-col items-start text-left active-scale transition-all duration-300 hover:border-primary/50 group relative overflow-hidden">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-secondary/10 rounded-full blur-2xl group-hover:bg-secondary/20 transition-colors"></div>
+<div class="w-12 h-12 bg-surface-variant rounded-lg flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">filter_2</span>
+</div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-on-surface mb-1">Semester 2</h2>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">auto_stories</span>
+<span class="font-label-md text-label-md">10 Modules</span>
+</div>
+<div class="mt-8 flex items-center gap-2 text-primary font-label-md">
+                    Explore Resources
+                    <span class="material-symbols-outlined text-sm transition-transform group-hover:translate-x-1">arrow_forward</span>
+</div>
+</button>
+</div>
+<!-- Extra Full Width Card: Books & Exercises -->
+<button class="w-full glass-card p-6 rounded-xl flex items-center justify-between active-scale transition-all duration-300 hover:border-primary/50 group relative overflow-hidden">
+<div class="flex items-center gap-6">
+<div class="w-16 h-16 bg-gradient-to-br from-primary/20 to-surface-variant rounded-xl flex items-center justify-center shadow-inner">
+<span class="material-symbols-outlined text-primary text-3xl">menu_book</span>
+</div>
+<div class="text-left">
+<h3 class="font-headline-md text-headline-md font-bold text-on-surface">Books &amp; Exercises</h3>
+<p class="font-body-md text-on-surface-variant">Access digital library and solved problem sets</p>
+</div>
+</div>
+<div class="hidden md:flex h-10 w-10 items-center justify-center rounded-full bg-surface-variant group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</div>
+</button>
+<!-- Dynamic Content Section -->
+<section class="mt-stack-lg">
+<h4 class="font-label-md text-label-md uppercase tracking-widest text-outline mb-4">Popular Resources</h4>
+<div class="flex gap-4 overflow-x-auto pb-4 no-scrollbar">
+<div class="flex-shrink-0 w-64 glass-card p-4 rounded-xl">
+<div class="w-full h-32 rounded-lg bg-cover bg-center mb-4" data-alt="A cinematic, high-detail top-down photograph of a dark workspace with a laptop displaying complex C++ source code. The lighting is cold blue, hitting the metallic keys of the laptop, reflecting the modern fintech and developer aesthetic of CS Bouira. Soft shadows and a 1.5px border glow create a professional depth." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDoGxfXAdwYYcHqiS6q7hmTwT2JcnQRdXk1KyhEOJ6hkC46QLN-D6QayaKnWLrEG1d81PXgO05d6Gt-KqW5ZcbKgg_5Lx8A4XpybO5HI91AWl85Irb_b40knMhUFAxjJ_R0kYZtL5uys7tVKhZbDEF7xyN1xTY8eOgUV-zoDC9uCCcbhcpFmvJCgPwKFCWdz3bW-bi_mNgXXIR473fMHHuAHXvrj4TrX2kYxNoYpPafgkac9LW9qS80yEblRmGMC9feRX0siOw0Fgik')"></div>
+<p class="font-label-md text-primary mb-1">ALGO &amp; PROG</p>
+<p class="font-headline-md text-headline-md text-on-surface truncate">Mastering Pointers</p>
+</div>
+<div class="flex-shrink-0 w-64 glass-card p-4 rounded-xl">
+<div class="w-full h-32 rounded-lg bg-cover bg-center mb-4" data-alt="A clean, minimalist 3D rendering of abstract mathematical geometry and fractals floating in a deep navy void. Neon electric blue lines define the shapes, symbolizing digital logic and advanced mathematics. The composition is structured and high-performance, matching the tech-centric identity of the CS student hub." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAXgeAIKeM1HbzPvCCtninWo60MSuEbXMB6hxpzbP-TlB_g5kGrqsx1wdE9AVaz00LOHVhxaWdr4NuaOgwlxawQQKLp1pYQ5e66ntpVo078hXroMcaL_piQimRzI1QEM_dh3F382Ws5Mogr5ljp1goa3PYBZDwv6RCuifsL6mAmOzOF4Yd2l2AHQqEVIbdunu7nXkg50GEN00L3gYAi06a9CqWgREWLX-YRdQDdipZkUvh0c-ePQxaL4r5tgxxfAkankhx5OJGYNUOt')"></div>
+<p class="font-label-md text-primary mb-1">ANALYSIS 1</p>
+<p class="font-headline-md text-headline-md text-on-surface truncate">Complex Series</p>
+</div>
+<div class="flex-shrink-0 w-64 glass-card p-4 rounded-xl">
+<div class="w-full h-32 rounded-lg bg-cover bg-center mb-4" data-alt="A macro photograph of circuit board patterns and microchips illuminated by a subtle pulsing violet light. The aesthetic is industrial yet futuristic, emphasizing technical precision and the foundational elements of computer architecture. Dark-first philosophy with high-density detail and a soft ambient glow." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBYvi6oZqeNk6OyrgCjg02L_uV4evyQC0nC3Otd5ONTOfF5wzl9iYLzlGjFay9aXN2LjoYyPg_i-xUHVxfAcXfaqiS_hSugrkJyLPqktmVruRhGeevr5cXDPuZFjsqndHItzR-J8ikVnb4WeYyn66pB4MeapbfbqAHTokk5MP8aPtbKmSJ37cUZDw1r5Pz1irCyj1EDTdPDJeK_IAJbfHPQDCzp3sADfhxODSvESDY7hVelXhz9vG5t-g-1lHuGq1i5nQuaHJJHh1hX')"></div>
+<p class="font-label-md text-primary mb-1">ARCHI 1</p>
+<p class="font-headline-md text-headline-md text-on-surface truncate">Von Neumann Model</p>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface-container dark:bg-surface-container border-t border-outline-variant/20 shadow-lg px-2 py-3 pb-safe flex justify-around items-center rounded-t-xl">
+<button class="flex flex-col items-center justify-center bg-primary-container/20 text-primary rounded-xl px-3 py-1 transition-transform duration-150 active:scale-95">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-md text-label-md">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">search</span>
+<span class="font-label-md text-label-md">Search</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">add</span>
+<span class="font-label-md text-label-md">Upload</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+<span class="font-label-md text-label-md">Favs</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md">Profile</span>
+</button>
+</nav>
+<script>
+        // Simple touch feedback and micro-interactions
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('touchstart', () => {
+                btn.style.opacity = '0.7';
+            });
+            btn.addEventListener('touchend', () => {
+                btn.style.opacity = '1';
+            });
+        });
+
+        // Horizontal scroll utility for mouse users
+        const scrollContainer = document.querySelector('.overflow-x-auto');
+        if(scrollContainer) {
+            scrollContainer.addEventListener('wheel', (evt) => {
+                evt.preventDefault();
+                scrollContainer.scrollLeft += evt.deltaY;
+            });
+        }
+    </script>
+</body></html>

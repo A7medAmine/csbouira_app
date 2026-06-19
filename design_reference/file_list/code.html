@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CS Bouira - File Explorer</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Manrope:wght@600;700;800&family=JetBrains+Mono:wght@400&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Manrope:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-container": "#002564",
+                    "secondary-container": "#494854",
+                    "inverse-on-surface": "#2e2f3f",
+                    "on-secondary-fixed-variant": "#464651",
+                    "surface-dim": "#111221",
+                    "on-primary-fixed-variant": "#0040a0",
+                    "on-tertiary": "#2f2f3c",
+                    "outline-variant": "#424655",
+                    "tertiary-fixed-dim": "#c7c5d5",
+                    "on-surface": "#e1e0f6",
+                    "primary-fixed-dim": "#b2c5ff",
+                    "secondary-fixed-dim": "#c7c5d3",
+                    "tertiary": "#c7c5d5",
+                    "on-secondary": "#302f3a",
+                    "on-primary-fixed": "#001847",
+                    "tertiary-fixed": "#e3e0f2",
+                    "on-secondary-container": "#b9b7c5",
+                    "secondary-fixed": "#e4e1ef",
+                    "error": "#ffb4ab",
+                    "error-container": "#93000a",
+                    "on-primary": "#002c72",
+                    "on-surface-variant": "#c2c6d8",
+                    "secondary": "#c7c5d3",
+                    "surface-container": "#1d1e2e",
+                    "on-tertiary-fixed": "#1a1a26",
+                    "background": "#111221",
+                    "surface-variant": "#323344",
+                    "surface-container-highest": "#323344",
+                    "outline": "#8c90a1",
+                    "on-secondary-fixed": "#1b1b25",
+                    "surface-bright": "#373849",
+                    "inverse-surface": "#e1e0f6",
+                    "surface-tint": "#b2c5ff",
+                    "surface-container-high": "#282939",
+                    "primary": "#b2c5ff",
+                    "primary-fixed": "#dae2ff",
+                    "primary-container": "#5a8cff",
+                    "surface": "#111221",
+                    "on-background": "#e1e0f6",
+                    "on-error-container": "#ffdad6",
+                    "inverse-primary": "#0056d1",
+                    "surface-container-low": "#191a2a",
+                    "surface-container-lowest": "#0c0d1c",
+                    "on-tertiary-container": "#292935",
+                    "on-tertiary-fixed-variant": "#464553",
+                    "on-error": "#690005",
+                    "tertiary-container": "#918f9f"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "stack-md": "16px",
+                    "unit": "4px",
+                    "margin-desktop": "32px",
+                    "stack-lg": "32px",
+                    "margin-mobile": "16px",
+                    "stack-sm": "8px",
+                    "container-max": "1280px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Manrope"],
+                    "body-lg": ["Inter"],
+                    "code-sm": ["jetbrainsMono"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Manrope"],
+                    "headline-lg-mobile": ["Manrope"],
+                    "display-lg": ["Manrope"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "code-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(21, 21, 31, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(26, 26, 38, 0.5);
+        }
+        body {
+            background-color: #0D0D14;
+            color: #e1e0f6;
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex flex-col min-h-screen">
+<!-- Top Navigation Anchor (Shared Component Mapping) -->
+<header class="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-outline-variant/30 px-margin-mobile py-4 flex justify-between items-center w-full">
+<div class="flex items-center gap-3">
+<button class="hover:bg-surface-variant/50 transition-colors p-2 rounded-full active:scale-95 duration-200">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<div class="flex flex-col">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Algo & Prog 1 / Cours</h1>
+<nav class="flex items-center gap-1 overflow-x-auto whitespace-nowrap">
+<span class="font-label-md text-label-md text-on-surface-variant">Drive</span>
+<span class="material-symbols-outlined text-[14px] text-outline">chevron_right</span>
+<span class="font-label-md text-label-md text-on-surface-variant">L1</span>
+<span class="material-symbols-outlined text-[14px] text-outline">chevron_right</span>
+<span class="font-label-md text-label-md text-primary">Cours</span>
+</nav>
+</div>
+</div>
+<button class="hover:bg-surface-variant/50 transition-colors p-2 rounded-full active:scale-95 duration-200">
+<span class="material-symbols-outlined text-on-surface-variant">more_vert</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow px-margin-mobile pt-6 pb-24 max-w-container-max mx-auto w-full">
+<!-- Search & Filter Bar -->
+<div class="mb-8 flex gap-3">
+<div class="flex-grow flex items-center gap-3 px-4 py-3 bg-surface-container rounded-xl border border-outline-variant/20 focus-within:border-primary transition-all duration-300 group">
+<span class="material-symbols-outlined text-on-surface-variant group-focus-within:text-primary transition-colors">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-md w-full placeholder-on-surface-variant/50" placeholder="Search files and folders..." type="text"/>
+</div>
+<button class="glass-card flex items-center justify-center p-3 rounded-xl text-primary hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+</div>
+<!-- Section: Folders -->
+<section class="mb-10">
+<div class="flex items-center justify-between mb-4">
+<h2 class="font-headline-md text-headline-md text-on-surface">Subfolders</h2>
+<span class="font-label-md text-label-md text-primary">1 item</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+<!-- Folder Row -->
+<div class="group flex items-center justify-between p-4 bg-surface-container rounded-xl border border-outline-variant/10 hover:border-primary/40 hover:bg-surface-container-high transition-all cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 flex items-center justify-center rounded-lg bg-primary-container/20 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">folder</span>
+</div>
+<div>
+<p class="font-body-lg text-body-lg text-on-surface group-hover:text-primary transition-colors">[YEAR] 2023-2024</p>
+<p class="font-label-md text-label-md text-on-surface-variant">12 files • Aug 24, 2023</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:translate-x-1 transition-transform">chevron_right</span>
+</div>
+</div>
+</section>
+<!-- Section: Files -->
+<section>
+<div class="flex items-center justify-between mb-4">
+<h2 class="font-headline-md text-headline-md text-on-surface">Files</h2>
+<div class="flex gap-2">
+<button class="p-1 text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined">grid_view</span></button>
+<button class="p-1 text-primary"><span class="material-symbols-outlined">list</span></button>
+</div>
+</div>
+<div class="flex flex-col gap-3">
+<!-- File Item 1 -->
+<div class="flex items-center justify-between p-4 glass-card rounded-xl hover:bg-surface-variant/30 transition-all cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="relative">
+<div class="w-12 h-12 flex items-center justify-center rounded-lg bg-error-container/20 text-error">
+<span class="material-symbols-outlined text-3xl">description</span>
+</div>
+<span class="absolute -bottom-1 -right-1 bg-error text-[8px] font-bold px-1 rounded text-on-error uppercase">PDF</span>
+</div>
+<div>
+<p class="font-body-lg text-body-lg text-on-surface font-semibold group-hover:text-primary transition-colors">Introduction to C</p>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest">1.2 MB • PDF DOCUMENT</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="hidden md:block font-label-md text-label-md text-on-surface-variant">Last opened 2h ago</span>
+<button class="p-2 hover:bg-surface-variant rounded-full text-on-surface-variant">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+<!-- File Item 2 -->
+<div class="flex items-center justify-between p-4 glass-card rounded-xl hover:bg-surface-variant/30 transition-all cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="relative">
+<div class="w-12 h-12 flex items-center justify-center rounded-lg bg-error-container/20 text-error">
+<span class="material-symbols-outlined text-3xl">description</span>
+</div>
+<span class="absolute -bottom-1 -right-1 bg-error text-[8px] font-bold px-1 rounded text-on-error uppercase">PDF</span>
+</div>
+<div>
+<p class="font-body-lg text-body-lg text-on-surface font-semibold group-hover:text-primary transition-colors">Pointers and Memory</p>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest">3.8 MB • PDF DOCUMENT</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="hidden md:block font-label-md text-label-md text-on-surface-variant">Yesterday</span>
+<button class="p-2 hover:bg-surface-variant rounded-full text-on-surface-variant">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Empty space for FAB context if needed, though instruction says suppress on detail screens. Keeping it clean as per "File List" focus -->
+</div>
+</section>
+<!-- Dynamic Visualization (Academic Tool Atmosphere) -->
+<div class="mt-12 opacity-40 mix-blend-screen pointer-events-none">
+<div class="w-full h-32 border-t border-dashed border-outline-variant/30 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-primary/5 to-transparent"></div>
+<div class="absolute inset-0 flex items-center justify-around">
+<div class="w-1 h-12 bg-primary/20 rounded-full animate-pulse"></div>
+<div class="w-1 h-20 bg-primary/10 rounded-full animate-pulse delay-75"></div>
+<div class="w-1 h-16 bg-primary/20 rounded-full animate-pulse delay-150"></div>
+<div class="w-1 h-8 bg-primary/10 rounded-full animate-pulse delay-300"></div>
+<div class="w-1 h-24 bg-primary/20 rounded-full animate-pulse delay-500"></div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Shell -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface-container border-t border-outline-variant/20 px-2 py-3 pb-safe flex justify-around items-center shadow-lg">
+<!-- Home (Inactive) -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-md text-label-md">Home</span>
+</button>
+<!-- Search (Inactive - Semantic Mapping) -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">search</span>
+<span class="font-label-md text-label-md">Search</span>
+</button>
+<!-- Upload (Special Action) -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-colors">
+<div class="p-2 bg-primary text-on-primary rounded-full -mt-8 shadow-xl">
+<span class="material-symbols-outlined">add</span>
+</div>
+<span class="font-label-md text-label-md mt-1">Upload</span>
+</button>
+<!-- Favs (Active? Semantic Mapping: If viewing "Files", maybe Home or Folder is more active. Let's assume user is currently in explorer context which maps to Home/Folder) -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+<span class="font-label-md text-label-md">Favs</span>
+</button>
+<!-- Profile (Inactive) -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md">Profile</span>
+</button>
+<!-- Active Indication Logic: Since this is "Drive/Explorer" view, we'll mark 'Home' as active based on typical app hierarchies if no specific 'Files' tab exists -->
+<script>
+            // Simple logic to set Home as active for this explorer view
+            document.querySelectorAll('nav button')[0].classList.add('bg-primary-container/20', 'text-primary', 'rounded-xl');
+            document.querySelectorAll('nav button')[0].classList.remove('text-on-surface-variant');
+        </script>
+</nav>
+<script>
+        // Micro-interactions for list items
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mousedown', () => {
+                card.style.transform = 'scale(0.98)';
+            });
+            card.addEventListener('mouseup', () => {
+                card.style.transform = 'scale(1)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body></html>

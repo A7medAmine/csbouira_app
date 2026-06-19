@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Search | CS Bouira</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Manrope:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-container": "#002564",
+                    "secondary-container": "#494854",
+                    "inverse-on-surface": "#2e2f3f",
+                    "on-secondary-fixed-variant": "#464651",
+                    "surface-dim": "#111221",
+                    "on-primary-fixed-variant": "#0040a0",
+                    "on-tertiary": "#2f2f3c",
+                    "outline-variant": "#424655",
+                    "tertiary-fixed-dim": "#c7c5d5",
+                    "on-surface": "#e1e0f6",
+                    "primary-fixed-dim": "#b2c5ff",
+                    "secondary-fixed-dim": "#c7c5d3",
+                    "tertiary": "#c7c5d5",
+                    "on-secondary": "#302f3a",
+                    "on-primary-fixed": "#001847",
+                    "tertiary-fixed": "#e3e0f2",
+                    "on-secondary-container": "#b9b7c5",
+                    "secondary-fixed": "#e4e1ef",
+                    "error": "#ffb4ab",
+                    "error-container": "#93000a",
+                    "on-primary": "#002c72",
+                    "on-surface-variant": "#c2c6d8",
+                    "secondary": "#c7c5d3",
+                    "surface-container": "#1d1e2e",
+                    "on-tertiary-fixed": "#1a1a26",
+                    "background": "#111221",
+                    "surface-variant": "#323344",
+                    "surface-container-highest": "#323344",
+                    "outline": "#8c90a1",
+                    "on-secondary-fixed": "#1b1b25",
+                    "surface-bright": "#373849",
+                    "inverse-surface": "#e1e0f6",
+                    "surface-tint": "#b2c5ff",
+                    "surface-container-high": "#282939",
+                    "primary": "#b2c5ff",
+                    "primary-fixed": "#dae2ff",
+                    "primary-container": "#5a8cff",
+                    "surface": "#111221",
+                    "on-background": "#e1e0f6",
+                    "on-error-container": "#ffdad6",
+                    "inverse-primary": "#0056d1",
+                    "surface-container-low": "#191a2a",
+                    "surface-container-lowest": "#0c0d1c",
+                    "on-tertiary-container": "#292935",
+                    "on-tertiary-fixed-variant": "#464553",
+                    "on-error": "#690005",
+                    "tertiary-container": "#918f9f"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "stack-md": "16px",
+                    "unit": "4px",
+                    "margin-desktop": "32px",
+                    "stack-lg": "32px",
+                    "margin-mobile": "16px",
+                    "stack-sm": "8px",
+                    "container-max": "1280px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Manrope"],
+                    "body-lg": ["Inter"],
+                    "code-sm": ["jetbrainsMono"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Manrope"],
+                    "headline-lg-mobile": ["Manrope"],
+                    "display-lg": ["Manrope"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "code-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #0D0D14;
+            color: #e1e0f6;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(21, 21, 31, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .search-glow:focus-within {
+            box-shadow: 0 0 20px rgba(178, 197, 255, 0.15);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="font-body-md text-body-md overflow-x-hidden pb-24 md:pb-0">
+<!-- Top Navigation / Search Header -->
+<header class="fixed top-0 left-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-outline-variant/30">
+<div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-4 max-w-container-max mx-auto">
+<div class="flex items-center gap-4 flex-1">
+<button aria-label="Back" class="material-symbols-outlined text-primary hover:bg-surface-variant/50 p-2 rounded-full transition-colors active:scale-95">arrow_back</button>
+<div class="relative flex-1 group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">search</span>
+<input class="w-full bg-surface-container border border-outline-variant/30 rounded-xl py-3 pl-11 pr-11 text-body-md font-body-md focus:outline-none focus:border-primary transition-all search-glow" id="search-input" placeholder="Search for modules, files..." type="text"/>
+<button class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary opacity-0 transition-opacity" id="clear-search">close</button>
+</div>
+</div>
+<button class="hidden md:flex ml-4 material-symbols-outlined text-primary p-2 hover:bg-surface-variant/50 rounded-full">more_vert</button>
+</div>
+<!-- Filter Chips Section -->
+<div class="px-margin-mobile md:px-margin-desktop pb-4 max-w-container-max mx-auto overflow-x-auto hide-scrollbar flex gap-3">
+<button class="flex-shrink-0 px-4 py-1.5 rounded-full border border-primary text-primary bg-primary/10 font-label-md text-label-md flex items-center gap-1">
+                Year <span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+<button class="flex-shrink-0 px-4 py-1.5 rounded-full border border-outline-variant/30 text-on-surface-variant bg-surface-container-low font-label-md text-label-md flex items-center gap-1 hover:border-primary/50 transition-colors">
+                Semester <span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+<button class="flex-shrink-0 px-4 py-1.5 rounded-full border border-outline-variant/30 text-on-surface-variant bg-surface-container-low font-label-md text-label-md flex items-center gap-1 hover:border-primary/50 transition-colors">
+                Module <span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+<button class="flex-shrink-0 px-4 py-1.5 rounded-full border border-outline-variant/30 text-on-surface-variant bg-surface-container-low font-label-md text-label-md flex items-center gap-1 hover:border-primary/50 transition-colors">
+                Type <span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+</div>
+</header>
+<main class="pt-40 md:pt-48 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto min-h-screen">
+<!-- Empty State (Shown by default) -->
+<section class="flex flex-col items-center justify-center text-center py-20 space-y-6" id="empty-state">
+<div class="relative w-64 h-64 md:w-80 md:h-80">
+<!-- Decorative Glow Background -->
+<div class="absolute inset-0 bg-primary/10 blur-[60px] rounded-full"></div>
+<!-- Friendly Animation Placeholder (Using WebGL for atmospheric effect) -->
+
+<!-- Central Icon Over Animation -->
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[80px] drop-shadow-xl" style="font-variation-settings: 'FILL' 1;">manage_search</span>
+</div>
+</div>
+<div class="space-y-2">
+<h2 class="font-headline-md text-headline-md text-on-surface">Start Exploring</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xs">Search for modules, files, or topics across the entire CS Bouira library.</p>
+</div>
+</section>
+<!-- Results List (Hidden by default, shown on typing) -->
+<section class="hidden space-y-6 pb-20" id="results-section">
+<div class="flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md text-on-surface">Top Results</h3>
+<span class="font-label-md text-label-md text-primary">12 Items Found</span>
+</div>
+<div class="space-y-3">
+<!-- Result Card: Module -->
+<div class="glass-panel p-4 rounded-xl flex items-center gap-4 hover:border-primary/40 transition-all cursor-pointer group active:scale-[0.98]">
+<div class="w-12 h-12 rounded-lg bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">menu_book</span>
+</div>
+<div class="flex-1 min-w-0">
+<h4 class="font-headline-md text-headline-md truncate text-[16px]">Architecture des Ordinateurs</h4>
+<p class="font-body-md text-body-md text-on-surface-variant truncate">Master 1 • Semester 1</p>
+</div>
+<div class="flex flex-col items-end gap-2">
+<span class="px-3 py-1 rounded-full bg-primary/10 text-primary font-label-md text-[10px] tracking-wider border border-primary/20 uppercase">Module</span>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">chevron_right</span>
+</div>
+</div>
+<!-- Result Card: Folder -->
+<div class="glass-panel p-4 rounded-xl flex items-center gap-4 hover:border-primary/40 transition-all cursor-pointer group active:scale-[0.98]">
+<div class="w-12 h-12 rounded-lg bg-secondary-container/30 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">folder</span>
+</div>
+<div class="flex-1 min-w-0">
+<h4 class="font-headline-md text-headline-md truncate text-[16px]">Cours Algorithmique L2</h4>
+<p class="font-body-md text-body-md text-on-surface-variant truncate">24 Files • Updated 2d ago</p>
+</div>
+<div class="flex flex-col items-end gap-2">
+<span class="px-3 py-1 rounded-full bg-secondary-container/50 text-secondary font-label-md text-[10px] tracking-wider border border-outline-variant/30 uppercase">Folder</span>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">chevron_right</span>
+</div>
+</div>
+<!-- Result Card: File -->
+<div class="glass-panel p-4 rounded-xl flex items-center gap-4 hover:border-primary/40 transition-all cursor-pointer group active:scale-[0.98]">
+<div class="w-12 h-12 rounded-lg bg-error-container/20 flex items-center justify-center text-error">
+<span class="material-symbols-outlined">picture_as_pdf</span>
+</div>
+<div class="flex-1 min-w-0">
+<h4 class="font-headline-md text-headline-md truncate text-[16px]">Exam_Final_Systèmes_M1_2023.pdf</h4>
+<p class="font-body-md text-body-md text-on-surface-variant truncate">1.2 MB • Distributed Systems</p>
+</div>
+<div class="flex flex-col items-end gap-2">
+<span class="px-3 py-1 rounded-full bg-surface-variant text-on-surface-variant font-label-md text-[10px] tracking-wider border border-outline-variant/30 uppercase">File</span>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">download</span>
+</div>
+</div>
+<!-- Result Card: Module -->
+<div class="glass-panel p-4 rounded-xl flex items-center gap-4 hover:border-primary/40 transition-all cursor-pointer group active:scale-[0.98]">
+<div class="w-12 h-12 rounded-lg bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">code</span>
+</div>
+<div class="flex-1 min-w-0">
+<h4 class="font-headline-md text-headline-md truncate text-[16px]">Compilation</h4>
+<p class="font-body-md text-body-md text-on-surface-variant truncate">Master 1 • Semester 1</p>
+</div>
+<div class="flex flex-col items-end gap-2">
+<span class="px-3 py-1 rounded-full bg-primary/10 text-primary font-label-md text-[10px] tracking-wider border border-primary/20 uppercase">Module</span>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">chevron_right</span>
+</div>
+</div>
+<!-- Result Card: File (Zip) -->
+<div class="glass-panel p-4 rounded-xl flex items-center gap-4 hover:border-primary/40 transition-all cursor-pointer group active:scale-[0.98]">
+<div class="w-12 h-12 rounded-lg bg-tertiary-container/20 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">folder_zip</span>
+</div>
+<div class="flex-1 min-w-0">
+<h4 class="font-headline-md text-headline-md truncate text-[16px]">TP_Java_Networking.zip</h4>
+<p class="font-body-md text-body-md text-on-surface-variant truncate">4.5 MB • Source Code</p>
+</div>
+<div class="flex flex-col items-end gap-2">
+<span class="px-3 py-1 rounded-full bg-surface-variant text-on-surface-variant font-label-md text-[10px] tracking-wider border border-outline-variant/30 uppercase">File</span>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">download</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-3 pb-safe bg-surface-container border-t border-outline-variant/20 shadow-lg dark:shadow-none rounded-t-xl md:hidden">
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-md text-label-md">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-primary-container/20 text-primary rounded-xl px-3 py-1 active:scale-95 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">search</span>
+<span class="font-label-md text-label-md font-bold">Search</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">add</span>
+<span class="font-label-md text-label-md">Upload</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+<span class="font-label-md text-label-md">Favs</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md">Profile</span>
+</button>
+</nav>
+<!-- Side/Top Nav for Desktop (Conditional shell rule from JSON) -->
+<div class="hidden md:flex fixed top-0 right-0 h-16 items-center px-margin-desktop z-[60]">
+<div class="flex items-center gap-6">
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">Help</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">Settings</a>
+<div class="w-8 h-8 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a young computer science student in a modern dark-themed studio setting. Soft blue volumetric lighting highlights their silhouette against a deep charcoal background. The style is sharp, cinematic, and tech-focused, matching a premium developer profile aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMJc9YKejM7fJ0hmWmhLyoqt0acIuKHzNdIj-Q970rETIeRmQuunBvTL2KIduwSc0PREyV-z35f3Sj1D-FfEnASGRAXCHumGpYd5se70OyHSWAsxH-FUyJKFnDKuMPeGwadG3XP66qeS8QuMdtyRhRuQeOkhGStkVOUPkmTPYV98QFXT1ERkiAI99MS_tmOHvvOB6wnUuwuwM7c1nz6lwOlzZi2Kagks5hqX-4KJ00ito2X8Tgn_Ctt2khVVPFlftPP_ndgilgbIxw"/>
+</div>
+</div>
+</div>
+<script>
+        const searchInput = document.getElementById('search-input');
+        const clearBtn = document.getElementById('clear-search');
+        const emptyState = document.getElementById('empty-state');
+        const resultsSection = document.getElementById('results-section');
+
+        searchInput.addEventListener('input', (e) => {
+            const val = e.target.value;
+            if (val.length > 0) {
+                clearBtn.style.opacity = '1';
+                emptyState.classList.add('hidden');
+                resultsSection.classList.remove('hidden');
+            } else {
+                clearBtn.style.opacity = '0';
+                emptyState.classList.remove('hidden');
+                resultsSection.classList.add('hidden');
+            }
+        });
+
+        clearBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            clearBtn.style.opacity = '0';
+            emptyState.classList.remove('hidden');
+            resultsSection.classList.add('hidden');
+            searchInput.focus();
+        });
+
+        // Simple scale interaction for cards
+        const cards = document.querySelectorAll('.glass-panel');
+        cards.forEach(card => {
+            card.addEventListener('mousedown', () => card.style.transform = 'scale(0.98)');
+            card.addEventListener('mouseup', () => card.style.transform = 'scale(1)');
+            card.addEventListener('mouseleave', () => card.style.transform = 'scale(1)');
+        });
+    </script>
+</body></html>

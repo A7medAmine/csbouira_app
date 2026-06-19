@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Manrope:wght@600;700;800&family=JetBrains+Mono&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Manrope:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-container": "#002564",
+                    "secondary-container": "#494854",
+                    "inverse-on-surface": "#2e2f3f",
+                    "on-secondary-fixed-variant": "#464651",
+                    "surface-dim": "#111221",
+                    "on-primary-fixed-variant": "#0040a0",
+                    "on-tertiary": "#2f2f3c",
+                    "outline-variant": "#424655",
+                    "tertiary-fixed-dim": "#c7c5d5",
+                    "on-surface": "#e1e0f6",
+                    "primary-fixed-dim": "#b2c5ff",
+                    "secondary-fixed-dim": "#c7c5d3",
+                    "tertiary": "#c7c5d5",
+                    "on-secondary": "#302f3a",
+                    "on-primary-fixed": "#001847",
+                    "tertiary-fixed": "#e3e0f2",
+                    "on-secondary-container": "#b9b7c5",
+                    "secondary-fixed": "#e4e1ef",
+                    "error": "#ffb4ab",
+                    "error-container": "#93000a",
+                    "on-primary": "#002c72",
+                    "on-surface-variant": "#c2c6d8",
+                    "secondary": "#c7c5d3",
+                    "surface-container": "#1d1e2e",
+                    "on-tertiary-fixed": "#1a1a26",
+                    "background": "#111221",
+                    "surface-variant": "#323344",
+                    "surface-container-highest": "#323344",
+                    "outline": "#8c90a1",
+                    "on-secondary-fixed": "#1b1b25",
+                    "surface-bright": "#373849",
+                    "inverse-surface": "#e1e0f6",
+                    "surface-tint": "#b2c5ff",
+                    "surface-container-high": "#282939",
+                    "primary": "#b2c5ff",
+                    "primary-fixed": "#dae2ff",
+                    "primary-container": "#5a8cff",
+                    "surface": "#111221",
+                    "on-background": "#e1e0f6",
+                    "on-error-container": "#ffdad6",
+                    "inverse-primary": "#0056d1",
+                    "surface-container-low": "#191a2a",
+                    "surface-container-lowest": "#0c0d1c",
+                    "on-tertiary-container": "#292935",
+                    "on-tertiary-fixed-variant": "#464553",
+                    "on-error": "#690005",
+                    "tertiary-container": "#918f9f"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "stack-md": "16px",
+                    "unit": "4px",
+                    "margin-desktop": "32px",
+                    "stack-lg": "32px",
+                    "margin-mobile": "16px",
+                    "stack-sm": "8px",
+                    "container-max": "1280px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Manrope"],
+                    "body-lg": ["Inter"],
+                    "code-sm": ["jetbrainsMono"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Manrope"],
+                    "headline-lg-mobile": ["Manrope"],
+                    "display-lg": ["Manrope"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "code-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #111221;
+            color: #e1e0f6;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .glass-card {
+            background: rgba(21, 21, 31, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(26, 26, 38, 0.5);
+        }
+        .active-scale:active {
+            transform: scale(0.98);
+        }
+        .nav-item-active {
+            transform: scale(0.95);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md text-body-md min-h-screen flex flex-col">
+<!-- Top AppBar -->
+<header class="bg-background border-b border-outline-variant/30 sticky top-0 z-50 flex justify-between items-center w-full px-margin-mobile py-4">
+<div class="flex items-center gap-3">
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-surface-variant/50 transition-colors active:scale-98">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface-variant">L1 / Sem 1</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Algo & Prog 1</h1>
+</div>
+</div>
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-surface-variant/50 transition-colors active:scale-98" id="fav-toggle">
+<span class="material-symbols-outlined text-primary" data-icon="star">star</span>
+</button>
+</header>
+<!-- Main Content -->
+<main class="flex-grow px-margin-mobile pt-stack-lg pb-32 max-w-container-max mx-auto w-full">
+<!-- Hero Decorative Section -->
+<div class="relative w-full h-40 rounded-xl overflow-hidden mb-gutter group">
+<div class="bg-cover bg-center w-full h-full transform transition-transform duration-700 group-hover:scale-105" data-alt="A futuristic, dark-themed digital landscape with glowing cyan and electric blue binary code patterns floating in a deep navy 3D space. The aesthetic is high-tech, precise, and academic, representing a computer science student resource hub. Soft volumetric lighting creates depth and focus on a central abstract algorithm visualization." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBnvBORQoz_8zAQpFxbO_HvV3m7KHPSoWzI9KcbgdzZXXGRGM7ma6FRRzGGMcO4ihFhdqO4AMclMUMU3HuIrwWRTJA7DFDStKSQkA8e9lT051U5yjn2XXMAs9dEiEJiRWMXdvY9MP-V2CWZvfQhRK4Eh0v3fdWAhjT4AE8wv-T9sz57C-6vHoEojN5zxPU5TtlgT48ECTQBh2XKSe-C_QirUzhGJ2yJce74Yr7vtv6jWhntCoWyRcG0c7ejugTeUvOtHUockJqUMrfo')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
+<div class="absolute bottom-4 left-4">
+<div class="bg-primary/10 border border-primary/20 px-3 py-1 rounded-full backdrop-blur-md">
+<span class="font-label-md text-label-md text-primary uppercase">Core Module</span>
+</div>
+</div>
+</div>
+<!-- Folder Grid -->
+<div class="grid grid-cols-2 gap-4">
+<!-- Cours -->
+<div class="glass-card p-5 rounded-xl flex flex-col items-start gap-4 hover:border-primary/40 transition-all duration-300 cursor-pointer active:scale-98">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="book">book</span>
+</div>
+<div class="flex flex-col">
+<h3 class="font-headline-md text-headline-md text-on-surface">Cours</h3>
+<p class="font-label-md text-label-md text-on-surface-variant mt-1">12 Files</p>
+</div>
+</div>
+<!-- Exams -->
+<div class="glass-card p-5 rounded-xl flex flex-col items-start gap-4 hover:border-primary/40 transition-all duration-300 cursor-pointer active:scale-98">
+<div class="w-12 h-12 rounded-lg bg-secondary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-3xl" data-icon="description">description</span>
+</div>
+<div class="flex flex-col">
+<h3 class="font-headline-md text-headline-md text-on-surface">Exams</h3>
+<p class="font-label-md text-label-md text-on-surface-variant mt-1">08 Files</p>
+</div>
+</div>
+<!-- Résumé -->
+<div class="glass-card p-5 rounded-xl flex flex-col items-start gap-4 hover:border-primary/40 transition-all duration-300 cursor-pointer active:scale-98">
+<div class="w-12 h-12 rounded-lg bg-tertiary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary text-3xl" data-icon="sticky_note_2">sticky_note_2</span>
+</div>
+<div class="flex flex-col">
+<h3 class="font-headline-md text-headline-md text-on-surface">Résumé</h3>
+<p class="font-label-md text-label-md text-on-surface-variant mt-1">05 Files</p>
+</div>
+</div>
+<!-- TDs & TPs -->
+<div class="glass-card p-5 rounded-xl flex flex-col items-start gap-4 hover:border-primary/40 transition-all duration-300 cursor-pointer active:scale-98">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="build">build</span>
+</div>
+<div class="flex flex-col">
+<h3 class="font-headline-md text-headline-md text-on-surface">TDs & TPs</h3>
+<p class="font-label-md text-label-md text-on-surface-variant mt-1">24 Files</p>
+</div>
+</div>
+<!-- Tests -->
+<div class="glass-card p-5 rounded-xl flex flex-col items-start gap-4 hover:border-primary/40 transition-all duration-300 cursor-pointer active:scale-98 col-span-2">
+<div class="flex items-center gap-4 w-full">
+<div class="w-12 h-12 rounded-lg bg-error-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-error text-3xl" data-icon="fact_check">fact_check</span>
+</div>
+<div class="flex flex-col flex-grow">
+<h3 class="font-headline-md text-headline-md text-on-surface">Tests</h3>
+<p class="font-label-md text-label-md text-on-surface-variant mt-1">03 Mock Exams available</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+</div>
+<!-- Recent Content Section -->
+<div class="mt-stack-lg">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-4">Recent Contributions</h2>
+<div class="space-y-3">
+<div class="flex items-center p-4 glass-card rounded-xl">
+<span class="material-symbols-outlined text-primary mr-4">picture_as_pdf</span>
+<div class="flex-grow">
+<p class="font-body-md text-on-surface font-semibold">Recursive_Algos_L1.pdf</p>
+<p class="text-xs text-on-surface-variant">Added 2 hours ago by Admin</p>
+</div>
+<button class="p-2 hover:bg-surface-variant/50 rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">download</span>
+</button>
+</div>
+<div class="flex items-center p-4 glass-card rounded-xl">
+<span class="material-symbols-outlined text-tertiary mr-4">code</span>
+<div class="flex-grow">
+<p class="font-body-md text-on-surface font-semibold">Sorting_Visualizer.c</p>
+<p class="text-xs text-on-surface-variant">Added 1 day ago by DevTeam</p>
+</div>
+<button class="p-2 hover:bg-surface-variant/50 rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">download</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-3 pb-safe bg-surface-container border-t border-outline-variant/20 shadow-lg dark:shadow-none">
+<!-- Home -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-colors duration-150" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-md text-label-md mt-1">Home</span>
+</a>
+<!-- Search -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-colors duration-150" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="font-label-md text-label-md mt-1">Search</span>
+</a>
+<!-- Upload (Central Action) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-colors duration-150" href="#">
+<span class="material-symbols-outlined">add</span>
+<span class="font-label-md text-label-md mt-1">Upload</span>
+</a>
+<!-- Favs (Active for this context if we imagine viewing a favorite module) -->
+<a class="flex flex-col items-center justify-center bg-primary-container/20 text-primary rounded-xl px-3 py-1 transition-transform duration-150 transform scale-95" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="font-label-md text-label-md mt-1 font-bold">Favs</span>
+</a>
+<!-- Profile -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary transition-colors duration-150" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md mt-1">Profile</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for favorite button
+        const favBtn = document.getElementById('fav-toggle');
+        const favIcon = favBtn.querySelector('.material-symbols-outlined');
+        let isFav = false;
+
+        favBtn.addEventListener('click', () => {
+            isFav = !isFav;
+            if (isFav) {
+                favIcon.style.fontVariationSettings = "'FILL' 1";
+                favIcon.classList.add('text-primary');
+            } else {
+                favIcon.style.fontVariationSettings = "'FILL' 0";
+            }
+            
+            // Haptic-like feedback animation
+            favBtn.animate([
+                { transform: 'scale(1)' },
+                { transform: 'scale(1.2)' },
+                { transform: 'scale(1)' }
+            ], {
+                duration: 200,
+                easing: 'ease-out'
+            });
+        });
+
+        // Add subtle scroll reveal effect
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    entry.target.classList.remove('opacity-0', 'translate-y-4');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.classList.add('opacity-0', 'translate-y-4', 'transition-all', 'duration-500');
+            observer.observe(card);
+        });
+    </script>
+</body></html>
