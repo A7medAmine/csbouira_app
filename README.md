@@ -24,3 +24,20 @@ A Flutter app for browsing and downloading academic resources (courses, exams, e
 flutter pub get
 flutter run
 ```
+
+## Environment Variables
+
+Copy `.env.example` to `.env` and fill in your Supabase credentials:
+
+```bash
+cp .env.example .env
+```
+
+Required values (from your Supabase project dashboard → Settings → API):
+
+| Variable           | Description                              |
+| ------------------ | ---------------------------------------- |
+| `SUPABASE_URL`     | Your Supabase project URL                |
+| `SUPABASE_ANON_KEY`| Your Supabase anon/public API key        |
+
+The app loads these via `flutter_dotenv` at startup — no `--dart-define` flags needed.

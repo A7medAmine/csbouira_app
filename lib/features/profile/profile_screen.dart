@@ -1,13 +1,14 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
-import '../../data/providers/auth_provider.dart';
-import '../../data/providers/local_profile_provider.dart';
-import '../../shared/widgets/app_bottom_nav.dart';
-import '../../shared/widgets/upload_fab.dart';
+import '../../data/providers/auth_providers.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -15,638 +16,238 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final auth = ref.watch(authProvider);
-    final profile = ref.watch(localProfileProvider);
+    final user = ref.watch(currentUserProvider);
 
-    if (!auth.isLoggedIn) {
-      return _buildUnauthenticated(context, theme, ref);
+    if (user == null) {
+      return _GuestProfileShell(theme: theme, ref: ref);
     }
 
-    return Scaffold(
-      backgroundColor: const Color(0xFF0D0D14),
-      body: SafeArea(
-        child: Stack(
-          children: [
-            ListView(
-              padding: const EdgeInsets.only(
-                left: AppSpacing.marginMobile,
-                right: AppSpacing.marginMobile,
-                top: 0,
-                bottom: 140,
-              ),
-              children: [
-                const SizedBox(height: 8),
-
-                _AppBar(theme: theme),
-                const SizedBox(height: 16),
-
-                _ProfileHeader(profile: profile, theme: theme, ref: ref),
-                const SizedBox(height: AppSpacing.stackLg),
-
-                Row(
-                  children: [
-                    Expanded(
-                      child: _StatCard(value: '12', label: 'Uploads', theme: theme),
-                    ),
-                    const SizedBox(width: AppSpacing.stackMd),
-                    Expanded(
-                      child: _StatCard(value: '0', label: 'Favorites', theme: theme),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: AppSpacing.stackLg),
-                _SettingsSection(theme: theme),
-                const SizedBox(height: AppSpacing.stackLg),
-                _DangerZone(theme: theme, ref: ref),
-              ],
-            ),
-
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: AppBottomNav(currentLocation: '/profile'),
-            ),
-            const UploadFab(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildUnauthenticated(BuildContext context, ThemeData theme, WidgetRef ref) {
-    final profile = ref.watch(localProfileProvider);
-
-    return Scaffold(
-      backgroundColor: const Color(0xFF0D0D14),
-      body: SafeArea(
-        child: Stack(
-          children: [
-            ListView(
-              padding: const EdgeInsets.only(
-                left: AppSpacing.marginMobile,
-                right: AppSpacing.marginMobile,
-                top: 0,
-                bottom: 140,
-              ),
-              children: [
-                const SizedBox(height: 8),
-                _AppBar(theme: theme),
-
-                // ── Login Prompt ─────────────────────────────────
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 48),
-                  child: Column(
-                    children: [
-                      Container(
-                        width: 80,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.surfaceContainer,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.person_outline,
-                          size: 40,
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.stackMd),
-                      Text(
-                        'Sign in to your account',
-                        style: theme.textTheme.headlineMedium?.copyWith(
-                          color: theme.colorScheme.onSurface,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.stackSm),
-                      Text(
-                        'Access your uploads, favorites, and more.',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: AppSpacing.stackLg),
-                      GestureDetector(
-                        onTap: () => context.push('/login'),
-                        child: Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.primaryContainer,
-                            borderRadius: BorderRadius.circular(AppRadius.lg),
-                            boxShadow: [
-                              BoxShadow(
-                                color: theme.colorScheme.primaryContainer.withAlpha(51),
-                                blurRadius: 20,
-                              ),
-                            ],
-                          ),
-                          child: Text(
-                            'Log In',
-                            textAlign: TextAlign.center,
-                            style: theme.textTheme.headlineMedium?.copyWith(
-                              color: theme.colorScheme.onPrimaryContainer,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      // ── Local profile info if exists ────────────
-                      if (profile.name != 'Guest' || profile.email.isNotEmpty) ...[
-                        const SizedBox(height: AppSpacing.stackLg),
-                        Divider(color: theme.colorScheme.outlineVariant.withAlpha(51)),
-                        const SizedBox(height: AppSpacing.stackMd),
-                        Text(
-                          'Local Profile',
-                          style: theme.textTheme.labelMedium?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                        const SizedBox(height: AppSpacing.stackSm),
-                        _LocalProfilePreview(profile: profile, theme: theme),
-                      ],
-                    ],
-                  ),
-                ),
-              ],
-            ),
-
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: AppBottomNav(currentLocation: '/profile'),
-            ),
-            const UploadFab(),
-          ],
-        ),
-      ),
-    );
+    return _LoggedInProfileShell(theme: theme, ref: ref, user: user);
   }
 }
 
-// ── AppBar ─────────────────────────────────────────────────────────────────
+// ── Shared widgets ──────────────────────────────────────────────────────────
 
-class _AppBar extends StatelessWidget {
+class _AvatarCircle extends StatelessWidget {
   final ThemeData theme;
+  final String initials;
+  final String? avatarUrl;
+  final String? avatarBase64;
+  final VoidCallback onEdit;
+  final bool showEditButton;
 
-  const _AppBar({required this.theme});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          GestureDetector(
-            onTap: () => context.pop(),
-            child: const _IconButton(icon: Icons.arrow_back),
-          ),
-          Text(
-            'Profile',
-            style: theme.textTheme.headlineMedium?.copyWith(
-              color: theme.colorScheme.primary,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const _IconButton(icon: Icons.more_vert),
-        ],
-      ),
-    );
-  }
-}
-
-class _IconButton extends StatelessWidget {
-  final IconData icon;
-  const _IconButton({required this.icon});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(AppRadius.full),
-      ),
-      child: Icon(icon, color: theme.colorScheme.primary, size: 24),
-    );
-  }
-}
-
-// ── Profile Header ─────────────────────────────────────────────────────────
-
-class _ProfileHeader extends StatelessWidget {
-  final LocalProfile profile;
-  final ThemeData theme;
-  final WidgetRef ref;
-
-  const _ProfileHeader({
-    required this.profile,
+  const _AvatarCircle({
     required this.theme,
-    required this.ref,
+    required this.initials,
+    this.avatarUrl,
+    this.avatarBase64,
+    required this.onEdit,
+    this.showEditButton = true,
   });
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _Avatar(profile: profile, theme: theme, ref: ref),
-        const SizedBox(height: AppSpacing.stackMd),
-        GestureDetector(
-          onTap: () => _editName(context, ref),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                profile.name,
-                style: theme.textTheme.headlineLarge?.copyWith(
-                  color: theme.colorScheme.onSurface,
-                ),
-                textAlign: TextAlign.center,
+  Widget _buildAvatar() {
+    if (avatarUrl != null && avatarUrl!.isNotEmpty) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(48),
+        child: Image.network(
+          avatarUrl!,
+          width: 96,
+          height: 96,
+          fit: BoxFit.cover,
+          errorBuilder: (_, __, ___) => _InitialsText(
+            theme: theme,
+            initials: initials,
+          ),
+          loadingBuilder: (_, child, progress) {
+            if (progress == null) return child;
+            return Center(
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: theme.colorScheme.onPrimaryContainer,
               ),
-              const SizedBox(width: AppSpacing.stackSm),
-              Icon(Icons.edit, size: 18, color: theme.colorScheme.onSurfaceVariant),
-            ],
+            );
+          },
+        ),
+      );
+    }
+    if (avatarBase64 != null) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(48),
+        child: Image.memory(
+          base64Decode(avatarBase64!),
+          width: 96,
+          height: 96,
+          fit: BoxFit.cover,
+          errorBuilder: (_, __, ___) => _InitialsText(
+            theme: theme,
+            initials: initials,
           ),
         ),
-        const SizedBox(height: 4),
-        GestureDetector(
-          onTap: () => _editEmail(context, ref),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                profile.email,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-                textAlign: TextAlign.center,
+      );
+    }
+    return _InitialsText(theme: theme, initials: initials);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.bottomRight,
+      children: [
+        Container(
+          width: 96,
+          height: 96,
+          decoration: BoxDecoration(
+            color: theme.colorScheme.primaryContainer,
+            borderRadius: BorderRadius.circular(48),
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.primary.withAlpha(38),
+                blurRadius: 20,
               ),
-              if (profile.email.isEmpty)
+            ],
+          ),
+          child: _buildAvatar(),
+        ),
+        if (showEditButton)
+          GestureDetector(
+            onTap: onEdit,
+            child: Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primary,
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: const Color(0xFF0D0D14),
+                  width: 2,
+                ),
+              ),
+              child: Icon(
+                Icons.edit,
+                color: theme.colorScheme.onPrimary,
+                size: 18,
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class _InitialsText extends StatelessWidget {
+  final ThemeData theme;
+  final String initials;
+
+  const _InitialsText({required this.theme, required this.initials});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        initials,
+        style: theme.textTheme.displayLarge?.copyWith(
+          color: theme.colorScheme.onPrimaryContainer,
+          fontSize: 36,
+          fontWeight: FontWeight.bold,
+          height: 1,
+        ),
+      ),
+    );
+  }
+}
+
+class _StatsGrid extends StatelessWidget {
+  final ThemeData theme;
+
+  const _StatsGrid({required this.theme});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: _GlassCard(
+            child: Column(
+              children: [
                 Text(
-                  'Add email',
-                  style: theme.textTheme.bodyMedium?.copyWith(
+                  '0',
+                  style: theme.textTheme.headlineMedium?.copyWith(
                     color: theme.colorScheme.primary,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              const SizedBox(width: AppSpacing.stackSm),
-              Icon(Icons.edit, size: 16, color: theme.colorScheme.onSurfaceVariant),
-            ],
+                const SizedBox(height: 4),
+                Text(
+                  'UPLOADS',
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                    letterSpacing: 1,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(width: AppSpacing.stackMd),
+        Expanded(
+          child: _GlassCard(
+            child: Column(
+              children: [
+                Text(
+                  '0',
+                  style: theme.textTheme.headlineMedium?.copyWith(
+                    color: theme.colorScheme.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'FAVORITES',
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                    letterSpacing: 1,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ],
     );
   }
-
-  void _editName(BuildContext context, WidgetRef ref) {
-    final controller = TextEditingController(text: ref.read(localProfileProvider).name);
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: const Color(0xFF1d1e2e),
-        title: const Text('Edit Name'),
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          style: const TextStyle(color: Colors.white),
-          decoration: const InputDecoration(
-            hintText: 'Enter your name',
-            hintStyle: TextStyle(color: Colors.white38),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              if (controller.text.trim().isNotEmpty) {
-                ref.read(localProfileProvider.notifier).updateName(controller.text.trim());
-              }
-              Navigator.pop(ctx);
-            },
-            child: const Text('Save'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _editEmail(BuildContext context, WidgetRef ref) {
-    final controller = TextEditingController(text: ref.read(localProfileProvider).email);
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: const Color(0xFF1d1e2e),
-        title: const Text('Edit Email'),
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          keyboardType: TextInputType.emailAddress,
-          style: const TextStyle(color: Colors.white),
-          decoration: const InputDecoration(
-            hintText: 'Enter your email',
-            hintStyle: TextStyle(color: Colors.white38),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              ref.read(localProfileProvider.notifier).updateEmail(controller.text.trim());
-              Navigator.pop(ctx);
-            },
-            child: const Text('Save'),
-          ),
-        ],
-      ),
-    );
-  }
 }
 
-class _Avatar extends StatelessWidget {
-  final LocalProfile profile;
-  final ThemeData theme;
-  final WidgetRef ref;
+class _GlassCard extends StatelessWidget {
+  final Widget child;
 
-  const _Avatar({
-    required this.profile,
-    required this.theme,
-    required this.ref,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.stackSm),
-      child: GestureDetector(
-        onTap: () => _showAvatarPicker(context, ref),
-        child: Stack(
-          children: [
-            Container(
-              width: 96,
-              height: 96,
-              decoration: BoxDecoration(
-                color: profile.avatarBytes != null
-                    ? Colors.transparent
-                    : theme.colorScheme.primaryContainer,
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: theme.colorScheme.primaryContainer.withAlpha(77),
-                    blurRadius: 20,
-                  ),
-                ],
-              ),
-              clipBehavior: Clip.antiAlias,
-              child: profile.avatarBytes != null
-                  ? ClipOval(
-                      child: Image.memory(
-                        profile.avatarBytes!,
-                        width: 96,
-                        height: 96,
-                        fit: BoxFit.cover,
-                      ),
-                    )
-                  : Center(
-                      child: Text(
-                        profile.initials,
-                        style: theme.textTheme.displayLarge?.copyWith(
-                          color: theme.colorScheme.onPrimaryContainer,
-                        ),
-                      ),
-                    ),
-            ),
-            Positioned(
-              bottom: 4,
-              right: 0,
-              child: Container(
-                padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primary,
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: theme.colorScheme.surface,
-                    width: 2,
-                  ),
-                ),
-                child: Icon(
-                  Icons.edit,
-                  size: 18,
-                  color: theme.colorScheme.onPrimary,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showAvatarPicker(BuildContext context, WidgetRef ref) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: const Color(0xFF1d1e2e),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (ctx) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: const Icon(Icons.camera_alt, color: Colors.white70),
-                title: const Text('Take Photo', style: TextStyle(color: Colors.white)),
-                onTap: () {
-                  Navigator.pop(ctx);
-                  ref.read(localProfileProvider.notifier).pickAvatar(ImageSource.camera);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.photo_library, color: Colors.white70),
-                title: const Text('Choose from Gallery', style: TextStyle(color: Colors.white)),
-                onTap: () {
-                  Navigator.pop(ctx);
-                  ref.read(localProfileProvider.notifier).pickAvatar(ImageSource.gallery);
-                },
-              ),
-              if (profile.avatarBytes != null)
-                ListTile(
-                  leading: const Icon(Icons.delete_outline, color: Colors.redAccent),
-                  title: const Text('Remove Photo', style: TextStyle(color: Colors.redAccent)),
-                  onTap: () {
-                    Navigator.pop(ctx);
-                    ref.read(localProfileProvider.notifier).removeAvatar();
-                  },
-                ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ── Local Profile Preview (for unauthenticated) ─────────────────────────────
-
-class _LocalProfilePreview extends StatelessWidget {
-  final LocalProfile profile;
-  final ThemeData theme;
-
-  const _LocalProfilePreview({required this.profile, required this.theme});
+  const _GlassCard({required this.child});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.stackMd),
       decoration: BoxDecoration(
-        color: const Color(0xFF15151F).withAlpha(179),
-        borderRadius: BorderRadius.circular(AppRadius.lg),
-        border: Border.all(color: const Color(0xFF1A1A26).withAlpha(128)),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primaryContainer,
-              shape: BoxShape.circle,
-            ),
-            child: Center(
-              child: Text(
-                profile.initials,
-                style: TextStyle(
-                  color: theme.colorScheme.onPrimaryContainer,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: AppSpacing.stackMd),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  profile.name,
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    color: theme.colorScheme.onSurface,
-                  ),
-                ),
-                if (profile.email.isNotEmpty)
-                  Text(
-                    profile.email,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ── Stat Card ──────────────────────────────────────────────────────────────
-
-class _StatCard extends StatelessWidget {
-  final String value;
-  final String label;
-  final ThemeData theme;
-
-  const _StatCard({required this.value, required this.label, required this.theme});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF15151F).withAlpha(179),
+        color: const Color(0x0D15151F),
         borderRadius: BorderRadius.circular(AppRadius.xl),
-        border: Border.all(color: const Color(0xFF1A1A26).withAlpha(128)),
+        border: Border.all(
+          color: const Color(0xFF1A1A26).withAlpha(128),
+        ),
       ),
-      child: Column(
-        children: [
-          Text(
-            value,
-            style: theme.textTheme.headlineMedium?.copyWith(
-              color: theme.colorScheme.primary,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label.toUpperCase(),
-            style: theme.textTheme.labelMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-              letterSpacing: 0.5,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ── Settings Section ───────────────────────────────────────────────────────
-
-class _SettingsSection extends StatelessWidget {
-  final ThemeData theme;
-  const _SettingsSection({required this.theme});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _SettingsRow(
-          icon: Icons.upload_file,
-          label: 'My Uploads',
-          onTap: () {},
-          theme: theme,
-        ),
-        const SizedBox(height: AppSpacing.stackSm),
-        _SettingsRow(
-          icon: Icons.favorite,
-          label: 'Favorites',
-          onTap: () => context.push('/favorites'),
-          theme: theme,
-        ),
-        const SizedBox(height: AppSpacing.stackSm),
-        _SettingsRow(
-          icon: Icons.info_outline,
-          label: 'About CS Bouira',
-          onTap: () {},
-          theme: theme,
-        ),
-      ],
+      child: child,
     );
   }
 }
 
 class _SettingsRow extends StatelessWidget {
+  final ThemeData theme;
   final IconData icon;
   final String label;
-  final VoidCallback? onTap;
-  final ThemeData theme;
+  final VoidCallback onTap;
 
   const _SettingsRow({
+    required this.theme,
     required this.icon,
     required this.label,
     required this.onTap,
-    required this.theme,
   });
 
   @override
@@ -654,11 +255,14 @@ class _SettingsRow extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.stackMd, vertical: 16),
+        width: double.infinity,
+        padding: const EdgeInsets.all(AppSpacing.stackMd),
         decoration: BoxDecoration(
-          color: const Color(0xFF15151F).withAlpha(179),
+          color: const Color(0x0D15151F),
           borderRadius: BorderRadius.circular(AppRadius.xl),
-          border: Border.all(color: const Color(0xFF1A1A26).withAlpha(128)),
+          border: Border.all(
+            color: const Color(0xFF1A1A26).withAlpha(128),
+          ),
         ),
         child: Row(
           children: [
@@ -667,11 +271,9 @@ class _SettingsRow extends StatelessWidget {
               height: 40,
               decoration: BoxDecoration(
                 color: theme.colorScheme.surfaceContainer,
-                borderRadius: BorderRadius.circular(AppRadius.lg),
+                borderRadius: BorderRadius.circular(AppRadius.md),
               ),
-              child: Center(
-                child: Icon(icon, color: theme.colorScheme.primary, size: 24),
-              ),
+              child: Icon(icon, color: theme.colorScheme.primary, size: 22),
             ),
             const SizedBox(width: AppSpacing.stackMd),
             Expanded(
@@ -682,7 +284,11 @@ class _SettingsRow extends StatelessWidget {
                 ),
               ),
             ),
-            Icon(Icons.chevron_right, color: theme.colorScheme.outline),
+            Icon(
+              Icons.chevron_right,
+              color: theme.colorScheme.outline,
+              size: 24,
+            ),
           ],
         ),
       ),
@@ -690,37 +296,566 @@ class _SettingsRow extends StatelessWidget {
   }
 }
 
-// ── Danger Zone ────────────────────────────────────────────────────────────
+// ── Guest profile ───────────────────────────────────────────────────────────
 
-class _DangerZone extends StatelessWidget {
+class _GuestProfileShell extends ConsumerStatefulWidget {
   final ThemeData theme;
   final WidgetRef ref;
 
-  const _DangerZone({required this.theme, required this.ref});
+  const _GuestProfileShell({required this.theme, required this.ref});
+
+  @override
+  ConsumerState<_GuestProfileShell> createState() =>
+      _GuestProfileShellState();
+}
+
+class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
+  String _name = '';
+  String _email = '';
+  String? _avatarBase64;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadGuestProfile();
+  }
+
+  Future<void> _loadGuestProfile() async {
+    final cache = ref.read(localProfileCacheProvider);
+    final name = await cache.getName();
+    final email = await cache.getEmail();
+    final avatar = await cache.getAvatarBase64();
+    if (mounted) {
+      setState(() {
+        _name = name;
+        _email = email;
+        _avatarBase64 = avatar;
+      });
+    }
+  }
+
+  Future<void> _editAvatar() async {
+    final picker = ImagePicker();
+    final file = await picker.pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 256,
+      maxHeight: 256,
+    );
+    if (file == null) return;
+    final bytes = await File(file.path).readAsBytes();
+    final b64 = base64Encode(bytes);
+    final cache = ref.read(localProfileCacheProvider);
+    await cache.setAvatarBase64(b64);
+    if (mounted) setState(() => _avatarBase64 = b64);
+  }
+
+  Future<void> _editName() async {
+    final controller = TextEditingController(text: _name);
+    final result = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: widget.theme.colorScheme.surfaceContainer,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.lg),
+        ),
+        title: Text(
+          'Edit Name',
+          style: widget.theme.textTheme.headlineMedium?.copyWith(
+            color: widget.theme.colorScheme.onSurface,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          style: widget.theme.textTheme.bodyMedium?.copyWith(
+            color: widget.theme.colorScheme.onSurface,
+          ),
+          decoration: InputDecoration(
+            hintText: 'Enter your name',
+            hintStyle: TextStyle(
+              color: widget.theme.colorScheme.onSurfaceVariant,
+            ),
+            filled: true,
+            fillColor: widget.theme.colorScheme.surfaceContainer,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppRadius.md),
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text(
+              'Cancel',
+              style: widget.theme.textTheme.labelMedium?.copyWith(
+                color: widget.theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(controller.text.trim()),
+            child: Text(
+              'Save',
+              style: widget.theme.textTheme.labelMedium?.copyWith(
+                color: widget.theme.colorScheme.primary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    if (result != null && result.isNotEmpty) {
+      final cache = ref.read(localProfileCacheProvider);
+      await cache.setName(result);
+      if (mounted) setState(() => _name = result);
+    }
+  }
+
+  Future<void> _editEmail() async {
+    final controller = TextEditingController(text: _email);
+    final result = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: widget.theme.colorScheme.surfaceContainer,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.lg),
+        ),
+        title: Text(
+          'Edit Email',
+          style: widget.theme.textTheme.headlineMedium?.copyWith(
+            color: widget.theme.colorScheme.onSurface,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          keyboardType: TextInputType.emailAddress,
+          style: widget.theme.textTheme.bodyMedium?.copyWith(
+            color: widget.theme.colorScheme.onSurface,
+          ),
+          decoration: InputDecoration(
+            hintText: 'Enter your email',
+            hintStyle: TextStyle(
+              color: widget.theme.colorScheme.onSurfaceVariant,
+            ),
+            filled: true,
+            fillColor: widget.theme.colorScheme.surfaceContainer,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppRadius.md),
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text(
+              'Cancel',
+              style: widget.theme.textTheme.labelMedium?.copyWith(
+                color: widget.theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(controller.text.trim()),
+            child: Text(
+              'Save',
+              style: widget.theme.textTheme.labelMedium?.copyWith(
+                color: widget.theme.colorScheme.primary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    if (result != null && result.isNotEmpty) {
+      final cache = ref.read(localProfileCacheProvider);
+      await cache.setEmail(result);
+      if (mounted) setState(() => _email = result);
+    }
+  }
+
+  String _initials(String name) {
+    if (name.isEmpty) return 'G';
+    final parts = name.trim().split(RegExp(r'\s+'));
+    if (parts.length >= 2) {
+      return '${parts.first[0]}${parts.last[0]}'.toUpperCase();
+    }
+    return name[0].toUpperCase();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = widget.theme;
+    return Scaffold(
+      backgroundColor: const Color(0xFF0D0D14),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: theme.colorScheme.primary),
+          onPressed: () => context.pop(),
+        ),
+        title: Text(
+          'Profile',
+          style: theme.textTheme.headlineMedium?.copyWith(
+            color: theme.colorScheme.primary,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.marginMobile,
+              24,
+              AppSpacing.marginMobile,
+              32,
+            ),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 440),
+              child: Column(
+                children: [
+                  _AvatarCircle(
+                    theme: theme,
+                    initials: _initials(_name),
+                    avatarBase64: _avatarBase64,
+                    onEdit: _editAvatar,
+                  ),
+                  const SizedBox(height: AppSpacing.stackMd),
+                  GestureDetector(
+                    onTap: _editName,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          _name.isNotEmpty ? _name : 'Guest',
+                          style: theme.textTheme.headlineLarge?.copyWith(
+                            color: theme.colorScheme.onSurface,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Icon(
+                          Icons.edit,
+                          color: theme.colorScheme.primary,
+                          size: 20,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  GestureDetector(
+                    onTap: _editEmail,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          _email.isNotEmpty ? _email : 'Add your email',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: _email.isNotEmpty
+                                ? theme.colorScheme.onSurfaceVariant
+                                : theme.colorScheme.onSurfaceVariant
+                                    .withAlpha(153),
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        Icon(
+                          Icons.edit,
+                          color: theme.colorScheme.primary,
+                          size: 16,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.primaryContainer.withAlpha(77),
+                      borderRadius: BorderRadius.circular(AppRadius.full),
+                    ),
+                    child: Text(
+                      'GUEST',
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        color: theme.colorScheme.primary,
+                        letterSpacing: 1.5,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.stackLg),
+                  _StatsGrid(theme: theme),
+                  const SizedBox(height: AppSpacing.stackLg),
+                  _SettingsRow(
+                    theme: theme,
+                    icon: Icons.upload_file,
+                    label: 'My Uploads',
+                    onTap: () {},
+                  ),
+                  const SizedBox(height: AppSpacing.stackSm),
+                  _SettingsRow(
+                    theme: theme,
+                    icon: Icons.favorite,
+                    label: 'Favorites',
+                    onTap: () => context.push('/favorites'),
+                  ),
+                  const SizedBox(height: AppSpacing.stackSm),
+                  _SettingsRow(
+                    theme: theme,
+                    icon: Icons.info_outline,
+                    label: 'About CS Bouira',
+                    onTap: () => context.push('/about'),
+                  ),
+                  const SizedBox(height: AppSpacing.stackLg),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 52,
+                    child: ElevatedButton(
+                      onPressed: () => context.push('/login'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: theme.colorScheme.primaryContainer,
+                        foregroundColor:
+                            theme.colorScheme.onPrimaryContainer,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(AppRadius.md),
+                        ),
+                      ),
+                      child: Text(
+                        'Log In or Sign Up',
+                        style: theme.textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ── Logged-in profile ───────────────────────────────────────────────────────
+
+class _LoggedInProfileShell extends ConsumerWidget {
+  final ThemeData theme;
+  final WidgetRef ref;
+  final User user;
+
+  const _LoggedInProfileShell({
+    required this.theme,
+    required this.ref,
+    required this.user,
+  });
+
+  String _initials(String name) {
+    if (name.isEmpty) return '?';
+    final parts = name.trim().split(RegExp(r'\s+'));
+    if (parts.length >= 2) {
+      return '${parts.first[0]}${parts.last[0]}'.toUpperCase();
+    }
+    return name[0].toUpperCase();
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final profileAsync = ref.watch(profileProvider(user.id));
+    final profile = profileAsync.asData?.value;
+
+    final meta = user.userMetadata;
+    final fullName = (profile?['full_name'] as String?) ??
+        meta?['full_name'] as String? ??
+        meta?['name'] as String? ??
+        user.email ??
+        'User';
+    final email = (profile?['email'] as String?) ?? user.email ?? '';
+    final avatarUrl = (profile?['avatar_url'] as String?) ??
+        meta?['avatar_url'] as String? ??
+        meta?['picture'] as String?;
+
+    return Scaffold(
+      backgroundColor: const Color(0xFF0D0D14),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: theme.colorScheme.primary),
+          onPressed: () => context.pop(),
+        ),
+        title: Text(
+          'Profile',
+          style: theme.textTheme.headlineMedium?.copyWith(
+            color: theme.colorScheme.primary,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.marginMobile,
+              24,
+              AppSpacing.marginMobile,
+              32,
+            ),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 440),
+              child: Column(
+                children: [
+                  _AvatarCircle(
+                    theme: theme,
+                    initials: _initials(fullName),
+                    avatarUrl: avatarUrl,
+                    onEdit: () {},
+                    showEditButton: false,
+                  ),
+                  const SizedBox(height: AppSpacing.stackMd),
+                  Text(
+                    fullName,
+                    style: theme.textTheme.headlineLarge?.copyWith(
+                      color: theme.colorScheme.onSurface,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    email,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.stackLg),
+                  _StatsGrid(theme: theme),
+                  const SizedBox(height: AppSpacing.stackLg),
+                  _SettingsRow(
+                    theme: theme,
+                    icon: Icons.upload_file,
+                    label: 'My Uploads',
+                    onTap: () {},
+                  ),
+                  const SizedBox(height: AppSpacing.stackSm),
+                  _SettingsRow(
+                    theme: theme,
+                    icon: Icons.favorite,
+                    label: 'Favorites',
+                    onTap: () => context.push('/favorites'),
+                  ),
+                  const SizedBox(height: AppSpacing.stackSm),
+                  _SettingsRow(
+                    theme: theme,
+                    icon: Icons.info_outline,
+                    label: 'About CS Bouira',
+                    onTap: () => context.push('/about'),
+                  ),
+                  const SizedBox(height: AppSpacing.stackLg),
+                  _LogOutButton(theme: theme, ref: ref),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _LogOutButton extends StatelessWidget {
+  final ThemeData theme;
+  final WidgetRef ref;
+
+  const _LogOutButton({required this.theme, required this.ref});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        ref.read(authProvider.notifier).logout();
-        context.pushReplacement('/login');
+      onTap: () async {
+        final confirmed = await showDialog<bool>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            backgroundColor: theme.colorScheme.surfaceContainer,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppRadius.lg),
+            ),
+            title: Text(
+              'Log Out',
+              style: theme.textTheme.headlineMedium?.copyWith(
+                color: theme.colorScheme.onSurface,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            content: Text(
+              'Are you sure you want to log out?',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(false),
+                child: Text(
+                  'Cancel',
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(true),
+                child: Text(
+                  'Log Out',
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: theme.colorScheme.error,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+
+        if (confirmed == true) {
+          final authService = ref.read(authServiceProvider);
+          await authService.signOut();
+          try {
+            await GoogleSignIn.instance.signOut();
+          } catch (_) {}
+          if (context.mounted) {
+            context.go('/');
+          }
+        }
       },
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: const EdgeInsets.all(AppSpacing.stackMd),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(AppRadius.xl),
-          border: Border.all(color: theme.colorScheme.error.withAlpha(77)),
+          border: Border.all(
+            color: theme.colorScheme.error.withAlpha(77),
+          ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.logout, color: theme.colorScheme.error, size: 24),
+            Icon(
+              Icons.logout,
+              color: theme.colorScheme.error,
+              size: 22,
+            ),
             const SizedBox(width: AppSpacing.stackSm),
             Text(
               'Log Out',
               style: theme.textTheme.headlineMedium?.copyWith(
                 color: theme.colorScheme.error,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ],
