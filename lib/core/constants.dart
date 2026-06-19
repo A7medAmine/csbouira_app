@@ -13,12 +13,6 @@ class EnvKeys {
   static const String supabaseAnonKey = 'SUPABASE_ANON_KEY';
 }
 
-class StorageConstants {
-  StorageConstants._();
-
-  static const String themeModeKey = 'theme_mode';
-}
-
 class UploadConstants {
   UploadConstants._();
 

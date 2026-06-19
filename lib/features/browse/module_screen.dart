@@ -44,6 +44,7 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
 
     return Scaffold(
       backgroundColor: const Color(0xFF111221),
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Stack(
           children: [

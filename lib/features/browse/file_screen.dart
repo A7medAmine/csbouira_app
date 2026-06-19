@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -31,9 +32,12 @@ enum _SortMode { nameAsc, nameDesc, type }
 
 class _FileScreenState extends State<FileScreen> {
   late final TextEditingController _searchController;
+  final ScrollController _scrollController = ScrollController();
   String _searchQuery = '';
   bool _isGridView = false;
   _SortMode _sortMode = _SortMode.nameAsc;
+  String? _highlightedItem;
+  Timer? _highlightTimer;
 
   List<String> get _segments {
     final parts = <String>[widget.year];
@@ -60,6 +64,8 @@ class _FileScreenState extends State<FileScreen> {
   @override
   void dispose() {
     _searchController.dispose();
+    _scrollController.dispose();
+    _highlightTimer?.cancel();
     super.dispose();
   }
 
@@ -150,13 +156,70 @@ class _FileScreenState extends State<FileScreen> {
     }
   }
 
+  void _scrollToItem(
+    List<MapEntry<String, DriveNode>> subfolders,
+    List<DriveFile> files,
+  ) {
+    if (_highlightedItem == null || !_scrollController.hasClients) return;
+
+    final itemH = 84.0;
+    final headerH = 36.0;
+    final spacerH = 16.0;
+    double offset = 0;
+
+    // Check if a subfolder matches
+    final folderIdx = subfolders.indexWhere(
+      (e) => e.key == _highlightedItem,
+    );
+    if (folderIdx >= 0) {
+      offset = headerH + spacerH + folderIdx * (itemH + spacerH);
+    } else {
+      // Check if a file matches
+      final folderSection = subfolders.isNotEmpty
+          ? headerH + spacerH + subfolders.length * (itemH + spacerH) + spacerH
+          : 0.0;
+      final fileIdx = files.indexWhere(
+        (f) => f.name == _highlightedItem,
+      );
+      if (fileIdx >= 0) {
+        offset = folderSection + headerH + spacerH + fileIdx * (itemH + spacerH);
+      }
+    }
+
+    if (offset > 0) {
+      final viewportH = _scrollController.position.viewportDimension;
+      final scrollTarget =
+          (offset - viewportH / 3).clamp(0.0, _scrollController.position.maxScrollExtent);
+      _scrollController.animateTo(
+        scrollTarget,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
+
+    // Clear highlight after 2 seconds
+    _highlightTimer?.cancel();
+    _highlightTimer = Timer(const Duration(seconds: 2), () {
+      if (mounted) setState(() => _highlightedItem = null);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final currentLocation = GoRouterState.of(context).uri.toString();
+    final highlightFromRoute =
+        GoRouterState.of(context).uri.queryParameters['highlight'];
+
+    // Track highlight from route params
+    if (highlightFromRoute != null && highlightFromRoute != _highlightedItem) {
+      _highlightedItem = highlightFromRoute;
+      _highlightTimer?.cancel();
+    }
 
     return Scaffold(
       backgroundColor: const Color(0xFF0D0D14),
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Stack(
           children: [
@@ -211,6 +274,13 @@ class _FileScreenState extends State<FileScreen> {
                     final hasContent =
                         subfolders.isNotEmpty || files.isNotEmpty;
 
+                    // Scroll to highlighted item after frame renders
+                    if (_highlightedItem != null) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        _scrollToItem(subfolders, files);
+                      });
+                    }
+
                     return Column(
                       children: [
                         _Header(
@@ -258,6 +328,7 @@ class _FileScreenState extends State<FileScreen> {
                                   ),
                                 )
                               : ListView(
+                                  controller: _scrollController,
                                   padding: const EdgeInsets.only(
                                     left: AppSpacing.marginMobile,
                                     right: AppSpacing.marginMobile,
@@ -278,6 +349,8 @@ class _FileScreenState extends State<FileScreen> {
                                         (entry) => _FolderCard(
                                           name: entry.key,
                                           node: entry.value,
+                                          isHighlighted:
+                                              entry.key == _highlightedItem,
                                           theme: theme,
                                           onTap: entry.value.isEmpty
                                               ? null
@@ -338,7 +411,7 @@ class _FileScreenState extends State<FileScreen> {
                                         Wrap(
                                           spacing: 12,
                                           runSpacing: 12,
-                                          children: files.map((file) {
+                                          children:                                           files.map((file) {
                                             final ext = file.name
                                                 .split('.')
                                                 .last
@@ -346,13 +419,18 @@ class _FileScreenState extends State<FileScreen> {
                                             final (icon, color, _) =
                                                 _fileTypeInfo(
                                                     ext, theme);
+                                            final isHighlighted =
+                                                file.name ==
+                                                    _highlightedItem;
                                             return GestureDetector(
                                               onTap: () {
                                                 if (file.link.isNotEmpty) {
                                                   context.push('/preview');
                                                 }
                                               },
-                                              child: Container(
+                                              child: AnimatedContainer(
+                                                duration: const Duration(
+                                                    milliseconds: 300),
                                                 width: (MediaQuery.of(
                                                             context)
                                                         .size
@@ -362,17 +440,27 @@ class _FileScreenState extends State<FileScreen> {
                                                 padding:
                                                     const EdgeInsets.all(16),
                                                 decoration: BoxDecoration(
-                                                  color: theme
-                                                      .colorScheme.surface
-                                                      .withAlpha(204),
+                                                  color: isHighlighted
+                                                      ? theme
+                                                          .colorScheme
+                                                          .primaryContainer
+                                                          .withAlpha(51)
+                                                      : theme
+                                                          .colorScheme.surface
+                                                          .withAlpha(204),
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           12),
                                                   border: Border.all(
-                                                    color: theme
-                                                        .colorScheme
-                                                        .outlineVariant
-                                                        .withAlpha(26),
+                                                    color: isHighlighted
+                                                        ? theme
+                                                            .colorScheme
+                                                            .primary
+                                                            .withAlpha(153)
+                                                        : theme
+                                                            .colorScheme
+                                                            .outlineVariant
+                                                            .withAlpha(26),
                                                   ),
                                                 ),
                                                 child: Column(
@@ -425,6 +513,8 @@ class _FileScreenState extends State<FileScreen> {
                                         ...files.map(
                                         (file) => _FileCard(
                                           file: file,
+                                          isHighlighted:
+                                              file.name == _highlightedItem,
                                           theme: theme,
                                           onTap: () {
                                             if (file.link.isNotEmpty) {
@@ -754,12 +844,14 @@ class _ViewToggleButton extends StatelessWidget {
 class _FolderCard extends StatelessWidget {
   final String name;
   final DriveNode node;
+  final bool isHighlighted;
   final ThemeData theme;
   final VoidCallback? onTap;
 
   const _FolderCard({
     required this.name,
     required this.node,
+    this.isHighlighted = false,
     required this.theme,
     this.onTap,
   });
@@ -771,15 +863,20 @@ class _FolderCard extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: AppSpacing.stackMd),
       child: GestureDetector(
         onTap: onTap,
-        child: Container(
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainer,
+            color: isHighlighted
+                ? theme.colorScheme.primaryContainer.withAlpha(38)
+                : theme.colorScheme.surfaceContainer,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: node.isEmpty
-                  ? theme.colorScheme.outlineVariant.withAlpha(26)
-                  : theme.colorScheme.outlineVariant.withAlpha(26),
+              color: isHighlighted
+                  ? theme.colorScheme.primary.withAlpha(153)
+                  : node.isEmpty
+                      ? theme.colorScheme.outlineVariant.withAlpha(26)
+                      : theme.colorScheme.outlineVariant.withAlpha(26),
             ),
           ),
           child: Row(
@@ -847,11 +944,13 @@ class _FolderCard extends StatelessWidget {
 
 class _FileCard extends StatelessWidget {
   final DriveFile file;
+  final bool isHighlighted;
   final ThemeData theme;
   final VoidCallback onTap;
 
   const _FileCard({
     required this.file,
+    this.isHighlighted = false,
     required this.theme,
     required this.onTap,
   });
@@ -865,13 +964,18 @@ class _FileCard extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: AppSpacing.stackSm),
       child: GestureDetector(
         onTap: onTap,
-        child: Container(
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: theme.colorScheme.surface.withAlpha(204),
+            color: isHighlighted
+                ? theme.colorScheme.primaryContainer.withAlpha(38)
+                : theme.colorScheme.surface.withAlpha(204),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: theme.colorScheme.outlineVariant.withAlpha(26),
+              color: isHighlighted
+                  ? theme.colorScheme.primary.withAlpha(153)
+                  : theme.colorScheme.outlineVariant.withAlpha(26),
             ),
           ),
           child: Row(
