@@ -4,9 +4,20 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../data/navigation_data.dart';
+import '../../data/providers/auth_providers.dart';
 import '../../data/providers/drive_providers.dart';
 import '../../shared/widgets/app_bottom_nav.dart';
 import '../../shared/widgets/upload_fab.dart';
+import '../../shared/widgets/avatar_widget.dart';
+
+String _initials(String name) {
+  if (name.isEmpty) return 'G';
+  final parts = name.trim().split(RegExp(r'\s+'));
+  if (parts.length >= 2) {
+    return '${parts.first[0]}${parts.last[0]}'.toUpperCase();
+  }
+  return name[0].toUpperCase();
+}
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -16,6 +27,34 @@ class HomeScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     final countsAsync = ref.watch(fileCountsProvider);
     final counts = countsAsync.asData?.value ?? {};
+    final user = ref.watch(currentUserProvider);
+
+    String displayName;
+    String? avatarUrl;
+    String? avatarBase64;
+
+    if (user != null) {
+      final profileAsync = ref.watch(profileProvider(user.id));
+      final profile = profileAsync.asData?.value;
+      final meta = user.userMetadata;
+      displayName = (profile?['full_name'] as String?) ??
+          meta?['full_name'] as String? ??
+          meta?['name'] as String? ??
+          user.email ??
+          'User';
+      avatarUrl = (profile?['avatar_url'] as String?) ??
+          meta?['avatar_url'] as String? ??
+          meta?['picture'] as String?;
+      avatarBase64 = null;
+    } else {
+      final guestProfile = ref.watch(guestProfileProvider).asData?.value ?? {};
+      final guestName = guestProfile['name'] as String? ?? '';
+      displayName = guestName.isNotEmpty ? guestName : 'Guest';
+      avatarBase64 = guestProfile['avatarBase64'] as String?;
+      avatarUrl = null;
+    }
+
+    final avatarInitials = _initials(displayName);
 
     return Scaffold(
       backgroundColor: const Color(0xFF0D0D14),
@@ -45,17 +84,12 @@ class HomeScreen extends ConsumerWidget {
                     ),
                     GestureDetector(
                       onTap: () => context.push('/profile'),
-                      child: Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.surfaceContainerHigh,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Icon(
-                          Icons.account_circle,
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
+                      child: AvatarWidget(
+                        size: 40,
+                        avatarUrl: avatarUrl,
+                        avatarBase64: avatarBase64,
+                        initials: avatarInitials,
+                        showEditButton: false,
                       ),
                     ),
                   ],
@@ -68,7 +102,7 @@ class HomeScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Welcome, Guest',
+                      'Welcome, $displayName',
                       style: theme.textTheme.headlineLarge?.copyWith(
                         fontWeight: FontWeight.w700,
                         color: Colors.white,

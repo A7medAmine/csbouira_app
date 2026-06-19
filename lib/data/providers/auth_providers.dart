@@ -68,3 +68,12 @@ final guestMergeServiceProvider = Provider<GuestMergeService>((ref) {
     supabase: supabase,
   );
 });
+
+final guestProfileProvider = FutureProvider<Map<String, dynamic>>((ref) async {
+  final cache = ref.watch(localProfileCacheProvider);
+  return {
+    'name': await cache.getName(),
+    'email': await cache.getEmail(),
+    'avatarBase64': await cache.getAvatarBase64(),
+  };
+});

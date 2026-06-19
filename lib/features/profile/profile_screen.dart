@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../data/providers/auth_providers.dart';
+import '../../shared/widgets/avatar_widget.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -27,133 +28,6 @@ class ProfileScreen extends ConsumerWidget {
 }
 
 // ── Shared widgets ──────────────────────────────────────────────────────────
-
-class _AvatarCircle extends StatelessWidget {
-  final ThemeData theme;
-  final String initials;
-  final String? avatarUrl;
-  final String? avatarBase64;
-  final VoidCallback onEdit;
-  final bool showEditButton;
-
-  const _AvatarCircle({
-    required this.theme,
-    required this.initials,
-    this.avatarUrl,
-    this.avatarBase64,
-    required this.onEdit,
-    this.showEditButton = true,
-  });
-
-  Widget _buildAvatar() {
-    if (avatarUrl != null && avatarUrl!.isNotEmpty) {
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(48),
-        child: Image.network(
-          avatarUrl!,
-          width: 96,
-          height: 96,
-          fit: BoxFit.cover,
-          errorBuilder: (_, __, ___) => _InitialsText(
-            theme: theme,
-            initials: initials,
-          ),
-          loadingBuilder: (_, child, progress) {
-            if (progress == null) return child;
-            return Center(
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: theme.colorScheme.onPrimaryContainer,
-              ),
-            );
-          },
-        ),
-      );
-    }
-    if (avatarBase64 != null) {
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(48),
-        child: Image.memory(
-          base64Decode(avatarBase64!),
-          width: 96,
-          height: 96,
-          fit: BoxFit.cover,
-          errorBuilder: (_, __, ___) => _InitialsText(
-            theme: theme,
-            initials: initials,
-          ),
-        ),
-      );
-    }
-    return _InitialsText(theme: theme, initials: initials);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.bottomRight,
-      children: [
-        Container(
-          width: 96,
-          height: 96,
-          decoration: BoxDecoration(
-            color: theme.colorScheme.primaryContainer,
-            borderRadius: BorderRadius.circular(48),
-            boxShadow: [
-              BoxShadow(
-                color: theme.colorScheme.primary.withAlpha(38),
-                blurRadius: 20,
-              ),
-            ],
-          ),
-          child: _buildAvatar(),
-        ),
-        if (showEditButton)
-          GestureDetector(
-            onTap: onEdit,
-            child: Container(
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primary,
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: const Color(0xFF0D0D14),
-                  width: 2,
-                ),
-              ),
-              child: Icon(
-                Icons.edit,
-                color: theme.colorScheme.onPrimary,
-                size: 18,
-              ),
-            ),
-          ),
-      ],
-    );
-  }
-}
-
-class _InitialsText extends StatelessWidget {
-  final ThemeData theme;
-  final String initials;
-
-  const _InitialsText({required this.theme, required this.initials});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        initials,
-        style: theme.textTheme.displayLarge?.copyWith(
-          color: theme.colorScheme.onPrimaryContainer,
-          fontSize: 36,
-          fontWeight: FontWeight.bold,
-          height: 1,
-        ),
-      ),
-    );
-  }
-}
 
 class _StatsGrid extends StatelessWidget {
   final ThemeData theme;
@@ -346,7 +220,10 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
     final b64 = base64Encode(bytes);
     final cache = ref.read(localProfileCacheProvider);
     await cache.setAvatarBase64(b64);
-    if (mounted) setState(() => _avatarBase64 = b64);
+    if (mounted) {
+      setState(() => _avatarBase64 = b64);
+      ref.invalidate(guestProfileProvider);
+    }
   }
 
   Future<void> _editName() async {
@@ -409,7 +286,10 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
     if (result != null && result.isNotEmpty) {
       final cache = ref.read(localProfileCacheProvider);
       await cache.setName(result);
-      if (mounted) setState(() => _name = result);
+      if (mounted) {
+        setState(() => _name = result);
+        ref.invalidate(guestProfileProvider);
+      }
     }
   }
 
@@ -474,7 +354,10 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
     if (result != null && result.isNotEmpty) {
       final cache = ref.read(localProfileCacheProvider);
       await cache.setEmail(result);
-      if (mounted) setState(() => _email = result);
+      if (mounted) {
+        setState(() => _email = result);
+        ref.invalidate(guestProfileProvider);
+      }
     }
   }
 
@@ -520,11 +403,18 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
               constraints: const BoxConstraints(maxWidth: 440),
               child: Column(
                 children: [
-                  _AvatarCircle(
-                    theme: theme,
+                  AvatarWidget(
+                    size: 96,
                     initials: _initials(_name),
                     avatarBase64: _avatarBase64,
                     onEdit: _editAvatar,
+                    showEditButton: true,
+                    boxShadow: [
+                      BoxShadow(
+                        color: theme.colorScheme.primary.withAlpha(38),
+                        blurRadius: 20,
+                      ),
+                    ],
                   ),
                   const SizedBox(height: AppSpacing.stackMd),
                   GestureDetector(
@@ -711,12 +601,18 @@ class _LoggedInProfileShell extends ConsumerWidget {
               constraints: const BoxConstraints(maxWidth: 440),
               child: Column(
                 children: [
-                  _AvatarCircle(
-                    theme: theme,
+                  AvatarWidget(
+                    size: 96,
                     initials: _initials(fullName),
                     avatarUrl: avatarUrl,
                     onEdit: () {},
                     showEditButton: false,
+                    boxShadow: [
+                      BoxShadow(
+                        color: theme.colorScheme.primary.withAlpha(38),
+                        blurRadius: 20,
+                      ),
+                    ],
                   ),
                   const SizedBox(height: AppSpacing.stackMd),
                   Text(
