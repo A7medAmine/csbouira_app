@@ -23,7 +23,7 @@ class ProfileScreen extends ConsumerWidget {
       return _GuestProfileShell(theme: theme, ref: ref);
     }
 
-    return _LoggedInProfileShell(theme: theme, ref: ref, user: user);
+    return _LoggedInProfileShell(theme: theme, user: user);
   }
 }
 
@@ -533,16 +533,14 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
   }
 }
 
-// ── Logged-in profile ───────────────────────────────────────────────────────
+// ── Logged-in profile (read-only) ─────────────────────────────────────────────
 
 class _LoggedInProfileShell extends ConsumerWidget {
   final ThemeData theme;
-  final WidgetRef ref;
   final User user;
 
   const _LoggedInProfileShell({
     required this.theme,
-    required this.ref,
     required this.user,
   });
 
@@ -605,7 +603,6 @@ class _LoggedInProfileShell extends ConsumerWidget {
                     size: 96,
                     initials: _initials(fullName),
                     avatarUrl: avatarUrl,
-                    onEdit: () {},
                     showEditButton: false,
                     boxShadow: [
                       BoxShadow(
@@ -663,6 +660,8 @@ class _LoggedInProfileShell extends ConsumerWidget {
     );
   }
 }
+
+
 
 class _LogOutButton extends StatelessWidget {
   final ThemeData theme;

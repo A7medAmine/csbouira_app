@@ -19,22 +19,18 @@ import 'features/profile/profile_screen.dart';
 import 'features/search/search_screen.dart';
 import 'features/upload/upload_screen.dart';
 
-class _AuthChangeNotifier extends ChangeNotifier {
-  void notify() => notifyListeners();
+class _AuthRefreshNotifier extends ChangeNotifier {
+  void trigger() => notifyListeners();
 }
 
-final _authRefreshNotifierProvider = ChangeNotifierProvider<_AuthChangeNotifier>((ref) {
-  final notifier = _AuthChangeNotifier();
-  ref.listen(authStateProvider, (_, __) => notifier.notify());
-  return notifier;
-});
+final _authRefreshNotifier = _AuthRefreshNotifier();
 
 final _routerProvider = Provider<GoRouter>((ref) {
-  final refreshNotifier = ref.watch(_authRefreshNotifierProvider);
+  ref.listen(authStateProvider, (_, __) => _authRefreshNotifier.trigger());
 
   return GoRouter(
     initialLocation: '/splash',
-    refreshListenable: refreshNotifier,
+    refreshListenable: _authRefreshNotifier,
     redirect: (context, state) {
       final session = Supabase.instance.client.auth.currentSession;
       final loggedIn = session?.user != null;
