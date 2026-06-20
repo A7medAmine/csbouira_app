@@ -9,6 +9,7 @@ import '../../data/models/drive_node.dart';
 import '../../data/providers/drive_providers.dart';
 import '../../data/providers/thumbnail_providers.dart';
 import '../../shared/widgets/app_bottom_nav.dart';
+import '../../shared/widgets/favorite_star.dart';
 import '../../shared/widgets/upload_fab.dart';
 
 class SemesterScreen extends ConsumerWidget {
@@ -553,14 +554,27 @@ class _OnlineResourceCard extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 2),
-            // Resource name
-            Text(
-              resource.name,
-              style: theme.textTheme.titleSmall?.copyWith(
-                color: theme.colorScheme.onSurface,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+            // Resource name + FavoriteStar
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    resource.name,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      color: theme.colorScheme.onSurface,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                FavoriteStar(
+                  itemType: 'online_resource',
+                  itemPath: resource.url,
+                  displayName: resource.name,
+                  resourceType: resource.type,
+                  size: 18,
+                ),
+              ],
             ),
             const SizedBox(height: 4),
             // Type + Language badges

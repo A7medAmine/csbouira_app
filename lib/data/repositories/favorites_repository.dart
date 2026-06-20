@@ -19,15 +19,17 @@ class FavoritesRepository {
   String? get _userId => _authService.currentUser?.id;
 
   Future<void> addFavorite(
-      String itemType, String itemPath, String displayName) async {
+      String itemType, String itemPath, String displayName, {String? resourceType}) async {
     if (_isLoggedIn) {
       await _supabase.from('favorites').insert({
         'user_id': _userId,
         'item_type': itemType,
         'item_path': itemPath,
+        'display_name': displayName,
+        if (resourceType != null) 'resource_type': resourceType,
       });
     } else {
-      await _local.addFavorite(itemType, itemPath, displayName);
+      await _local.addFavorite(itemType, itemPath, displayName, resourceType: resourceType);
     }
   }
 
@@ -68,5 +70,32 @@ class FavoritesRepository {
       return result;
     }
     return _local.getAll();
+  }
+
+  /// Toggle a module favorite.
+  Future<void> favoriteModule(String modulePath, String displayName) async {
+    if (await isFavorite('module', modulePath)) {
+      await removeFavorite('module', modulePath);
+    } else {
+      await addFavorite('module', modulePath, displayName);
+    }
+  }
+
+  /// Toggle a file favorite using its unique link as the identifier.
+  Future<void> favoriteFile(String fileLink, String displayName) async {
+    if (await isFavorite('file', fileLink)) {
+      await removeFavorite('file', fileLink);
+    } else {
+      await addFavorite('file', fileLink, displayName);
+    }
+  }
+
+  /// Toggle an online resource favorite using its URL as the identifier.
+  Future<void> favoriteOnlineResource(String url, String displayName, {String? resourceType}) async {
+    if (await isFavorite('online_resource', url)) {
+      await removeFavorite('online_resource', url);
+    } else {
+      await addFavorite('online_resource', url, displayName, resourceType: resourceType);
+    }
   }
 }

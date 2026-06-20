@@ -4,8 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../data/models/drive_node.dart';
+import '../../data/providers/auth_providers.dart';
 import '../../data/providers/drive_providers.dart';
+import '../../data/providers/favorites_providers.dart';
 import '../../shared/widgets/app_bottom_nav.dart';
+import '../../shared/widgets/favorite_star.dart';
 import '../../shared/widgets/upload_fab.dart';
 
 class FileScreen extends StatefulWidget {
@@ -425,7 +428,8 @@ class _FileScreenState extends State<FileScreen> {
                                             return GestureDetector(
                                               onTap: () {
                                                 if (file.link.isNotEmpty) {
-                                                  context.push('/preview');
+                                                  context.push('/preview',
+                                                      extra: file);
                                                 }
                                               },
                                               child: AnimatedContainer(
@@ -465,6 +469,21 @@ class _FileScreenState extends State<FileScreen> {
                                                 ),
                                                 child: Column(
                                                   children: [
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .end,
+                                                      children: [
+                                                        FavoriteStar(
+                                                          itemType: 'file',
+                                                          itemPath:
+                                                              file.link,
+                                                          displayName:
+                                                              file.name,
+                                                          size: 18,
+                                                        ),
+                                                      ],
+                                                    ),
                                                     Container(
                                                       width: 48,
                                                       height: 48,
@@ -518,7 +537,8 @@ class _FileScreenState extends State<FileScreen> {
                                           theme: theme,
                                           onTap: () {
                                             if (file.link.isNotEmpty) {
-                                              context.push('/preview');
+                                              context.push('/preview',
+                                                  extra: file);
                                             }
                                           },
                                         ),
@@ -942,7 +962,7 @@ class _FolderCard extends StatelessWidget {
   }
 }
 
-class _FileCard extends StatelessWidget {
+class _FileCard extends ConsumerStatefulWidget {
   final DriveFile file;
   final bool isHighlighted;
   final ThemeData theme;
@@ -956,101 +976,177 @@ class _FileCard extends StatelessWidget {
   });
 
   @override
+  ConsumerState<_FileCard> createState() => _FileCardState();
+}
+
+class _FileCardState extends ConsumerState<_FileCard>
+    with SingleTickerProviderStateMixin {
+  double _dragOffset = 0;
+  double _snapStartOffset = 0;
+  late final AnimationController _snapController;
+  static const double _threshold = 100;
+
+  @override
+  void initState() {
+    super.initState();
+    _snapController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 250),
+    );
+    _snapController.addListener(() {
+      setState(() {
+        _dragOffset = _snapStartOffset * (1 - _snapController.value);
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _snapController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _toggleFavorite() async {
+    final repo = ref.read(favoritesRepositoryProvider);
+    await repo.favoriteFile(widget.file.link, widget.file.name);
+    ref.invalidate(favoritesListProvider);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final ext = file.name.split('.').last.toLowerCase();
-    final (icon, color, showBadge) = _fileTypeInfo(ext, theme);
+    final ext = widget.file.name.split('.').last.toLowerCase();
+    final (icon, color, showBadge) = _fileTypeInfo(ext, widget.theme);
 
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.stackSm),
       child: GestureDetector(
-        onTap: onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: isHighlighted
-                ? theme.colorScheme.primaryContainer.withAlpha(38)
-                : theme.colorScheme.surface.withAlpha(204),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: isHighlighted
-                  ? theme.colorScheme.primary.withAlpha(153)
-                  : theme.colorScheme.outlineVariant.withAlpha(26),
-            ),
-          ),
-          child: Row(
-            children: [
-              Stack(
-                children: [
-                  Container(
-                    width: 48,
-                    height: 48,
+        onHorizontalDragStart: (_) {
+          _snapController.reset();
+          setState(() => _dragOffset = 0);
+        },
+        onHorizontalDragUpdate: (details) {
+          setState(() {
+            _dragOffset = (_dragOffset - details.delta.dx).clamp(0, 300);
+          });
+        },
+        onHorizontalDragEnd: (_) {
+          if (_dragOffset >= _threshold) {
+            _toggleFavorite();
+          }
+          _snapStartOffset = _dragOffset;
+          _snapController.forward(from: 0);
+        },
+        onHorizontalDragCancel: () {
+          _snapStartOffset = _dragOffset;
+          _snapController.forward(from: 0);
+        },
+        onTap: widget.onTap,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            height: 80,
+            color: widget.theme.colorScheme.primary,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    height: 80,
+                    padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: color.withAlpha(51),
-                      borderRadius: BorderRadius.circular(12),
+                      color: widget.isHighlighted
+                          ? widget.theme.colorScheme.primaryContainer.withAlpha(38)
+                          : widget.theme.colorScheme.surface.withAlpha(204),
+                      border: Border.all(
+                        color: widget.isHighlighted
+                            ? widget.theme.colorScheme.primary.withAlpha(153)
+                            : widget.theme.colorScheme.outlineVariant.withAlpha(26),
+                      ),
                     ),
-                    child: Icon(icon, color: color, size: 24),
-                  ),
-                  if (showBadge)
-                    Positioned(
-                      right: -2,
-                      bottom: -2,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 4,
-                          vertical: 1,
+                    child: Row(
+                      children: [
+                        Stack(
+                          children: [
+                            Container(
+                              width: 48,
+                              height: 48,
+                              decoration: BoxDecoration(
+                                color: color.withAlpha(51),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Icon(icon, color: color, size: 24),
+                            ),
+                            if (showBadge)
+                              Positioned(
+                                right: -2,
+                                bottom: -2,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 4,
+                                    vertical: 1,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: color,
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Text(
+                                    'PDF',
+                                    style: TextStyle(
+                                      fontSize: 8,
+                                      fontWeight: FontWeight.bold,
+                                      color: widget.theme.colorScheme.onError,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
-                        decoration: BoxDecoration(
-                          color: color,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(
-                          'PDF',
-                          style: TextStyle(
-                            fontSize: 8,
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.onError,
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                widget.file.name,
+                                style: widget.theme.textTheme.bodyLarge?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: widget.theme.colorScheme.onSurface,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                ext.toUpperCase(),
+                                style: widget.theme.textTheme.labelMedium?.copyWith(
+                                  color: widget.theme.colorScheme.onSurfaceVariant,
+                                  letterSpacing: 1.5,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ),
+                        FavoriteStar(
+                          itemType: 'file',
+                          itemPath: widget.file.link,
+                          displayName: widget.file.name,
+                        ),
+                      ],
                     ),
-                ],
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      file.name,
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.onSurface,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      ext.toUpperCase(),
-                      style: theme.textTheme.labelMedium?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                        letterSpacing: 1.5,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              GestureDetector(
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  child: Icon(
-                    Icons.more_vert,
-                    color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ),
-              ),
-            ],
+                if (_dragOffset > 0)
+                  Container(
+                    width: _dragOffset.clamp(0, 100),
+                    color: widget.theme.colorScheme.primary,
+                    alignment: Alignment.center,
+                    child: Icon(
+                      Icons.star,
+                      color: widget.theme.colorScheme.onPrimary,
+                      size: 28,
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ),

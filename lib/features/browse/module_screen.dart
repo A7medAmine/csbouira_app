@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../data/providers/drive_providers.dart';
 import '../../shared/widgets/app_bottom_nav.dart';
+import '../../shared/widgets/favorite_star.dart';
 import '../../shared/widgets/upload_fab.dart';
 
 String _moduleInitials(String name) {
@@ -343,6 +344,13 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
                                             ],
                                           ),
                                         ),
+                                        FavoriteStar(
+                                          itemType: 'module',
+                                          itemPath:
+                                              '${widget.year}>subfolders>${widget.semester}>subfolders>${entry.key}',
+                                          displayName: entry.key,
+                                        ),
+                                        const SizedBox(width: 4),
                                         Icon(
                                           Icons.chevron_right,
                                           color: theme.colorScheme.outline,
