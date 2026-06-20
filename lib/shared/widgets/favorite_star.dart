@@ -47,6 +47,7 @@ class _FavoriteStarState extends ConsumerState<FavoriteStar> {
     final repo = ref.read(favoritesRepositoryProvider);
     final wasFavorited = _isFavorited!;
     setState(() => _isFavorited = !wasFavorited);
+    ref.invalidate(favoritesListProvider);
     try {
       if (wasFavorited) {
         await repo.removeFavorite(widget.itemType, widget.itemPath);
@@ -54,9 +55,9 @@ class _FavoriteStarState extends ConsumerState<FavoriteStar> {
         await repo.addFavorite(widget.itemType, widget.itemPath, widget.displayName,
             resourceType: widget.resourceType);
       }
-      ref.invalidate(favoritesListProvider);
     } catch (_) {
       if (mounted) setState(() => _isFavorited = wasFavorited);
+      ref.invalidate(favoritesListProvider);
     }
   }
 

@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../data/providers/auth_providers.dart';
+import '../../shared/widgets/app_bottom_nav.dart';
 import '../../shared/widgets/avatar_widget.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -219,11 +220,11 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
     final bytes = await File(file.path).readAsBytes();
     final b64 = base64Encode(bytes);
     final cache = ref.read(localProfileCacheProvider);
-    await cache.setAvatarBase64(b64);
     if (mounted) {
       setState(() => _avatarBase64 = b64);
       ref.invalidate(guestProfileProvider);
     }
+    await cache.setAvatarBase64(b64);
   }
 
   Future<void> _editName() async {
@@ -285,11 +286,11 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
     );
     if (result != null && result.isNotEmpty) {
       final cache = ref.read(localProfileCacheProvider);
-      await cache.setName(result);
       if (mounted) {
         setState(() => _name = result);
         ref.invalidate(guestProfileProvider);
       }
+      await cache.setName(result);
     }
   }
 
@@ -353,11 +354,11 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
     );
     if (result != null && result.isNotEmpty) {
       final cache = ref.read(localProfileCacheProvider);
-      await cache.setEmail(result);
       if (mounted) {
         setState(() => _email = result);
         ref.invalidate(guestProfileProvider);
       }
+      await cache.setEmail(result);
     }
   }
 
@@ -373,6 +374,7 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
   @override
   Widget build(BuildContext context) {
     final theme = widget.theme;
+    final currentLocation = GoRouterState.of(context).matchedLocation;
     return Scaffold(
       backgroundColor: const Color(0xFF0D0D14),
       appBar: AppBar(
@@ -391,17 +393,19 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
         ),
       ),
       body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(
-              AppSpacing.marginMobile,
-              24,
-              AppSpacing.marginMobile,
-              32,
-            ),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 440),
-              child: Column(
+        child: Stack(
+          children: [
+            Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.marginMobile,
+                  24,
+                  AppSpacing.marginMobile,
+                  140,
+                ),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 440),
+                  child: Column(
                 children: [
                   AvatarWidget(
                     size: 96,
@@ -528,7 +532,15 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
             ),
           ),
         ),
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
+          child: AppBottomNav(currentLocation: currentLocation),
+        ),
+        ],
       ),
+    ),
     );
   }
 }
@@ -555,6 +567,7 @@ class _LoggedInProfileShell extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final currentLocation = GoRouterState.of(context).matchedLocation;
     final profileAsync = ref.watch(profileProvider(user.id));
     final profile = profileAsync.asData?.value;
 
@@ -587,74 +600,84 @@ class _LoggedInProfileShell extends ConsumerWidget {
         ),
       ),
       body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(
-              AppSpacing.marginMobile,
-              24,
-              AppSpacing.marginMobile,
-              32,
-            ),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 440),
-              child: Column(
-                children: [
-                  AvatarWidget(
-                    size: 96,
-                    initials: _initials(fullName),
-                    avatarUrl: avatarUrl,
-                    showEditButton: false,
-                    boxShadow: [
-                      BoxShadow(
-                        color: theme.colorScheme.primary.withAlpha(38),
-                        blurRadius: 20,
+        child: Stack(
+          children: [
+            Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.marginMobile,
+                  24,
+                  AppSpacing.marginMobile,
+                  140,
+                ),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 440),
+                  child: Column(
+                    children: [
+                      AvatarWidget(
+                        size: 96,
+                        initials: _initials(fullName),
+                        avatarUrl: avatarUrl,
+                        showEditButton: false,
+                        boxShadow: [
+                          BoxShadow(
+                            color: theme.colorScheme.primary.withAlpha(38),
+                            blurRadius: 20,
+                          ),
+                        ],
                       ),
+                      const SizedBox(height: AppSpacing.stackMd),
+                      Text(
+                        fullName,
+                        style: theme.textTheme.headlineLarge?.copyWith(
+                          color: theme.colorScheme.onSurface,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        email,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.stackLg),
+                      _StatsGrid(theme: theme),
+                      const SizedBox(height: AppSpacing.stackLg),
+                      _SettingsRow(
+                        theme: theme,
+                        icon: Icons.upload_file,
+                        label: 'My Uploads',
+                        onTap: () {},
+                      ),
+                      const SizedBox(height: AppSpacing.stackSm),
+                      _SettingsRow(
+                        theme: theme,
+                        icon: Icons.favorite,
+                        label: 'Favorites',
+                        onTap: () => context.push('/favorites'),
+                      ),
+                      const SizedBox(height: AppSpacing.stackSm),
+                      _SettingsRow(
+                        theme: theme,
+                        icon: Icons.info_outline,
+                        label: 'About CS Bouira',
+                        onTap: () => context.push('/about'),
+                      ),
+                      const SizedBox(height: AppSpacing.stackLg),
+                      _LogOutButton(theme: theme, ref: ref),
                     ],
                   ),
-                  const SizedBox(height: AppSpacing.stackMd),
-                  Text(
-                    fullName,
-                    style: theme.textTheme.headlineLarge?.copyWith(
-                      color: theme.colorScheme.onSurface,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    email,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.stackLg),
-                  _StatsGrid(theme: theme),
-                  const SizedBox(height: AppSpacing.stackLg),
-                  _SettingsRow(
-                    theme: theme,
-                    icon: Icons.upload_file,
-                    label: 'My Uploads',
-                    onTap: () {},
-                  ),
-                  const SizedBox(height: AppSpacing.stackSm),
-                  _SettingsRow(
-                    theme: theme,
-                    icon: Icons.favorite,
-                    label: 'Favorites',
-                    onTap: () => context.push('/favorites'),
-                  ),
-                  const SizedBox(height: AppSpacing.stackSm),
-                  _SettingsRow(
-                    theme: theme,
-                    icon: Icons.info_outline,
-                    label: 'About CS Bouira',
-                    onTap: () => context.push('/about'),
-                  ),
-                  const SizedBox(height: AppSpacing.stackLg),
-                  _LogOutButton(theme: theme, ref: ref),
-                ],
+                ),
               ),
             ),
-          ),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: AppBottomNav(currentLocation: currentLocation),
+            ),
+          ],
         ),
       ),
     );

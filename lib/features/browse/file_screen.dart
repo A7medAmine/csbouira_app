@@ -1007,9 +1007,13 @@ class _FileCardState extends ConsumerState<_FileCard>
   }
 
   Future<void> _toggleFavorite() async {
-    final repo = ref.read(favoritesRepositoryProvider);
-    await repo.favoriteFile(widget.file.link, widget.file.name);
     ref.invalidate(favoritesListProvider);
+    final repo = ref.read(favoritesRepositoryProvider);
+    try {
+      await repo.favoriteFile(widget.file.link, widget.file.name);
+    } catch (_) {
+      ref.invalidate(favoritesListProvider);
+    }
   }
 
   @override
@@ -1043,15 +1047,32 @@ class _FileCardState extends ConsumerState<_FileCard>
         onTap: widget.onTap,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(12),
-          child: Container(
-            height: 80,
-            color: widget.theme.colorScheme.primary,
-            child: Row(
-              children: [
-                Expanded(
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Positioned(
+                right: 0,
+                top: 0,
+                bottom: 0,
+                width: _dragOffset.clamp(0, 100).toDouble(),
+                child: Container(
+                  color: widget.theme.colorScheme.primary,
+                  alignment: Alignment.center,
+                  child: _dragOffset > 0
+                      ? Icon(
+                          Icons.star,
+                          color: widget.theme.colorScheme.onPrimary,
+                          size: 28,
+                        )
+                      : null,
+                ),
+              ),
+              Transform.translate(
+                offset: Offset(-_dragOffset.clamp(0, 100).toDouble(), 0),
+                child: SizedBox(
+                  height: 76,
                   child: Container(
-                    height: 80,
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
                       color: widget.isHighlighted
                           ? widget.theme.colorScheme.primaryContainer.withAlpha(38)
@@ -1134,19 +1155,8 @@ class _FileCardState extends ConsumerState<_FileCard>
                     ),
                   ),
                 ),
-                if (_dragOffset > 0)
-                  Container(
-                    width: _dragOffset.clamp(0, 100),
-                    color: widget.theme.colorScheme.primary,
-                    alignment: Alignment.center,
-                    child: Icon(
-                      Icons.star,
-                      color: widget.theme.colorScheme.onPrimary,
-                      size: 28,
-                    ),
-                  ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

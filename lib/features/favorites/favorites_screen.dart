@@ -116,6 +116,19 @@ class FavoritesScreen extends ConsumerStatefulWidget {
 
 class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
   int _selectedTab = 0;
+  late final PageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: 0);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   Future<void> _removeFavorite(FavoriteItem item) async {
     final repo = ref.read(favoritesRepositoryProvider);
@@ -152,6 +165,72 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
       default:
         return '';
     }
+  }
+
+  Widget _buildTabPage({
+    required List<FavoriteItem> items,
+    required int tabIndex,
+    required ThemeData theme,
+    required AsyncValue<DriveRootData> rootAsync,
+  }) {
+    if (items.isEmpty) {
+      return _FavoritesEmptyState(theme: theme, tabIndex: tabIndex);
+    }
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.marginMobile,
+        AppSpacing.stackLg,
+        AppSpacing.marginMobile,
+        140,
+      ),
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              _tabTitle(tabIndex),
+              style: theme.textTheme.headlineMedium?.copyWith(
+                color: Colors.white,
+              ),
+            ),
+            Text(
+              '${items.length} Total',
+              style: theme.textTheme.labelMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: AppSpacing.stackMd),
+        ...items.map((item) {
+          switch (tabIndex) {
+            case 0:
+              return _ModuleFavoriteCard(
+                item: item,
+                rootAsync: rootAsync,
+                theme: theme,
+                onRemove: () => _removeFavorite(item),
+                onTap: () => _navigateTo(item),
+              );
+            case 1:
+              return _FileFavoriteCard(
+                item: item,
+                theme: theme,
+                onRemove: () => _removeFavorite(item),
+              );
+            case 2:
+              return _OnlineResourceFavoriteCard(
+                item: item,
+                theme: theme,
+                onRemove: () => _removeFavorite(item),
+                onTap: () => _navigateTo(item),
+              );
+            default:
+              return const SizedBox.shrink();
+          }
+        }),
+      ],
+    );
   }
 
   @override
@@ -266,102 +345,48 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                           .where((f) => f.itemType == 'online_resource')
                           .toList();
                       final counts = [modules.length, files.length, onlineResources.length];
-                      final currentItems = _selectedTab == 0
-                          ? modules
-                          : _selectedTab == 1
-                              ? files
-                              : onlineResources;
 
                       return Column(
                         children: [
-                          // Tab Navigation
                           _FavoritesTabBar(
                             selectedTab: _selectedTab,
                             counts: counts,
-                            onTabChanged: (i) =>
-                                setState(() => _selectedTab = i),
+                            onTabChanged: (i) {
+                              _pageController.animateToPage(
+                                i,
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              );
+                              setState(() => _selectedTab = i);
+                            },
                             theme: theme,
                           ),
-
-                          // Content
                           Expanded(
-                            child: currentItems.isEmpty
-                                ? _FavoritesEmptyState(
-                                    theme: theme,
-                                    tabIndex: _selectedTab,
-                                  )
-                                : ListView(
-                                    padding: const EdgeInsets.fromLTRB(
-                                      AppSpacing.marginMobile,
-                                      AppSpacing.stackLg,
-                                      AppSpacing.marginMobile,
-                                      140,
-                                    ),
-                                    children: [
-                                      // Section header
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            _tabTitle(_selectedTab),
-                                            style: theme
-                                                .textTheme.headlineMedium
-                                                ?.copyWith(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          Text(
-                                            '${currentItems.length} Total',
-                                            style: theme
-                                                .textTheme.labelMedium
-                                                ?.copyWith(
-                                              color: theme.colorScheme
-                                                  .onSurfaceVariant,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                          height: AppSpacing.stackMd),
-
-                                      // Cards
-                                      ...currentItems.map(
-                                        (item) {
-                                          switch (_selectedTab) {
-                                            case 0:
-                                              return _ModuleFavoriteCard(
-                                                item: item,
-                                                rootAsync: rootAsync,
-                                                theme: theme,
-                                                onRemove: () =>
-                                                    _removeFavorite(item),
-                                                onTap: () =>
-                                                    _navigateTo(item),
-                                              );
-                                            case 1:
-                                              return _FileFavoriteCard(
-                                                item: item,
-                                                theme: theme,
-                                                onRemove: () =>
-                                                    _removeFavorite(item),
-                                              );
-                                            case 2:
-                                              return _OnlineResourceFavoriteCard(
-                                                item: item,
-                                                theme: theme,
-                                                onRemove: () =>
-                                                    _removeFavorite(item),
-                                                onTap: () =>
-                                                    _navigateTo(item),
-                                              );
-                                            default:
-                                              return const SizedBox.shrink();
-                                          }
-                                        },
-                                      ),
-                                    ],
-                                  ),
+                            child: PageView(
+                              controller: _pageController,
+                              onPageChanged: (i) =>
+                                  setState(() => _selectedTab = i),
+                              children: [
+                                _buildTabPage(
+                                  items: modules,
+                                  tabIndex: 0,
+                                  theme: theme,
+                                  rootAsync: rootAsync,
+                                ),
+                                _buildTabPage(
+                                  items: files,
+                                  tabIndex: 1,
+                                  theme: theme,
+                                  rootAsync: rootAsync,
+                                ),
+                                _buildTabPage(
+                                  items: onlineResources,
+                                  tabIndex: 2,
+                                  theme: theme,
+                                  rootAsync: rootAsync,
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       );
