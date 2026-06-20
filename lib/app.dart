@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'core/theme/app_theme.dart';
 import 'data/providers/auth_providers.dart';
+import 'data/providers/favorites_providers.dart';
 import 'features/about/about_screen.dart';
 import 'features/auth/forgot_password_screen.dart';
 import 'features/auth/login_screen.dart';
@@ -24,6 +25,10 @@ import 'shared/widgets/app_bottom_nav.dart';
 class _AuthRefreshNotifier extends ChangeNotifier {
   void trigger() => notifyListeners();
 }
+
+/// Global full-screen toggle used by PreviewScreen to hide the shell's
+/// bottom navigation bar without affecting other screens.
+final fullScreenNotifier = ValueNotifier<bool>(false);
 
 final _authRefreshNotifier = _AuthRefreshNotifier();
 
@@ -48,7 +53,11 @@ CustomTransitionPage<void> _buildTransitionPage({
 }
 
 final _routerProvider = Provider<GoRouter>((ref) {
-  ref.listen(authStateProvider, (_, __) => _authRefreshNotifier.trigger());
+  ref.listen(authStateProvider, (_, __) {
+    _authRefreshNotifier.trigger();
+    // Refresh favorites and profile data when auth state changes (login/logout)
+    ref.invalidate(favoritesListProvider);
+  });
 
   return GoRouter(
     initialLocation: '/splash',
@@ -293,23 +302,30 @@ class _ShellScaffoldState extends State<_ShellScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: _onPopInvokedWithResult,
-      child: Scaffold(
-        body: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 180),
-          switchInCurve: Curves.easeInOut,
-          switchOutCurve: Curves.easeInOut,
-          child: KeyedSubtree(
-            key: ValueKey<int>(widget.navigationShell.currentIndex),
-            child: widget.navigationShell,
+    return ValueListenableBuilder<bool>(
+      valueListenable: fullScreenNotifier,
+      builder: (context, isFullScreen, _) {
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: _onPopInvokedWithResult,
+          child: Scaffold(
+            body: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 180),
+              switchInCurve: Curves.easeInOut,
+              switchOutCurve: Curves.easeInOut,
+              child: KeyedSubtree(
+                key: ValueKey<int>(widget.navigationShell.currentIndex),
+                child: widget.navigationShell,
+              ),
+            ),
+            bottomNavigationBar: isFullScreen
+                ? null
+                : AppBottomNav(
+                    navigationShell: widget.navigationShell,
+                  ),
           ),
-        ),
-        bottomNavigationBar: AppBottomNav(
-          navigationShell: widget.navigationShell,
-        ),
-      ),
+        );
+      },
     );
   }
 }

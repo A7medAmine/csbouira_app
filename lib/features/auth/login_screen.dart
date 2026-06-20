@@ -6,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../data/providers/auth_providers.dart';
+import '../../data/providers/favorites_providers.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -80,6 +81,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
         final mergeService = ref.read(guestMergeServiceProvider);
         await mergeService.mergeGuestDataIntoAccount(userId);
+        ref.invalidate(favoritesListProvider);
       } else {
         await authService.signInWithEmail(
           _emailController.text.trim(),
@@ -90,6 +92,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         if (user != null) {
           final mergeService = ref.read(guestMergeServiceProvider);
           await mergeService.mergeGuestDataIntoAccount(user.id);
+          ref.invalidate(favoritesListProvider);
         }
       }
 
@@ -164,6 +167,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         debugPrint('\x1B[31m[GoogleSignIn] Merging guest data for user ${user.id}...\x1B[0m');
         final mergeService = ref.read(guestMergeServiceProvider);
         await mergeService.mergeGuestDataIntoAccount(user.id);
+        ref.invalidate(favoritesListProvider);
         debugPrint('\x1B[31m[GoogleSignIn] Guest merge complete.\x1B[0m');
       }
 

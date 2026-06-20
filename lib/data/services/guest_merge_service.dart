@@ -22,6 +22,8 @@ class GuestMergeService {
               'user_id': userId,
               'item_type': fav.itemType,
               'item_path': fav.itemPath,
+              'display_name': fav.displayName,
+              if (fav.resourceType != null) 'resource_type': fav.resourceType,
             },
             onConflict: 'user_id, item_type, item_path',
           );

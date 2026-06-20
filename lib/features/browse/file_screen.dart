@@ -8,6 +8,7 @@ import '../../data/providers/auth_providers.dart';
 import '../../data/providers/drive_providers.dart';
 import '../../data/providers/favorites_providers.dart';
 import '../../shared/widgets/favorite_star.dart';
+import '../preview/preview_args.dart';
 
 class FileScreen extends StatefulWidget {
   final String year;
@@ -411,7 +412,9 @@ class _FileScreenState extends State<FileScreen> {
                                         Wrap(
                                           spacing: 12,
                                           runSpacing: 12,
-                                          children:                                           files.map((file) {
+                                          children: files.asMap().entries.map((entry) {
+                                            final fileIndex = entry.key;
+                                            final file = entry.value;
                                             final ext = file.name
                                                 .split('.')
                                                 .last
@@ -426,7 +429,10 @@ class _FileScreenState extends State<FileScreen> {
                                               onTap: () {
                                                 if (file.link.isNotEmpty) {
                                                   context.push('/preview',
-                                                      extra: file);
+                                                      extra: PreviewArgs(
+                                                        files: files,
+                                                        initialIndex: fileIndex,
+                                                      ));
                                                 }
                                               },
                                               child: AnimatedContainer(
@@ -526,16 +532,19 @@ class _FileScreenState extends State<FileScreen> {
                                           }).toList(),
                                         )
                                       else
-                                        ...files.map(
-                                        (file) => _FileCard(
-                                          file: file,
+                                        ...files.asMap().entries.map(
+                                        (entry) => _FileCard(
+                                          file: entry.value,
                                           isHighlighted:
-                                              file.name == _highlightedItem,
+                                              entry.value.name == _highlightedItem,
                                           theme: theme,
                                           onTap: () {
-                                            if (file.link.isNotEmpty) {
+                                            if (entry.value.link.isNotEmpty) {
                                               context.push('/preview',
-                                                  extra: file);
+                                                  extra: PreviewArgs(
+                                                    files: files,
+                                                    initialIndex: entry.key,
+                                                  ));
                                             }
                                           },
                                         ),

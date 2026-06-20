@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../data/providers/auth_providers.dart';
+import '../../data/providers/favorites_providers.dart';
 import '../../shared/widgets/avatar_widget.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -31,8 +32,9 @@ class ProfileScreen extends ConsumerWidget {
 
 class _StatsGrid extends StatelessWidget {
   final ThemeData theme;
+  final int favoriteCount;
 
-  const _StatsGrid({required this.theme});
+  const _StatsGrid({required this.theme, this.favoriteCount = 0});
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +69,7 @@ class _StatsGrid extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  '0',
+                  '$favoriteCount',
                   style: theme.textTheme.headlineMedium?.copyWith(
                     color: theme.colorScheme.primary,
                     fontWeight: FontWeight.bold,
@@ -481,7 +483,13 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.stackLg),
-                  _StatsGrid(theme: theme),
+                  _StatsGrid(
+                    theme: theme,
+                    favoriteCount: ref.watch(favoritesListProvider).maybeWhen(
+                          data: (list) => list.length,
+                          orElse: () => 0,
+                        ),
+                  ),
                   const SizedBox(height: AppSpacing.stackLg),
                   _SettingsRow(
                     theme: theme,
@@ -633,7 +641,13 @@ class _LoggedInProfileShell extends ConsumerWidget {
                         ),
                       ),
                       const SizedBox(height: AppSpacing.stackLg),
-                      _StatsGrid(theme: theme),
+                      _StatsGrid(
+                        theme: theme,
+                        favoriteCount: ref.watch(favoritesListProvider).maybeWhen(
+                              data: (list) => list.length,
+                              orElse: () => 0,
+                            ),
+                      ),
                       const SizedBox(height: AppSpacing.stackLg),
                       _SettingsRow(
                         theme: theme,
