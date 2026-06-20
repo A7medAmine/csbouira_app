@@ -3,17 +3,54 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 class AppBottomNav extends ConsumerWidget {
-  final String currentLocation;
+  final StatefulNavigationShell navigationShell;
 
-  const AppBottomNav({super.key, required this.currentLocation});
+  const AppBottomNav({super.key, required this.navigationShell});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
 
-    bool isActive(String path) {
-      if (path == '/') return currentLocation == '/';
-      return currentLocation.startsWith(path);
+    Widget navItem(IconData icon, String label, int index) {
+      final isActive = navigationShell.currentIndex == index;
+      return GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          navigationShell.goBranch(
+            index,
+            initialLocation: index == navigationShell.currentIndex,
+          );
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          decoration: BoxDecoration(
+            color: isActive
+                ? theme.colorScheme.primaryContainer.withAlpha(51)
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon,
+                color: isActive
+                    ? theme.colorScheme.primary
+                    : theme.colorScheme.onSurfaceVariant,
+                size: 24,
+              ),
+              Text(
+                label,
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: isActive
+                      ? theme.colorScheme.primary
+                      : theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
     }
 
     return Container(
@@ -34,83 +71,12 @@ class AppBottomNav extends ConsumerWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _NavItem(
-            icon: Icons.home,
-            label: 'Home',
-            isActive: isActive('/'),
-            onTap: () => context.go('/'),
-          ),
-          _NavItem(
-            icon: Icons.search,
-            label: 'Search',
-            isActive: isActive('/search'),
-            onTap: () => context.push('/search'),
-          ),
-          const SizedBox(width: 64),
-          _NavItem(
-            icon: Icons.favorite,
-            label: 'Favs',
-            isActive: isActive('/favorites'),
-            onTap: () => context.push('/favorites'),
-          ),
-          _NavItem(
-            icon: Icons.person,
-            label: 'Profile',
-            isActive: isActive('/profile'),
-            onTap: () => context.push('/profile'),
-          ),
+          navItem(Icons.home, 'Home', 0),
+          navItem(Icons.search, 'Search', 1),
+          navItem(Icons.favorite, 'Favs', 2),
+          navItem(Icons.cloud_upload, 'Upload', 3),
+          navItem(Icons.person, 'Profile', 4),
         ],
-      ),
-    );
-  }
-}
-
-class _NavItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final bool isActive;
-  final VoidCallback? onTap;
-
-  const _NavItem({
-    required this.icon,
-    required this.label,
-    required this.isActive,
-    this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-        decoration: BoxDecoration(
-          color: isActive
-              ? theme.colorScheme.primaryContainer.withAlpha(51)
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              icon,
-              color: isActive
-                  ? theme.colorScheme.primary
-                  : theme.colorScheme.onSurfaceVariant,
-              size: 24,
-            ),
-            Text(
-              label,
-              style: theme.textTheme.labelMedium?.copyWith(
-                color: isActive
-                    ? theme.colorScheme.primary
-                    : theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

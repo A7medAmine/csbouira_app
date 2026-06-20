@@ -7,9 +7,7 @@ import '../../data/models/drive_node.dart';
 import '../../data/providers/auth_providers.dart';
 import '../../data/providers/drive_providers.dart';
 import '../../data/providers/favorites_providers.dart';
-import '../../shared/widgets/app_bottom_nav.dart';
 import '../../shared/widgets/favorite_star.dart';
-import '../../shared/widgets/upload_fab.dart';
 
 class FileScreen extends StatefulWidget {
   final String year;
@@ -210,7 +208,6 @@ class _FileScreenState extends State<FileScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final currentLocation = GoRouterState.of(context).uri.toString();
     final highlightFromRoute =
         GoRouterState.of(context).uri.queryParameters['highlight'];
 
@@ -336,7 +333,7 @@ class _FileScreenState extends State<FileScreen> {
                                     left: AppSpacing.marginMobile,
                                     right: AppSpacing.marginMobile,
                                     top: AppSpacing.stackLg,
-                                    bottom: 160,
+                                    bottom: 24,
                                   ),
                                   children: [
                                     if (subfolders.isNotEmpty) ...[
@@ -553,15 +550,6 @@ class _FileScreenState extends State<FileScreen> {
                 );
               },
             ),
-
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: AppBottomNav(currentLocation: currentLocation),
-            ),
-
-            const UploadFab(),
           ],
         ),
       ),

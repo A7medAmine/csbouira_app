@@ -6,8 +6,6 @@ import '../../core/theme/app_spacing.dart';
 import '../../data/navigation_data.dart';
 import '../../data/providers/auth_providers.dart';
 import '../../data/providers/drive_providers.dart';
-import '../../shared/widgets/app_bottom_nav.dart';
-import '../../shared/widgets/upload_fab.dart';
 import '../../shared/widgets/avatar_widget.dart';
 
 String _initials(String name) {
@@ -66,7 +64,7 @@ class HomeScreen extends ConsumerWidget {
                 left: AppSpacing.marginMobile,
                 right: AppSpacing.marginMobile,
                 top: 0,
-                bottom: 140,
+                bottom: 24,
               ),
               children: [
                 const SizedBox(height: 16),
@@ -203,16 +201,6 @@ class HomeScreen extends ConsumerWidget {
                 _StatsSection(),
               ],
             ),
-
-            // Bottom navigation bar
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: const AppBottomNav(currentLocation: '/'),
-            ),
-
-            const UploadFab(),
           ],
         ),
       ),

@@ -10,8 +10,7 @@ import '../../data/providers/auth_providers.dart';
 import '../../data/providers/drive_providers.dart';
 import '../../data/providers/favorites_providers.dart';
 import '../../data/providers/thumbnail_providers.dart';
-import '../../shared/widgets/app_bottom_nav.dart';
-import '../../shared/widgets/upload_fab.dart';
+
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -181,7 +180,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
         AppSpacing.marginMobile,
         AppSpacing.stackLg,
         AppSpacing.marginMobile,
-        140,
+        24,
       ),
       children: [
         Row(
@@ -236,7 +235,6 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final currentLocation = GoRouterState.of(context).uri.toString();
     final favoritesAsync = ref.watch(favoritesListProvider);
     final rootAsync = ref.watch(driveRootDataProvider);
 
@@ -395,16 +393,6 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                 ),
               ],
             ),
-
-            // Bottom navigation
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: AppBottomNav(currentLocation: currentLocation),
-            ),
-
-            const UploadFab(),
           ],
         ),
       ),

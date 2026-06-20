@@ -3,9 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../data/providers/drive_providers.dart';
-import '../../shared/widgets/app_bottom_nav.dart';
 import '../../shared/widgets/favorite_star.dart';
-import '../../shared/widgets/upload_fab.dart';
 
 String _moduleInitials(String name) {
   final words = name.split(RegExp(r'[\s\-]+'));
@@ -41,7 +39,6 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final nodeAsync = ref.watch(driveNodeProvider(drivePathKey([widget.year, widget.semester])));
-    final currentLocation = GoRouterState.of(context).uri.toString();
 
     return Scaffold(
       backgroundColor: const Color(0xFF111221),
@@ -152,7 +149,7 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
                           AppSpacing.marginMobile,
                           AppSpacing.stackLg,
                           AppSpacing.marginMobile,
-                          140,
+                          24,
                         ),
                         children: [
                           // Search & Filter Row
@@ -449,16 +446,6 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
                 ),
               ],
             ),
-
-            // Bottom navigation
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: AppBottomNav(currentLocation: currentLocation),
-            ),
-
-            const UploadFab(),
           ],
         ),
       ),

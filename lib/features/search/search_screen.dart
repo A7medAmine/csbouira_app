@@ -4,8 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../data/models/drive_node.dart';
 import '../../data/providers/drive_providers.dart';
-import '../../shared/widgets/app_bottom_nav.dart';
-import '../../shared/widgets/upload_fab.dart';
+
 
 enum SearchResultType { module, folder, file }
 
@@ -85,7 +84,6 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final currentLocation = GoRouterState.of(context).uri.toString();
 
     return Scaffold(
       backgroundColor: const Color(0xFF0D0D14),
@@ -185,14 +183,6 @@ class _SearchScreenState extends State<SearchScreen> {
               ],
             ),
 
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: AppBottomNav(currentLocation: currentLocation),
-            ),
-
-            const UploadFab(),
           ],
         ),
       ),
@@ -723,7 +713,7 @@ class _SearchResults extends ConsumerWidget {
             AppSpacing.marginMobile,
             AppSpacing.stackLg,
             AppSpacing.marginMobile,
-            160,
+            24,
           ),
           children: [
             Row(

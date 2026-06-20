@@ -8,7 +8,6 @@ import 'package:image_picker/image_picker.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../data/providers/auth_providers.dart';
-import '../../shared/widgets/app_bottom_nav.dart';
 import '../../shared/widgets/avatar_widget.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -374,7 +373,6 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
   @override
   Widget build(BuildContext context) {
     final theme = widget.theme;
-    final currentLocation = GoRouterState.of(context).matchedLocation;
     return Scaffold(
       backgroundColor: const Color(0xFF0D0D14),
       appBar: AppBar(
@@ -401,7 +399,7 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
                   AppSpacing.marginMobile,
                   24,
                   AppSpacing.marginMobile,
-                  140,
+                  24,
                 ),
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 440),
@@ -531,13 +529,7 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
               ),
             ),
           ),
-        ),
-        Positioned(
-          left: 0,
-          right: 0,
-          bottom: 0,
-          child: AppBottomNav(currentLocation: currentLocation),
-        ),
+          ),
         ],
       ),
     ),
@@ -567,7 +559,6 @@ class _LoggedInProfileShell extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentLocation = GoRouterState.of(context).matchedLocation;
     final profileAsync = ref.watch(profileProvider(user.id));
     final profile = profileAsync.asData?.value;
 
@@ -608,7 +599,7 @@ class _LoggedInProfileShell extends ConsumerWidget {
                   AppSpacing.marginMobile,
                   24,
                   AppSpacing.marginMobile,
-                  140,
+                  24,
                 ),
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 440),
@@ -670,12 +661,6 @@ class _LoggedInProfileShell extends ConsumerWidget {
                   ),
                 ),
               ),
-            ),
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: AppBottomNav(currentLocation: currentLocation),
             ),
           ],
         ),

@@ -8,9 +8,7 @@ import '../../data/navigation_data.dart';
 import '../../data/models/drive_node.dart';
 import '../../data/providers/drive_providers.dart';
 import '../../data/providers/thumbnail_providers.dart';
-import '../../shared/widgets/app_bottom_nav.dart';
 import '../../shared/widgets/favorite_star.dart';
-import '../../shared/widgets/upload_fab.dart';
 
 class SemesterScreen extends ConsumerWidget {
   final String year;
@@ -30,7 +28,6 @@ class SemesterScreen extends ConsumerWidget {
     });
 
     final yearResources = onlineAsync.asData?.value[year];
-    final currentLocation = GoRouterState.of(context).uri.toString();
 
     return Scaffold(
       backgroundColor: const Color(0xFF111221),
@@ -123,7 +120,7 @@ class SemesterScreen extends ConsumerWidget {
                       AppSpacing.marginMobile,
                       AppSpacing.marginMobile,
                       AppSpacing.marginMobile,
-                      140,
+                      24,
                     ),
                     children: [
                       // Academic year badge + description
@@ -194,16 +191,6 @@ class SemesterScreen extends ConsumerWidget {
                 ),
               ],
             ),
-
-            // Bottom navigation
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: AppBottomNav(currentLocation: currentLocation),
-            ),
-
-            const UploadFab(),
           ],
         ),
       ),

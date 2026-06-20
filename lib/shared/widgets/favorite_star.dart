@@ -69,10 +69,17 @@ class _FavoriteStarState extends ConsumerState<FavoriteStar> {
     final isFav = _isFavorited ?? false;
     return GestureDetector(
       onTap: _toggle,
-      child: Icon(
-        isFav ? Icons.star : Icons.star_border,
-        color: isFav ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant,
-        size: widget.size,
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 150),
+        transitionBuilder: (child, animation) {
+          return ScaleTransition(scale: animation, child: child);
+        },
+        child: Icon(
+          isFav ? Icons.star : Icons.star_border,
+          key: ValueKey<bool>(isFav),
+          color: isFav ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant,
+          size: widget.size,
+        ),
       ),
     );
   }

@@ -4,9 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../data/navigation_data.dart';
 import '../../data/providers/drive_providers.dart';
-import '../../shared/widgets/app_bottom_nav.dart';
 import '../../shared/widgets/favorite_star.dart';
-import '../../shared/widgets/upload_fab.dart';
 
 class FolderScreen extends ConsumerWidget {
   final String year;
@@ -24,7 +22,6 @@ class FolderScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final moduleNodeAsync = ref.watch(driveNodeProvider(drivePathKey([year, semester, module])));
-    final currentLocation = GoRouterState.of(context).uri.toString();
 
     final folderFileCounts = <String, int>{};
     final moduleNode = moduleNodeAsync.asData?.value;
@@ -137,7 +134,7 @@ class FolderScreen extends ConsumerWidget {
                       AppSpacing.marginMobile,
                       AppSpacing.stackLg,
                       AppSpacing.marginMobile,
-                      140,
+                      24,
                     ),
                     children: [
                       // Badge pill
@@ -168,16 +165,6 @@ class FolderScreen extends ConsumerWidget {
                 ),
               ],
             ),
-
-            // Bottom navigation
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: AppBottomNav(currentLocation: currentLocation),
-            ),
-
-            const UploadFab(),
           ],
         ),
       ),
