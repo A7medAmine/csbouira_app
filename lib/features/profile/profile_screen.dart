@@ -389,6 +389,10 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: theme.colorScheme.primary),
           onPressed: () {
+            if (MediaQuery.of(context).viewInsets.bottom > 0) {
+              FocusScope.of(context).unfocus();
+              return;
+            }
             final shell = StatefulNavigationShell.of(context);
             if (Navigator.of(context).canPop()) {
               context.pop();
@@ -602,6 +606,10 @@ class _LoggedInProfileShell extends ConsumerWidget {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: theme.colorScheme.primary),
           onPressed: () {
+            if (MediaQuery.of(context).viewInsets.bottom > 0) {
+              FocusScope.of(context).unfocus();
+              return;
+            }
             final shell = StatefulNavigationShell.of(context);
             if (Navigator.of(context).canPop()) {
               context.pop();

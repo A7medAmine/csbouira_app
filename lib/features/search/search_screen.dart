@@ -339,6 +339,10 @@ class _SearchHeader extends StatelessWidget {
             children: [
               GestureDetector(
                 onTap: () {
+                  if (MediaQuery.of(context).viewInsets.bottom > 0) {
+                    FocusScope.of(context).unfocus();
+                    return;
+                  }
                   final shell = StatefulNavigationShell.of(context);
                   if (Navigator.of(context).canPop()) {
                     context.pop();
