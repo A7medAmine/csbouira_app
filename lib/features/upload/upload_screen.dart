@@ -81,6 +81,9 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
     _moduleController.addListener(() {
       setState(() => _showSuggestions = _moduleController.text.isNotEmpty);
     });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FocusScope.of(context).unfocus();
+    });
   }
 
   @override
@@ -337,8 +340,8 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
             'semester': _mapSemester(_selectedSemester!),
             'file_type': categoryMap[_selectedCategory]!,
           });
-          ref.invalidate(uploadCountProvider);
         } catch (_) {}
+        ref.invalidate(uploadCountProvider);
       } else {
         final cache = LocalProfileCache();
         await cache.incrementUploadCount();
@@ -741,7 +744,6 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
         Stack(
           children: [
             TextField(
-              autofocus: false,
               controller: _moduleController,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurface,

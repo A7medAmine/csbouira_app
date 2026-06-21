@@ -16,6 +16,7 @@ import 'features/browse/semester_screen.dart';
 import 'features/favorites/favorites_screen.dart';
 import 'features/home/home_screen.dart';
 import 'features/preview/preview_screen.dart';
+import 'features/profile/my_uploads_screen.dart';
 import 'features/profile/profile_screen.dart';
 import 'features/search/search_screen.dart';
 import 'features/splash/splash_screen.dart';
@@ -225,6 +226,16 @@ final _routerProvider = Provider<GoRouter>((ref) {
                   key: state.pageKey,
                   child: const ProfileScreen(),
                 ),
+                routes: [
+                  GoRoute(
+                    path: 'my-uploads',
+                    name: 'myUploads',
+                    pageBuilder: (_, state) => _buildTransitionPage(
+                      key: state.pageKey,
+                      child: const MyUploadsScreen(),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

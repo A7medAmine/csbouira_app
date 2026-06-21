@@ -508,7 +508,7 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
                     theme: theme,
                     icon: Icons.upload_file,
                     label: 'My Uploads',
-                    onTap: () {},
+                    onTap: () => context.push('/profile/my-uploads'),
                   ),
                   const SizedBox(height: AppSpacing.stackSm),
                   _SettingsRow(
@@ -677,7 +677,7 @@ class _LoggedInProfileShell extends ConsumerWidget {
                         theme: theme,
                         icon: Icons.upload_file,
                         label: 'My Uploads',
-                        onTap: () {},
+                        onTap: () => context.push('/profile/my-uploads'),
                       ),
                       const SizedBox(height: AppSpacing.stackSm),
                       _SettingsRow(
