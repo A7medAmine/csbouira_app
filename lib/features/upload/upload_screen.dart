@@ -141,7 +141,7 @@ const _modulesByGradeSemester = {
       'Introduction au Machine Learning',
       'Introduction au traitement automatique des langues naturelles',
       'Modélisation et architectures logicielles',
-      'Systèmes d'Information géographiques'
+      'Systèmes d\'Information géographiques'
     ]
   },
   'Master 1 IA': {
@@ -159,7 +159,7 @@ const _modulesByGradeSemester = {
       'Computer Vision',
       'Cybercriminalité',
       'Deep Learning',
-      'Gestion de l'Incertain',
+      'Gestion de l\'Incertain',
       'Gestion de projets informatiques',
       'Modélisation et simulation',
       'Systèmes Multi Agents',
@@ -186,7 +186,7 @@ const _modulesByGradeSemester = {
       'Ontologie et sémantique web',
       'Programmation pour le Big data',
       "Sécurité des systèmes d'information",
-      'Systèmes d'Information Coopératifs',
+      'Systèmes d\'Information Coopératifs',
       'Systèmes décisionnels et entrepôt de données'
     ]
   },

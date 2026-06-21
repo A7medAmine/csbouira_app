@@ -379,7 +379,7 @@ if (isMaster) {
               ),
               const SizedBox(height: 4),
               Text(
-                'No content available for this grade',
+                'Empty',
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
