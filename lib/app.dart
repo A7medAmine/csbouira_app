@@ -289,6 +289,19 @@ class _ShellScaffoldState extends State<_ShellScaffold> {
 
   void _onPopInvokedWithResult(bool didPop, _) {
     if (didPop) return;
+
+    // If a text field currently has focus, dismiss the keyboard only.
+    final primaryFocus = FocusManager.instance.primaryFocus;
+    if (primaryFocus != null && primaryFocus.context?.widget is EditableText) {
+      primaryFocus.unfocus();
+      return;
+    }
+    // Fallback for any open keyboard without focus.
+    if (MediaQuery.of(context).viewInsets.bottom > 0) {
+      FocusScope.of(context).unfocus();
+      return;
+    }
+
     if (_canPop()) {
       final branch = widget.navigationShell
           .route.branches[widget.navigationShell.currentIndex];
@@ -320,27 +333,15 @@ class _ShellScaffoldState extends State<_ShellScaffold> {
           canPop: false,
           onPopInvokedWithResult: _onPopInvokedWithResult,
           child: Scaffold(
-            body: GestureDetector(
-              onHorizontalDragEnd: (details) {
-                if (isFullScreen) return;
-                final velocity = details.primaryVelocity ?? 0;
-                final current = widget.navigationShell.currentIndex;
-                if (velocity < -200 && current < 4) {
-                  widget.navigationShell.goBranch(current + 1);
-                } else if (velocity > 200 && current > 0) {
-                  widget.navigationShell.goBranch(current - 1);
-                }
-              },
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 180),
-                switchInCurve: Curves.easeInOut,
-                switchOutCurve: Curves.easeInOut,
-                child: KeyedSubtree(
-                  key: ValueKey<int>(widget.navigationShell.currentIndex),
-                  child: widget.navigationShell,
-                ),
-              ),
-            ),
+               body: AnimatedSwitcher(
+                 duration: const Duration(milliseconds: 180),
+                 switchInCurve: Curves.easeInOut,
+                 switchOutCurve: Curves.easeInOut,
+                 child: KeyedSubtree(
+                   key: ValueKey<int>(widget.navigationShell.currentIndex),
+                   child: widget.navigationShell,
+                 ),
+               ),
             bottomNavigationBar: isFullScreen
                 ? null
                 : AppBottomNav(
