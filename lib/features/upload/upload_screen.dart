@@ -48,6 +48,89 @@ const _semestersByGrade = {
   'Master 2 IA': ['S09'],
 };
 
+const _modulesByGradeSemester = {
+  'Licence 1': {
+    'S01': [
+      'Algèbre 1',
+      'Algorithmique Et Structure De Données 1',
+      'Analyse 1',
+    ],
+    'S02': [
+      'Algèbre 2',
+      'Algorithmique Et Structure De Données 2',
+      'Analyse 2',
+    ],
+  },
+  'Licence 2': {
+    'S03': [
+      'Algorithmique Et Structure De Données 3',
+      'Anglais 3',
+      'Architecture Des Ordinateurs',
+    ],
+    'S04': [
+      'Anglais 4',
+      'Base De Donnees',
+      "Developpement D'applications Web",
+    ],
+  },
+  'Licence 3 SI': {
+    'S05': [
+      'Compilation',
+      'Economie numérique et veille stratégique',
+      'Génie Logiciel',
+    ],
+    'S06': [
+      'Application Mobile',
+      'Créer Une Startup',
+      'Données Semi Structurées',
+    ],
+  },
+  'Master 1 GSI': {
+    'S07': [
+      'Algorithmique avancée et complexité',
+      'Architecture et administration des bases de données',
+    ],
+    'S08': [
+      'Cybercriminalité',
+      'Gestion de l\'incertain',
+    ],
+  },
+  'Master 1 ISIL': {
+    'S08': [
+      'Analyse de données',
+      'Bases de données avancées',
+    ],
+  },
+  'Master 1 IA': {
+    'S07': [
+      'Algorithmique Avancée et Complexité',
+      'Analyse de données',
+    ],
+    'S08': [
+      'Computer Vision',
+      'Cybercriminalité',
+    ],
+  },
+  'Master 2 GSI': {
+    'S09': [
+      'Big Data',
+      'Blockchain',
+    ],
+  },
+  'Master 2 ISIL': {
+    'S09': [
+      'Deep Learning',
+      'Introduction aux ERP',
+    ],
+  },
+  'Master 2 IA': {
+    'S09': [
+      'Application de Deep Learning',
+      'Calcul intensif',
+    ],
+  },
+};
+
 const _categories = ['Cours', 'Summary', 'TP', 'TD', 'Test', 'Exam', 'Other'];
 
 class UploadScreen extends ConsumerStatefulWidget {
@@ -61,10 +144,9 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
   String? _selectedCategory;
   String? _selectedGrade;
   String? _selectedSemester;
-  final _moduleController = TextEditingController();
+  String? _selectedModule;
 
   SelectedUploadFile? _selectedFile;
-  bool _showSuggestions = false;
 
   List<String> _allModules = [];
 
@@ -72,15 +154,14 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
       _selectedCategory != null &&
       _selectedGrade != null &&
       _selectedSemester != null &&
-      _moduleController.text.trim().isNotEmpty &&
+      _selectedModule != null &&
+      _selectedModule!.trim().isNotEmpty &&
       _selectedFile != null;
 
   @override
   void initState() {
     super.initState();
-    _moduleController.addListener(() {
-      setState(() => _showSuggestions = _moduleController.text.isNotEmpty);
-    });
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FocusScope.of(context).unfocus();
     });
@@ -88,7 +169,6 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
 
   @override
   void dispose() {
-    _moduleController.dispose();
     super.dispose();
   }
 
@@ -97,15 +177,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
     return num.isOdd ? 'S1' : 'S2';
   }
 
-  List<String> _filteredSuggestions() {
-    if (_allModules.isEmpty) return [];
-    final q = _moduleController.text.trim().toLowerCase();
-    if (q.isEmpty) return [];
-    return _allModules
-        .where((m) => m.toLowerCase().contains(q))
-        .take(8)
-        .toList();
-  }
+
 
   void _showFilePickerOptions() {
     showModalBottomSheet(
@@ -310,7 +382,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
       'Other': 'Other',
     };
 
-    final moduleName = _moduleController.text.trim();
+    final moduleName = _selectedModule!.trim();
 
     final service = ref.read(_uploadServiceProvider);
     final result = await service.uploadResource(
@@ -432,7 +504,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
       _selectedCategory = null;
       _selectedGrade = null;
       _selectedSemester = null;
-      _moduleController.clear();
+      _selectedModule = null;
       _selectedFile = null;
     });
   }
@@ -477,7 +549,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
       _allModules = modules.toList()..sort();
     }
 
-    final suggestions = _filteredSuggestions();
+    final suggestions = const <String>[]; // module suggestions now via dropdown
     final semesters = _semestersByGrade[_selectedGrade] ?? [];
     final uploadState = ref.watch(uploadStateProvider);
 
@@ -728,97 +800,14 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
     );
   }
 
-  Widget _buildModuleField(ThemeData theme, List<String> suggestions) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 4, bottom: 8),
-          child: Text(
-            'MODULE NAME',
-            style: theme.textTheme.labelMedium?.copyWith(
-              color: theme.colorScheme.primary,
-            ),
-          ),
-        ),
-        Stack(
-          children: [
-            TextField(
-              controller: _moduleController,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurface,
-              ),
-              decoration: InputDecoration(
-                hintText: 'e.g. Algorithms & Data Structures',
-                hintStyle: TextStyle(
-                  color: theme.colorScheme.onSurfaceVariant.withAlpha(128),
-                ),
-                suffixIcon: Icon(
-                  Icons.search,
-                  color: theme.colorScheme.outline,
-                  size: 20,
-                ),
-              ),
-            ),
-            if (suggestions.isNotEmpty && _showSuggestions)
-              Positioned(
-                left: 0,
-                right: 0,
-                top: 56,
-                child: Material(
-                  color: Colors.transparent,
-                  elevation: 8,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.surfaceContainerHigh,
-                      borderRadius: BorderRadius.circular(AppRadius.md),
-                      border: Border.all(
-                        color: theme.colorScheme.outlineVariant.withAlpha(77),
-                      ),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        for (int i = 0; i < suggestions.length; i++)
-                          InkWell(
-                            onTap: () {
-                              _moduleController.text = suggestions[i];
-                              _moduleController.selection = TextSelection.fromPosition(
-                                TextPosition(offset: suggestions[i].length),
-                              );
-                              setState(() => _showSuggestions = false);
-                            },
-                            child: Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: AppSpacing.stackMd,
-                                vertical: 12,
-                              ),
-                              decoration: i < suggestions.length - 1
-                                  ? BoxDecoration(
-                                      border: Border(
-                                        bottom: BorderSide(
-                                          color: theme.colorScheme.outlineVariant.withAlpha(26),
-                                        ),
-                                      ),
-                                    )
-                                  : null,
-                              child: Text(
-                                suggestions[i],
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: theme.colorScheme.onSurfaceVariant,
-                                ),
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ],
+  Widget _buildModuleField(ThemeData theme, List<String> _) {
+    final gradeMap = _selectedGrade != null ? _modulesByGradeSemester[_selectedGrade] : null;
+    final modules = gradeMap != null && _selectedSemester != null ? gradeMap[_selectedSemester] ?? [] : <String>[];    return _buildDropdown(
+      theme: theme,
+      label: 'MODULE',
+      value: _selectedModule,
+      items: modules,
+      onChanged: (v) => setState(() => _selectedModule = v),
     );
   }
 
