@@ -338,7 +338,14 @@ class _SearchHeader extends StatelessWidget {
           Row(
             children: [
               GestureDetector(
-                onTap: () => context.pop(),
+                onTap: () {
+                  final shell = StatefulNavigationShell.of(context);
+                  if (Navigator.of(context).canPop()) {
+                    context.pop();
+                  } else if (shell.currentIndex != 0) {
+                    shell.goBranch(0, initialLocation: true);
+                  }
+                },
                 child: Container(
                   padding: const EdgeInsets.all(8),
                   child: Icon(

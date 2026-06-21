@@ -155,7 +155,7 @@ class _PreviewScreenState extends State<PreviewScreen> {
                       Icons.arrow_back,
                       color: theme.colorScheme.primary,
                     ),
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () => context.pop(),
                   ),
                   title: Column(
                     mainAxisSize: MainAxisSize.min,

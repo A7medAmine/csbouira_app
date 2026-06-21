@@ -63,3 +63,23 @@ CREATE TRIGGER set_profiles_updated_at
   BEFORE UPDATE ON profiles
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();
+
+-- Upload tracking
+CREATE TABLE IF NOT EXISTS uploads (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id) on delete cascade not null,
+  file_name text not null,
+  module_name text not null,
+  grade text not null,
+  semester text not null,
+  file_type text not null,
+  created_at timestamptz default now() not null
+);
+
+alter table uploads enable row level security;
+
+create policy "Users can view their own uploads" on uploads
+  for select using (auth.uid() = user_id);
+
+create policy "Users can insert their own uploads" on uploads
+  for insert with check (auth.uid() = user_id);

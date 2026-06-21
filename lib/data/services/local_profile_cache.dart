@@ -4,6 +4,7 @@ class LocalProfileCache {
   static const _keyName = 'guest_profile_name';
   static const _keyEmail = 'guest_profile_email';
   static const _keyAvatar = 'guest_profile_avatar';
+  static const _keyUploadCount = 'guest_upload_count';
 
   Future<String> getName() async {
     final prefs = await SharedPreferences.getInstance();
@@ -37,6 +38,16 @@ class LocalProfileCache {
     } else {
       await prefs.remove(_keyAvatar);
     }
+  }
+
+  Future<int> getUploadCount() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(_keyUploadCount) ?? 0;
+  }
+
+  Future<void> incrementUploadCount() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_keyUploadCount, (prefs.getInt(_keyUploadCount) ?? 0) + 1);
   }
 
   Future<void> clear() async {

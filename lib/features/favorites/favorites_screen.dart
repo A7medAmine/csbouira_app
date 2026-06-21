@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -214,14 +215,16 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
     if (items.isEmpty) {
       return _FavoritesEmptyState(theme: theme, tabIndex: tabIndex);
     }
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(
-        AppSpacing.marginMobile,
-        AppSpacing.stackLg,
-        AppSpacing.marginMobile,
-        24,
-      ),
-      children: [
+    return ScrollConfiguration(
+      behavior: const _VerticalOnlyScrollBehavior(),
+      child: ListView(
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.marginMobile,
+          AppSpacing.stackLg,
+          AppSpacing.marginMobile,
+          24,
+        ),
+        children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -286,6 +289,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
           );
         }),
       ],
+      ),
     );
   }
 
@@ -352,7 +356,14 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                   child: Row(
                     children: [
                       GestureDetector(
-                        onTap: () => context.pop(),
+                        onTap: () {
+                          final shell = StatefulNavigationShell.of(context);
+                          if (Navigator.of(context).canPop()) {
+                            context.pop();
+                          } else if (shell.currentIndex != 0) {
+                            shell.goBranch(0, initialLocation: true);
+                          }
+                        },
                         child: Container(
                           padding: const EdgeInsets.all(8),
                           child: Icon(
@@ -422,6 +433,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                           Expanded(
                             child: PageView(
                               controller: _pageController,
+                              physics: const PageScrollPhysics(),
                               onPageChanged: (i) =>
                                   setState(() => _selectedTab = i),
                               children: [
@@ -1103,4 +1115,19 @@ class _FavoritesEmptyState extends StatelessWidget {
       ),
     );
   }
+}
+
+class _VerticalOnlyScrollBehavior extends ScrollBehavior {
+  const _VerticalOnlyScrollBehavior();
+
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+        PointerDeviceKind.trackpad,
+      };
+
+  @override
+  ScrollPhysics getScrollPhysics(BuildContext context) =>
+      const ClampingScrollPhysics();
 }

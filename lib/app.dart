@@ -226,33 +226,33 @@ final _routerProvider = Provider<GoRouter>((ref) {
                   child: const ProfileScreen(),
                 ),
               ),
-              GoRoute(
-                path: '/login',
-                name: 'login',
-                pageBuilder: (_, state) => _buildTransitionPage(
-                  key: state.pageKey,
-                  child: const LoginScreen(),
-                ),
-              ),
-              GoRoute(
-                path: '/forgot-password',
-                name: 'forgotPassword',
-                pageBuilder: (_, state) => _buildTransitionPage(
-                  key: state.pageKey,
-                  child: const ForgotPasswordScreen(),
-                ),
-              ),
-              GoRoute(
-                path: '/about',
-                name: 'about',
-                pageBuilder: (_, state) => _buildTransitionPage(
-                  key: state.pageKey,
-                  child: const AboutScreen(),
-                ),
-              ),
             ],
           ),
         ],
+      ),
+      GoRoute(
+        path: '/login',
+        name: 'login',
+        pageBuilder: (_, state) => _buildTransitionPage(
+          key: state.pageKey,
+          child: const LoginScreen(),
+        ),
+      ),
+      GoRoute(
+        path: '/forgot-password',
+        name: 'forgotPassword',
+        pageBuilder: (_, state) => _buildTransitionPage(
+          key: state.pageKey,
+          child: const ForgotPasswordScreen(),
+        ),
+      ),
+      GoRoute(
+        path: '/about',
+        name: 'about',
+        pageBuilder: (_, state) => _buildTransitionPage(
+          key: state.pageKey,
+          child: const AboutScreen(),
+        ),
       ),
     ],
   );
@@ -309,13 +309,25 @@ class _ShellScaffoldState extends State<_ShellScaffold> {
           canPop: false,
           onPopInvokedWithResult: _onPopInvokedWithResult,
           child: Scaffold(
-            body: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 180),
-              switchInCurve: Curves.easeInOut,
-              switchOutCurve: Curves.easeInOut,
-              child: KeyedSubtree(
-                key: ValueKey<int>(widget.navigationShell.currentIndex),
-                child: widget.navigationShell,
+            body: GestureDetector(
+              onHorizontalDragEnd: (details) {
+                if (isFullScreen) return;
+                final velocity = details.primaryVelocity ?? 0;
+                final current = widget.navigationShell.currentIndex;
+                if (velocity < -200 && current < 4) {
+                  widget.navigationShell.goBranch(current + 1);
+                } else if (velocity > 200 && current > 0) {
+                  widget.navigationShell.goBranch(current - 1);
+                }
+              },
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 180),
+                switchInCurve: Curves.easeInOut,
+                switchOutCurve: Curves.easeInOut,
+                child: KeyedSubtree(
+                  key: ValueKey<int>(widget.navigationShell.currentIndex),
+                  child: widget.navigationShell,
+                ),
               ),
             ),
             bottomNavigationBar: isFullScreen

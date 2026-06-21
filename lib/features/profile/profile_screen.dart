@@ -9,6 +9,7 @@ import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../data/providers/auth_providers.dart';
 import '../../data/providers/favorites_providers.dart';
+import '../../data/providers/upload_count_provider.dart';
 import '../../shared/widgets/avatar_widget.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -32,9 +33,14 @@ class ProfileScreen extends ConsumerWidget {
 
 class _StatsGrid extends StatelessWidget {
   final ThemeData theme;
+  final int uploadCount;
   final int favoriteCount;
 
-  const _StatsGrid({required this.theme, this.favoriteCount = 0});
+  const _StatsGrid({
+    required this.theme,
+    this.uploadCount = 0,
+    this.favoriteCount = 0,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +51,7 @@ class _StatsGrid extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  '0',
+                  '$uploadCount',
                   style: theme.textTheme.headlineMedium?.copyWith(
                     color: theme.colorScheme.primary,
                     fontWeight: FontWeight.bold,
@@ -382,7 +388,14 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: theme.colorScheme.primary),
-          onPressed: () => context.pop(),
+          onPressed: () {
+            final shell = StatefulNavigationShell.of(context);
+            if (Navigator.of(context).canPop()) {
+              context.pop();
+            } else if (shell.currentIndex != 0) {
+              shell.goBranch(0, initialLocation: true);
+            }
+          },
         ),
         title: Text(
           'Profile',
@@ -588,7 +601,14 @@ class _LoggedInProfileShell extends ConsumerWidget {
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: theme.colorScheme.primary),
-          onPressed: () => context.pop(),
+          onPressed: () {
+            final shell = StatefulNavigationShell.of(context);
+            if (Navigator.of(context).canPop()) {
+              context.pop();
+            } else if (shell.currentIndex != 0) {
+              shell.goBranch(0, initialLocation: true);
+            }
+          },
         ),
         title: Text(
           'Profile',
@@ -643,6 +663,10 @@ class _LoggedInProfileShell extends ConsumerWidget {
                       const SizedBox(height: AppSpacing.stackLg),
                       _StatsGrid(
                         theme: theme,
+                        uploadCount: ref.watch(uploadCountProvider).maybeWhen(
+                              data: (count) => count,
+                              orElse: () => 0,
+                            ),
                         favoriteCount: ref.watch(favoritesListProvider).maybeWhen(
                               data: (list) => list.length,
                               orElse: () => 0,
