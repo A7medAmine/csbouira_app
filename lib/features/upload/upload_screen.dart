@@ -18,7 +18,7 @@ import '../../data/providers/my_uploads_provider.dart';
 import '../../data/providers/upload_count_provider.dart';
 import '../../data/providers/upload_state_provider.dart';
 import '../../data/services/local_profile_cache.dart';
-import '../../data/services/upload_service.dart';
+import '../../data/services/upload_service.dart' show CancelToken, UploadService;
 import 'upload_review_screen.dart';
 
 final _uploadServiceProvider = Provider<UploadService>((ref) {
@@ -222,6 +222,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
   SelectedUploadFile? _selectedFile;
 
   List<String> _allModules = [];
+  CancelToken? _cancelToken;
 
   bool get _isFormValid =>
       _selectedCategory != null &&
@@ -242,6 +243,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
 
   @override
   void dispose() {
+    _cancelToken?.cancel();
     super.dispose();
   }
 
@@ -426,6 +428,9 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
     final stateNotifier = ref.read(uploadStateProvider.notifier);
     stateNotifier.setUploading();
 
+    final cancelToken = CancelToken();
+    _cancelToken = cancelToken;
+
     final user = ref.read(currentUserProvider);
     String fullName;
     String email;
@@ -468,8 +473,13 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
       fileName: _selectedFile!.fileName,
       fileBytes: _selectedFile!.bytes,
       mimeType: _selectedFile!.mimeType,
+      onProgress: (progress) {
+        stateNotifier.setProgress(progress);
+      },
+      cancelToken: cancelToken,
     );
 
+    _cancelToken = null;
     if (!mounted) return;
 
     if (result.success) {
@@ -573,6 +583,8 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
   }
 
   void _resetForm() {
+    _cancelToken?.cancel();
+    _cancelToken = null;
     ref.read(uploadStateProvider.notifier).reset();
     setState(() {
       _selectedCategory = null;
@@ -672,6 +684,14 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
   }
 
   Widget _buildErrorBanner(ThemeData theme, UploadResult error) {
+    final (icon, title) = switch (error.errorType) {
+      UploadErrorType.offline => (Icons.wifi_off, 'No internet connection'),
+      UploadErrorType.timeout => (Icons.timer_off, 'Request timed out'),
+      UploadErrorType.cancelled => (Icons.cancel_outlined, 'Upload cancelled'),
+      UploadErrorType.serverError => (Icons.error_outline, error.message ?? 'Upload failed.'),
+      UploadErrorType.unknown => (Icons.error_outline, error.message ?? 'Upload failed.'),
+      null => (Icons.error_outline, error.message ?? 'Upload failed.'),
+    };
     return Container(
       padding: const EdgeInsets.all(AppSpacing.stackSm),
       decoration: BoxDecoration(
@@ -686,11 +706,11 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
         children: [
           Row(
             children: [
-              Icon(Icons.error_outline, color: theme.colorScheme.error, size: 20),
+              Icon(icon, color: theme.colorScheme.error, size: 20),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  error.message ?? 'Upload failed.',
+                  title,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.error,
                   ),
@@ -698,22 +718,24 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.stackSm),
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton.icon(
-              onPressed: _submit,
-              icon: const Icon(Icons.refresh, size: 18),
-              label: const Text('Retry'),
-              style: TextButton.styleFrom(
-                foregroundColor: theme.colorScheme.error,
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                textStyle: theme.textTheme.labelMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
+          if (error.errorType != UploadErrorType.cancelled) ...[
+            const SizedBox(height: AppSpacing.stackSm),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton.icon(
+                onPressed: _submit,
+                icon: const Icon(Icons.refresh, size: 18),
+                label: const Text('Retry'),
+                style: TextButton.styleFrom(
+                  foregroundColor: theme.colorScheme.error,
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  textStyle: theme.textTheme.labelMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ),
-          ),
+          ],
         ],
       ),
     );
@@ -1269,7 +1291,74 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
   }
 
   Widget _buildSubmitButton(ThemeData theme, UploadFormState uploadState) {
-    final enabled = _isFormValid && !uploadState.isUploading;
+    if (uploadState.isUploading) {
+      final progressPercent = (uploadState.progress * 100).clamp(0, 100).toInt();
+      return Column(
+        children: [
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton(
+              onPressed: null,
+              style: FilledButton.styleFrom(
+                backgroundColor: theme.colorScheme.surfaceContainerHighest,
+                disabledBackgroundColor: theme.colorScheme.surfaceContainerHighest,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppRadius.md),
+                ),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: LinearProgressIndicator(
+                        value: uploadState.progress,
+                        minHeight: 6,
+                        backgroundColor: theme.colorScheme.surfaceContainerHighest,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          theme.colorScheme.primary,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Text(
+                    'Uploading\u2026 $progressPercent%',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: () {
+                _cancelToken?.cancel();
+              },
+              icon: const Icon(Icons.close, size: 18),
+              label: const Text('Cancel upload'),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: theme.colorScheme.error,
+                side: BorderSide(color: theme.colorScheme.error.withAlpha(77)),
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppRadius.md),
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
+    final enabled = _isFormValid;
     return SizedBox(
       width: double.infinity,
       child: FilledButton(
@@ -1288,28 +1377,19 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
             borderRadius: BorderRadius.circular(AppRadius.md),
           ),
         ),
-        child: uploadState.isUploading
-            ? SizedBox(
-                width: 22,
-                height: 22,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2.5,
-                  color: theme.colorScheme.onPrimary,
-                ),
-              )
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.cloud_upload, size: 20),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Upload Resource',
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.cloud_upload, size: 20),
+            const SizedBox(width: 8),
+            Text(
+              'Upload Resource',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
               ),
+            ),
+          ],
+        ),
       ),
     );
   }
