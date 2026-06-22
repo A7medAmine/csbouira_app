@@ -72,88 +72,89 @@ class _UploadReviewSheetState extends State<_UploadReviewSheet> {
     final theme = Theme.of(context);
     final maxHeight = MediaQuery.of(context).size.height * 0.75;
 
-    return DraggableScrollableSheet(
-      initialChildSize: 0.75,
-      maxChildSize: 0.85,
-      minChildSize: 0.5,
-      expand: false,
-      builder: (ctx, scrollController) {
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: Column(
-            children: [
-              Container(
-                margin: const EdgeInsets.only(top: 12),
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.outlineVariant,
-                  borderRadius: BorderRadius.circular(2),
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // -- close button row ----------------------------------------------------
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const SizedBox(width: 40),
+                Text(
+                  'Review File',
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    color: theme.colorScheme.onSurface,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              Expanded(
-                child: ListView(
-                  controller: scrollController,
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-                  children: [
-                    Text(
-                      'Review File',
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        color: theme.colorScheme.onSurface,
-                        fontWeight: FontWeight.w600,
+                IconButton(
+                  icon: Icon(Icons.close, color: theme.colorScheme.onSurfaceVariant),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+          // -- preview -------------------------------------------------------------
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: SizedBox(
+              height: maxHeight * 0.5,
+              child: _buildPreview(theme),
+            ),
+          ),
+          const SizedBox(height: 16),
+          // -- file info ------------------------------------------------------------
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: _buildFileInfo(theme),
+          ),
+          const SizedBox(height: 24),
+          // -- action buttons -------------------------------------------------------
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+            child: Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: widget.onRetake,
+                    icon: const Icon(Icons.refresh, size: 18),
+                    label: const Text('Retake / Choose Again'),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: theme.colorScheme.onSurface,
+                      side: BorderSide(color: theme.colorScheme.outlineVariant),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppRadius.md),
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      height: maxHeight * 0.5,
-                      child: _buildPreview(theme),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildFileInfo(theme),
-                    const SizedBox(height: 24),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: OutlinedButton.icon(
-                            onPressed: widget.onRetake,
-                            icon: const Icon(Icons.refresh, size: 18),
-                            label: const Text('Retake / Choose Again'),
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: theme.colorScheme.onSurface,
-                              side: BorderSide(color: theme.colorScheme.outlineVariant),
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(AppRadius.md),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: FilledButton.icon(
-                            onPressed: widget.onConfirm,
-                            icon: const Icon(Icons.check, size: 18),
-                            label: const Text('Use This File'),
-                            style: FilledButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(AppRadius.md),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(width: 12),
+                Expanded(
+                  child: FilledButton.icon(
+                    onPressed: widget.onConfirm,
+                    icon: const Icon(Icons.check, size: 18),
+                    label: const Text('Use This File'),
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppRadius.md),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 

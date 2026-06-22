@@ -894,7 +894,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
                         height: itemHeight,
                         child: Center(
                           child: Row(
-            mainAxisSize: MainAxisSize.max,
+                            mainAxisSize: MainAxisSize.min,
                             children: rowItems,
                           ),
                         ),
@@ -919,11 +919,14 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
 
   Widget _buildModuleField(ThemeData theme, List<String> _) {
     final gradeMap = _selectedGrade != null ? _modulesByGradeSemester[_selectedGrade] : null;
-    final modules = gradeMap != null && _selectedSemester != null ? gradeMap[_selectedSemester] ?? [] : <String>[];    return _buildDropdown(
+    final modules = gradeMap != null && _selectedSemester != null ? gradeMap[_selectedSemester] ?? [] : <String>[];
+    final moduleEnabled = _selectedGrade != null && _selectedSemester != null;
+    return _buildDropdown(
       theme: theme,
       label: 'MODULE',
       value: _selectedModule,
       items: modules,
+      enabled: moduleEnabled,
       onChanged: (v) => setState(() => _selectedModule = v),
     );
   }
@@ -952,6 +955,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
             label: 'SEMESTER',
             value: _selectedSemester,
             items: semesters,
+            enabled: _selectedGrade != null,
             onChanged: (v) => setState(() => _selectedSemester = v),
           ),
         ),
@@ -965,6 +969,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
     required String? value,
     required List<String> items,
     required ValueChanged<String?> onChanged,
+    bool enabled = true,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -974,43 +979,53 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
           child: Text(
             label,
             style: theme.textTheme.labelMedium?.copyWith(
-              color: theme.colorScheme.primary,
+              color: enabled ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant.withAlpha(128),
             ),
           ),
         ),
         GestureDetector(
-          onTap: () => _showDropdownSheet(theme, label, value, items, onChanged),
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.stackMd,
-              vertical: 14,
-            ),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainer,
-              borderRadius: BorderRadius.circular(AppRadius.md),
-              border: Border.all(
-                color: theme.colorScheme.outlineVariant.withAlpha(77),
+          onTap: enabled
+              ? () => _showDropdownSheet(theme, label, value, items, onChanged)
+              : null,
+          child: AnimatedOpacity(
+            duration: const Duration(milliseconds: 200),
+            opacity: enabled ? 1.0 : 0.45,
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.stackMd,
+                vertical: 14,
               ),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    value ?? 'Select',
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: value != null
-                          ? theme.colorScheme.onSurface
-                          : theme.colorScheme.onSurfaceVariant,
+              decoration: BoxDecoration(
+                color: enabled
+                    ? theme.colorScheme.surfaceContainer
+                    : theme.colorScheme.surfaceContainerLow,
+                borderRadius: BorderRadius.circular(AppRadius.md),
+                border: Border.all(
+                  color: enabled
+                      ? theme.colorScheme.outlineVariant.withAlpha(77)
+                      : theme.colorScheme.outlineVariant.withAlpha(38),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      value ?? (enabled ? 'Select' : '—'),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: value != null
+                            ? theme.colorScheme.onSurface
+                            : theme.colorScheme.onSurfaceVariant.withAlpha(enabled ? 255 : 128),
+                      ),
                     ),
                   ),
-                ),
-                Icon(
-                  Icons.expand_more,
-                  color: theme.colorScheme.outline,
-                  size: 20,
-                ),
-              ],
+                  Icon(
+                    Icons.expand_more,
+                    color: theme.colorScheme.outline.withAlpha(enabled ? 255 : 77),
+                    size: 20,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -1278,7 +1293,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
                 const SizedBox(width: 6),
                 Text(
                   'Change file',
-                  style: theme.textTheme.labelMedium?.copyWith(
+              style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.primary,
                   ),
                 ),
