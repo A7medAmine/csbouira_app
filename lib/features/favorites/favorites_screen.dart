@@ -11,6 +11,8 @@ import '../../data/providers/auth_providers.dart';
 import '../../data/providers/drive_providers.dart';
 import '../../data/providers/favorites_providers.dart';
 import '../../data/providers/thumbnail_providers.dart';
+import '../../data/services/file_cache_service.dart';
+import '../preview/preview_args.dart';
 
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -185,6 +187,22 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
           '/module/${Uri.encodeComponent(segments[2])}',
         );
       }
+    } else if (item.itemType == 'file') {
+      final fileId = extractDriveFileId(item.itemPath);
+      final file = DriveFile(
+        name: item.displayName,
+        link: item.itemPath,
+        downloadLink: fileId != null
+            ? 'https://drive.usercontent.google.com/download?id=$fileId'
+            : null,
+        previewLink: fileId != null
+            ? 'https://drive.google.com/file/d/$fileId/preview'
+            : null,
+      );
+      context.push('/preview', extra: PreviewArgs(
+        files: [file],
+        initialIndex: 0,
+      ));
     } else if (item.itemType == 'online_resource') {
       final uri = Uri.tryParse(item.itemPath);
       if (uri != null) {
@@ -261,6 +279,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                 item: item,
                 theme: theme,
                 onRemove: () => _removeFavorite(item),
+                onTap: () => _navigateTo(item),
               );
             case 2:
               card = _OnlineResourceFavoriteCard(
@@ -806,11 +825,13 @@ class _FileFavoriteCard extends StatelessWidget {
   final FavoriteItem item;
   final ThemeData theme;
   final VoidCallback onRemove;
+  final VoidCallback onTap;
 
   const _FileFavoriteCard({
     required this.item,
     required this.theme,
     required this.onRemove,
+    required this.onTap,
   });
 
   @override
@@ -821,52 +842,55 @@ class _FileFavoriteCard extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.stackMd),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: const Color(0xFF15151F).withAlpha(179),
-          borderRadius: BorderRadius.circular(AppRadius.lg),
-          border: Border.all(
-            color: theme.colorScheme.outlineVariant.withAlpha(77),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: const Color(0xFF15151F).withAlpha(179),
+            borderRadius: BorderRadius.circular(AppRadius.lg),
+            border: Border.all(
+              color: theme.colorScheme.outlineVariant.withAlpha(77),
+            ),
           ),
-        ),
-        child: Row(
-          children: [
-            // File icon
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color: iconBg,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(icon, color: iconColor, size: 24),
-            ),
-            const SizedBox(width: 16),
-
-            // Name
-            Expanded(
-              child: Text(
-                item.displayName,
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: theme.colorScheme.onSurface,
+          child: Row(
+            children: [
+              // File icon
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: iconBg,
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                child: Icon(icon, color: iconColor, size: 24),
               ),
-            ),
+              const SizedBox(width: 16),
 
-            // Remove button
-            GestureDetector(
-              onTap: onRemove,
-              child: Icon(
-                Icons.star,
-                color: theme.colorScheme.primary,
-                size: 22,
+              // Name
+              Expanded(
+                child: Text(
+                  item.displayName,
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-            ),
-          ],
+
+              // Remove button
+              GestureDetector(
+                onTap: onRemove,
+                child: Icon(
+                  Icons.star,
+                  color: theme.colorScheme.primary,
+                  size: 22,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
