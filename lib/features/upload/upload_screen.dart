@@ -14,6 +14,7 @@ import '../../data/models/selected_upload_file.dart';
 import '../../data/models/upload_result.dart';
 import '../../data/providers/auth_providers.dart';
 import '../../data/providers/drive_providers.dart';
+import '../../data/providers/my_uploads_provider.dart';
 import '../../data/providers/upload_count_provider.dart';
 import '../../data/providers/upload_state_provider.dart';
 import '../../data/services/local_profile_cache.dart';
@@ -486,6 +487,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
           });
         } catch (_) {}
         ref.invalidate(uploadCountProvider);
+        ref.invalidate(myUploadsProvider);
       } else {
         final cache = LocalProfileCache();
         await cache.incrementUploadCount();
@@ -679,15 +681,36 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
           color: theme.colorScheme.error.withAlpha(77),
         ),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.error_outline, color: theme.colorScheme.error, size: 20),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              error.message ?? 'Upload failed.',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.error,
+          Row(
+            children: [
+              Icon(Icons.error_outline, color: theme.colorScheme.error, size: 20),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  error.message ?? 'Upload failed.',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.error,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.stackSm),
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton.icon(
+              onPressed: _submit,
+              icon: const Icon(Icons.refresh, size: 18),
+              label: const Text('Retry'),
+              style: TextButton.styleFrom(
+                foregroundColor: theme.colorScheme.error,
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                textStyle: theme.textTheme.labelMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),

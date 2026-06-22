@@ -35,12 +35,14 @@ class HomeScreen extends ConsumerWidget {
       final profileAsync = ref.watch(profileProvider(user.id));
       final profile = profileAsync.asData?.value;
       final meta = user.userMetadata;
-      displayName = (profile?['full_name'] as String?) ??
+      displayName =
+          (profile?['full_name'] as String?) ??
           meta?['full_name'] as String? ??
           meta?['name'] as String? ??
           user.email ??
           'User';
-      avatarUrl = (profile?['avatar_url'] as String?) ??
+      avatarUrl =
+          (profile?['avatar_url'] as String?) ??
           meta?['avatar_url'] as String? ??
           meta?['picture'] as String?;
       avatarBase64 = null;
@@ -56,152 +58,161 @@ class HomeScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFF0D0D14),
-      body: SafeArea(
-        child: Stack(
-          children: [
-            ListView(
-              padding: const EdgeInsets.only(
-                left: AppSpacing.marginMobile,
-                right: AppSpacing.marginMobile,
-                top: 0,
-                bottom: 24,
-              ),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: AppSpacing.containerMax),
+          child: SafeArea(
+            child: Stack(
               children: [
-                const SizedBox(height: 16),
-                // Top bar
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                ListView(
+                  padding: const EdgeInsets.only(
+                    left: AppSpacing.marginMobile,
+                    right: AppSpacing.marginMobile,
+                    top: 0,
+                    bottom: 24,
+                  ),
                   children: [
-                    Text(
-                      'CS BOUIRA',
-                      style: theme.textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.w800,
-                        color: theme.colorScheme.primary,
-                        letterSpacing: -0.5,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () => context.push('/profile'),
-                      child: AvatarWidget(
-                        size: 40,
-                        avatarUrl: avatarUrl,
-                        avatarBase64: avatarBase64,
-                        initials: avatarInitials,
-                        showEditButton: false,
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 24),
-
-                // Hero section
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Welcome, $displayName',
-                      style: theme.textTheme.headlineLarge?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Access all Computer Science resources from University of Bouira in one place.',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 24),
-
-                // Search bar
-                GestureDetector(
-                  onTap: () => context.push('/search'),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.stackMd,
-                      vertical: 14,
-                    ),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.surfaceContainer,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: theme.colorScheme.outlineVariant.withAlpha(77),
-                      ),
-                    ),
-                    child: Row(
+                    const SizedBox(height: 16),
+                    // Top bar
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Icon(
-                          Icons.search,
-                          color: theme.colorScheme.outline,
-                          size: 20,
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            'Search courses, files, or exams...',
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
+                        Text(
+                          'CS BOUIRA',
+                          style: theme.textTheme.headlineMedium?.copyWith(
+                            fontWeight: FontWeight.w800,
+                            color: theme.colorScheme.primary,
+                            letterSpacing: -0.5,
                           ),
                         ),
-                        Icon(
-                          Icons.tune,
-                          color: theme.colorScheme.outline,
-                          size: 20,
+                        GestureDetector(
+                          onTap: () => context.push('/profile'),
+                          child: AvatarWidget(
+                            size: 40,
+                            avatarUrl: avatarUrl,
+                            avatarBase64: avatarBase64,
+                            initials: avatarInitials,
+                            showEditButton: false,
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                ),
 
-                const SizedBox(height: 32),
+                    const SizedBox(height: 24),
 
-                // Academic Path header
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      'Academic Path',
-                      style: theme.textTheme.headlineMedium?.copyWith(
-                        color: Colors.white,
-                      ),
+                    // Hero section
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Welcome, $displayName',
+                          style: theme.textTheme.headlineLarge?.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Access all Computer Science resources from University of Bouira in one place.',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
                     ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.primaryContainer.withAlpha(51),
-                        borderRadius: BorderRadius.circular(AppRadius.full),
-                      ),
-                      child: Text(
-                        'SELECT YEAR',
-                        style: theme.textTheme.labelMedium?.copyWith(
-                          color: theme.colorScheme.primary,
+
+                    const SizedBox(height: 24),
+
+                    // Search bar
+                    GestureDetector(
+                      onTap: () => context.push('/search'),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.stackMd,
+                          vertical: 14,
+                        ),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.surfaceContainer,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: theme.colorScheme.outlineVariant.withAlpha(
+                              77,
+                            ),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.search,
+                              color: theme.colorScheme.outline,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                'Search courses, files, or exams...',
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                            ),
+                            Icon(
+                              Icons.tune,
+                              color: theme.colorScheme.outline,
+                              size: 20,
+                            ),
+                          ],
                         ),
                       ),
                     ),
+
+                    const SizedBox(height: 32),
+
+                    // Academic Path header
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          'Academic Path',
+                          style: theme.textTheme.headlineMedium?.copyWith(
+                            color: Colors.white,
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.primaryContainer.withAlpha(
+                              51,
+                            ),
+                            borderRadius: BorderRadius.circular(AppRadius.full),
+                          ),
+                          child: Text(
+                            'SELECT YEAR',
+                            style: theme.textTheme.labelMedium?.copyWith(
+                              color: theme.colorScheme.primary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // Bento grid
+                    _BentoYearGrid(counts: counts),
+
+                    const SizedBox(height: 32),
+
+                    _StatsSection(),
                   ],
                 ),
-
-                const SizedBox(height: 16),
-
-                // Bento grid
-                _BentoYearGrid(counts: counts),
-
-                const SizedBox(height: 32),
-
-                _StatsSection(),
               ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -215,103 +226,107 @@ class _BentoYearGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
     const gap = 16.0;
-    final halfWidth = (screenWidth - 32) / 2;
-    final fullWidth = screenWidth - 32;
 
-    return Column(
-      children: [
-        // Row 1: Licence 1 + Licence 2
-        Row(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final halfWidth = constraints.maxWidth / 2;
+        final fullWidth = constraints.maxWidth;
+
+        return Column(
           children: [
+            // Row 1: Licence 1 + Licence 2
+            Row(
+              children: [
+                SizedBox(
+                  width: halfWidth - gap / 2,
+                  child: _YearCard(
+                    year: kYears[0],
+                    fileCount: counts[kYears[0].name] ?? 0,
+                  ),
+                ),
+                const SizedBox(width: gap),
+                SizedBox(
+                  width: halfWidth - gap / 2,
+                  child: _YearCard(
+                    year: kYears[1],
+                    fileCount: counts[kYears[1].name] ?? 0,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: gap),
+
+            // Row 2: Licence 3 SI (full width)
             SizedBox(
-              width: halfWidth - gap / 2,
+              width: fullWidth,
               child: _YearCard(
-                year: kYears[0],
-                fileCount: counts[kYears[0].name] ?? 0,
+                year: kYears[2],
+                fileCount: counts[kYears[2].name] ?? 0,
               ),
             ),
-            const SizedBox(width: gap),
+            const SizedBox(height: gap),
+
+            // Row 3: Master 1 GSI + Master 1 ISIL
+            Row(
+              children: [
+                SizedBox(
+                  width: halfWidth - gap / 2,
+                  child: _YearCard(
+                    year: kYears[3],
+                    fileCount: counts[kYears[3].name] ?? 0,
+                  ),
+                ),
+                const SizedBox(width: gap),
+                SizedBox(
+                  width: halfWidth - gap / 2,
+                  child: _YearCard(
+                    year: kYears[4],
+                    fileCount: counts[kYears[4].name] ?? 0,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: gap),
+
+            // Row 4: Master 1 AI (full width, highlighted)
             SizedBox(
-              width: halfWidth - gap / 2,
+              width: fullWidth,
               child: _YearCard(
-                year: kYears[1],
-                fileCount: counts[kYears[1].name] ?? 0,
+                year: kYears[5],
+                fileCount: counts[kYears[5].name] ?? 0,
               ),
+            ),
+            const SizedBox(height: gap),
+
+            // Row 5: Master 2 GSI + ISIL + AI (3 cols)
+            Row(
+              children: [
+                Expanded(
+                  child: _YearCard(
+                    year: kYears[6],
+                    fileCount: counts[kYears[6].name] ?? 0,
+                  ),
+                ),
+                const SizedBox(width: gap / 2),
+                Expanded(
+                  child: _YearCard(
+                    year: kYears[7],
+                    fileCount: counts[kYears[7].name] ?? 0,
+                  ),
+                ),
+                const SizedBox(width: gap / 2),
+                Expanded(
+                  child: _YearCard(
+                    year: kYears[8],
+                    fileCount: counts[kYears[8].name] ?? 0,
+                  ),
+                ),
+              ],
             ),
           ],
-        ),
-        const SizedBox(height: gap),
-
-        // Row 2: Licence 3 SI (full width)
-        SizedBox(
-          width: fullWidth,
-          child: _YearCard(
-            year: kYears[2],
-            fileCount: counts[kYears[2].name] ?? 0,
-          ),
-        ),
-        const SizedBox(height: gap),
-
-        // Row 3: Master 1 GSI + Master 1 ISIL
-        Row(
-          children: [
-            SizedBox(
-              width: halfWidth - gap / 2,
-              child: _YearCard(
-                year: kYears[3],
-                fileCount: counts[kYears[3].name] ?? 0,
-              ),
-            ),
-            const SizedBox(width: gap),
-            SizedBox(
-              width: halfWidth - gap / 2,
-              child: _YearCard(
-                year: kYears[4],
-                fileCount: counts[kYears[4].name] ?? 0,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: gap),
-
-        // Row 4: Master 1 AI (full width, highlighted)
-        SizedBox(
-          width: fullWidth,
-          child: _YearCard(
-            year: kYears[5],
-            fileCount: counts[kYears[5].name] ?? 0,
-          ),
-        ),
-        const SizedBox(height: gap),
-
-        // Row 5: Master 2 GSI + ISIL + AI (3 cols)
-        Row(
-          children: [
-            Expanded(
-              child: _YearCard(
-                year: kYears[6],
-                fileCount: counts[kYears[6].name] ?? 0,
-              ),
-            ),
-            const SizedBox(width: gap / 2),
-            Expanded(
-              child: _YearCard(
-                year: kYears[7],
-                fileCount: counts[kYears[7].name] ?? 0,
-              ),
-            ),
-            const SizedBox(width: gap / 2),
-            Expanded(
-              child: _YearCard(
-                year: kYears[8],
-                fileCount: counts[kYears[8].name] ?? 0,
-              ),
-            ),
-          ],
-        ),
-      ],
+        );
+      },
     );
   }
 }
@@ -336,18 +351,20 @@ class _YearCard extends StatelessWidget {
           color: const Color(0xFF15151F).withAlpha(204),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isNew
-                ? theme.colorScheme.primary.withAlpha(51)
-                : theme.colorScheme.outlineVariant.withAlpha(77),
+            color:
+                isNew
+                    ? theme.colorScheme.primary.withAlpha(51)
+                    : theme.colorScheme.outlineVariant.withAlpha(77),
           ),
-          boxShadow: isNew
-              ? [
-                  BoxShadow(
-                    color: theme.colorScheme.primary.withAlpha(38),
-                    blurRadius: 20,
-                  ),
-                ]
-              : null,
+          boxShadow:
+              isNew
+                  ? [
+                    BoxShadow(
+                      color: theme.colorScheme.primary.withAlpha(38),
+                      blurRadius: 20,
+                    ),
+                  ]
+                  : null,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -372,18 +389,23 @@ class _YearCard extends StatelessWidget {
                     Expanded(
                       child: Text(
                         year.name,
-                        style: year.name.length > 12
-                            ? theme.textTheme.titleMedium?.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                              )
-                            : theme.textTheme.headlineMedium?.copyWith(
-                                color: Colors.white,
-                              ),
+                        style:
+                            year.name.length > 12
+                                ? theme.textTheme.titleMedium?.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                )
+                                : theme.textTheme.headlineMedium?.copyWith(
+                                  color: Colors.white,
+                                ),
                       ),
                     ),
                     if (year.icon != null)
-                      Icon(year.icon, color: theme.colorScheme.primary, size: 24),
+                      Icon(
+                        year.icon,
+                        color: theme.colorScheme.primary,
+                        size: 24,
+                      ),
                   ],
                 ),
               ],
@@ -439,9 +461,17 @@ class _StatsSection extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _StatItem(value: '2.4k+', label: 'Users'),
-          Container(width: 1, height: 32, color: theme.colorScheme.outlineVariant.withAlpha(77)),
+          Container(
+            width: 1,
+            height: 32,
+            color: theme.colorScheme.outlineVariant.withAlpha(77),
+          ),
           _StatItem(value: '15k', label: 'Files'),
-          Container(width: 1, height: 32, color: theme.colorScheme.outlineVariant.withAlpha(77)),
+          Container(
+            width: 1,
+            height: 32,
+            color: theme.colorScheme.outlineVariant.withAlpha(77),
+          ),
           _StatItem(value: '12', label: 'Specials'),
         ],
       ),
@@ -477,5 +507,3 @@ class _StatItem extends StatelessWidget {
     );
   }
 }
-
-

@@ -132,8 +132,7 @@ class _FileScreenState extends State<FileScreen> {
       case _SortMode.nameDesc:
         return List.from(entries)..sort((a, b) => b.key.compareTo(a.key));
       case _SortMode.type:
-        return List.from(entries)
-          ..sort((a, b) => a.key.compareTo(b.key));
+        return List.from(entries)..sort((a, b) => a.key.compareTo(b.key));
       case _SortMode.nameAsc:
         return List.from(entries)..sort((a, b) => a.key.compareTo(b.key));
     }
@@ -142,19 +141,13 @@ class _FileScreenState extends State<FileScreen> {
   List<DriveFile> _sortFiles(List<DriveFile> files) {
     switch (_sortMode) {
       case _SortMode.nameDesc:
-        return List.from(files)
-          ..sort((a, b) => b.name.compareTo(a.name));
+        return List.from(files)..sort((a, b) => b.name.compareTo(a.name));
       case _SortMode.type:
-        return List.from(files)
-          ..sort(
-            (a, b) => a.name
-                .split('.')
-                .last
-                .compareTo(b.name.split('.').last),
-          );
+        return List.from(files)..sort(
+          (a, b) => a.name.split('.').last.compareTo(b.name.split('.').last),
+        );
       case _SortMode.nameAsc:
-        return List.from(files)
-          ..sort((a, b) => a.name.compareTo(b.name));
+        return List.from(files)..sort((a, b) => a.name.compareTo(b.name));
     }
   }
 
@@ -170,28 +163,31 @@ class _FileScreenState extends State<FileScreen> {
     double offset = 0;
 
     // Check if a subfolder matches
-    final folderIdx = subfolders.indexWhere(
-      (e) => e.key == _highlightedItem,
-    );
+    final folderIdx = subfolders.indexWhere((e) => e.key == _highlightedItem);
     if (folderIdx >= 0) {
       offset = headerH + spacerH + folderIdx * (itemH + spacerH);
     } else {
       // Check if a file matches
-      final folderSection = subfolders.isNotEmpty
-          ? headerH + spacerH + subfolders.length * (itemH + spacerH) + spacerH
-          : 0.0;
-      final fileIdx = files.indexWhere(
-        (f) => f.name == _highlightedItem,
-      );
+      final folderSection =
+          subfolders.isNotEmpty
+              ? headerH +
+                  spacerH +
+                  subfolders.length * (itemH + spacerH) +
+                  spacerH
+              : 0.0;
+      final fileIdx = files.indexWhere((f) => f.name == _highlightedItem);
       if (fileIdx >= 0) {
-        offset = folderSection + headerH + spacerH + fileIdx * (itemH + spacerH);
+        offset =
+            folderSection + headerH + spacerH + fileIdx * (itemH + spacerH);
       }
     }
 
     if (offset > 0) {
       final viewportH = _scrollController.position.viewportDimension;
-      final scrollTarget =
-          (offset - viewportH / 3).clamp(0.0, _scrollController.position.maxScrollExtent);
+      final scrollTarget = (offset - viewportH / 3).clamp(
+        0.0,
+        _scrollController.position.maxScrollExtent,
+      );
       _scrollController.animateTo(
         scrollTarget,
         duration: const Duration(milliseconds: 300),
@@ -221,345 +217,419 @@ class _FileScreenState extends State<FileScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFF0D0D14),
       resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Consumer(
-              builder: (context, ref, _) {
-                final nodeAsync = ref.watch(
-                  driveNodeProvider(drivePathKey(_segments)),
-                );
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: AppSpacing.containerMax),
+          child: SafeArea(
+            child: Stack(
+              children: [
+                Consumer(
+                  builder: (context, ref, _) {
+                    final nodeAsync = ref.watch(
+                      driveNodeProvider(drivePathKey(_segments)),
+                    );
 
-                return nodeAsync.when(
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
-                  error: (err, _) =>
-                      Center(child: Text('Failed to load: $err')),
-                  data: (node) {
-                    if (node == null) {
-                      return Center(
-                        child: Text(
-                          'Folder not found',
-                          style: theme.textTheme.bodyLarge?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      );
-                    }
-
-                    final query = _searchQuery.toLowerCase();
-
-                    final subfolders = query.isEmpty
-                        ? _sortSubfolders(
-                            node.subfolders.entries.toList(),
-                          )
-                        : _sortSubfolders(
-                            node.subfolders.entries
-                                .where(
-                                  (e) =>
-                                      e.key.toLowerCase().contains(query),
-                                )
-                                .toList(),
+                    return nodeAsync.when(
+                      loading:
+                          () =>
+                              const Center(child: CircularProgressIndicator()),
+                      error:
+                          (err, _) =>
+                              Center(child: Text('Failed to load: $err')),
+                      data: (node) {
+                        if (node == null) {
+                          return Center(
+                            child: Text(
+                              'Folder not found',
+                              style: theme.textTheme.bodyLarge?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
+                            ),
                           );
-                    final files = query.isEmpty
-                        ? _sortFiles(node.files)
-                        : _sortFiles(
-                            node.files
-                                .where(
-                                  (f) =>
-                                      f.name.toLowerCase().contains(query),
+                        }
+
+                        final query = _searchQuery.toLowerCase();
+
+                        final subfolders =
+                            query.isEmpty
+                                ? _sortSubfolders(
+                                  node.subfolders.entries.toList(),
                                 )
-                                .toList(),
-                          );
-
-                    final hasContent =
-                        subfolders.isNotEmpty || files.isNotEmpty;
-
-                    // Scroll to highlighted item after frame renders
-                    if (_highlightedItem != null) {
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        _scrollToItem(subfolders, files);
-                      });
-                    }
-
-                    return Column(
-                      children: [
-                        _Header(
-                          year: widget.year,
-                          module: widget.module,
-                          folder: widget.folder,
-                          theme: theme,
-                        ),
-
-                        _SearchBar(
-                          controller: _searchController,
-                          onChanged: (v) =>
-                              setState(() => _searchQuery = v),
-                          onFilterTap: _showFilterSheet,
-                          theme: theme,
-                        ),
-
-                        Expanded(
-                          child: !hasContent
-                              ? Center(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(
-                                        query.isNotEmpty
-                                            ? Icons.search_off
-                                            : Icons.folder_off,
-                                        size: 64,
-                                        color: theme.colorScheme
-                                            .onSurfaceVariant,
-                                      ),
-                                      const SizedBox(
-                                          height: AppSpacing.stackMd),
-                                      Text(
-                                        query.isNotEmpty
-                                            ? 'No matching files or folders'
-                                            : 'No files available',
-                                        style: theme.textTheme.bodyLarge
-                                            ?.copyWith(
-                                          color: theme.colorScheme
-                                              .onSurfaceVariant,
+                                : _sortSubfolders(
+                                  node.subfolders.entries
+                                      .where(
+                                        (e) =>
+                                            e.key.toLowerCase().contains(query),
+                                      )
+                                      .toList(),
+                                );
+                        final files =
+                            query.isEmpty
+                                ? _sortFiles(node.files)
+                                : _sortFiles(
+                                  node.files
+                                      .where(
+                                        (f) => f.name.toLowerCase().contains(
+                                          query,
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              : ListView(
-                                  controller: _scrollController,
-                                  padding: const EdgeInsets.only(
-                                    left: AppSpacing.marginMobile,
-                                    right: AppSpacing.marginMobile,
-                                    top: AppSpacing.stackLg,
-                                    bottom: 24,
-                                  ),
-                                  children: [
-                                    if (subfolders.isNotEmpty) ...[
-                                      _SectionHeader(
-                                        title: 'Subfolders',
-                                        count:
-                                            '${subfolders.length} items',
-                                        theme: theme,
-                                      ),
-                                      const SizedBox(
-                                          height: AppSpacing.stackMd),
-                                      ...subfolders.map(
-                                        (entry) => _FolderCard(
-                                          name: entry.key,
-                                          node: entry.value,
-                                          isHighlighted:
-                                              entry.key == _highlightedItem,
-                                          theme: theme,
-                                          onTap: entry.value.isEmpty
-                                              ? null
-                                              : () {
-                                                  final newSub =
-                                                      _buildSubpath(
-                                                          entry.key);
-                                                  if (widget.semester
-                                                      .isEmpty) {
-                                                    context.push(
-                                                      '/year/${Uri.encodeComponent(widget.year)}'
-                                                      '/books'
-                                                      '?sub=${Uri.encodeComponent(newSub)}',
-                                                    );
-                                                  } else {
-                                                    context.push(
-                                                      '/year/${Uri.encodeComponent(widget.year)}'
-                                                      '/semester/${Uri.encodeComponent(widget.semester)}'
-                                                      '/module/${Uri.encodeComponent(widget.module)}'
-                                                      '/folder/${Uri.encodeComponent(widget.folder)}'
-                                                      '?sub=${Uri.encodeComponent(newSub)}',
-                                                    );
-                                                  }
-                                                },
-                                        ),
-                                      ),
-                                      if (files.isNotEmpty)
-                                        const SizedBox(
-                                            height: AppSpacing.stackLg),
-                                    ],
-                                    if (files.isNotEmpty) ...[
-                                      _SectionHeader(
-                                        title: 'Files',
-                                        theme: theme,
-                                        trailing: Row(
+                                      )
+                                      .toList(),
+                                );
+
+                        final hasContent =
+                            subfolders.isNotEmpty || files.isNotEmpty;
+
+                        // Scroll to highlighted item after frame renders
+                        if (_highlightedItem != null) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            _scrollToItem(subfolders, files);
+                          });
+                        }
+
+                        return Column(
+                          children: [
+                            _Header(
+                              year: widget.year,
+                              module: widget.module,
+                              folder: widget.folder,
+                              theme: theme,
+                            ),
+
+                            _SearchBar(
+                              controller: _searchController,
+                              onChanged:
+                                  (v) => setState(() => _searchQuery = v),
+                              onFilterTap: _showFilterSheet,
+                              theme: theme,
+                            ),
+
+                            Expanded(
+                              child:
+                                  !hasContent
+                                      ? Center(
+                                        child: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            _ViewToggleButton(
-                                              icon: Icons.grid_view,
-                                              isActive: _isGridView,
-                                              theme: theme,
-                                              onTap: () => setState(
-                                                  () => _isGridView = true),
+                                            Icon(
+                                              query.isNotEmpty
+                                                  ? Icons.search_off
+                                                  : Icons.folder_off,
+                                              size: 64,
+                                              color:
+                                                  theme
+                                                      .colorScheme
+                                                      .onSurfaceVariant,
                                             ),
-                                            _ViewToggleButton(
-                                              icon: Icons.list,
-                                              isActive: !_isGridView,
-                                              theme: theme,
-                                              onTap: () => setState(
-                                                  () => _isGridView = false),
+                                            const SizedBox(
+                                              height: AppSpacing.stackMd,
+                                            ),
+                                            Text(
+                                              query.isNotEmpty
+                                                  ? 'No matching files or folders'
+                                                  : 'No files available',
+                                              style: theme.textTheme.bodyLarge
+                                                  ?.copyWith(
+                                                    color:
+                                                        theme
+                                                            .colorScheme
+                                                            .onSurfaceVariant,
+                                                  ),
                                             ),
                                           ],
                                         ),
-                                      ),
-                                      const SizedBox(
-                                          height: AppSpacing.stackMd),
-                                      if (_isGridView)
-                                        Wrap(
-                                          spacing: 12,
-                                          runSpacing: 12,
-                                          children: files.asMap().entries.map((entry) {
-                                            final fileIndex = entry.key;
-                                            final file = entry.value;
-                                            final ext = file.name
-                                                .split('.')
-                                                .last
-                                                .toLowerCase();
-                                            final (icon, color, _) =
-                                                _fileTypeInfo(
-                                                    ext, theme);
-                                            final isHighlighted =
-                                                file.name ==
-                                                    _highlightedItem;
-                                            return GestureDetector(
-                                              onTap: () {
-                                                if (file.link.isNotEmpty) {
-                                                  context.push('/preview',
-                                                      extra: PreviewArgs(
-                                                        files: files,
-                                                        initialIndex: fileIndex,
-                                                      ));
-                                                }
-                                              },
-                                              child: AnimatedContainer(
-                                                duration: const Duration(
-                                                    milliseconds: 300),
-                                                width: (MediaQuery.of(
-                                                            context)
-                                                        .size
-                                                        .width -
-                                                    44) /
-                                                    2,
-                                                padding:
-                                                    const EdgeInsets.all(16),
-                                                decoration: BoxDecoration(
-                                                  color: isHighlighted
-                                                      ? theme
-                                                          .colorScheme
-                                                          .primaryContainer
-                                                          .withAlpha(51)
-                                                      : theme
-                                                          .colorScheme.surface
-                                                          .withAlpha(204),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          12),
-                                                  border: Border.all(
-                                                    color: isHighlighted
-                                                        ? theme
-                                                            .colorScheme
-                                                            .primary
-                                                            .withAlpha(153)
-                                                        : theme
-                                                            .colorScheme
-                                                            .outlineVariant
-                                                            .withAlpha(26),
-                                                  ),
-                                                ),
-                                                child: Column(
-                                                  children: [
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .end,
-                                                      children: [
-                                                        FavoriteStar(
-                                                          itemType: 'file',
-                                                          itemPath:
-                                                              file.link,
-                                                          displayName:
-                                                              file.name,
-                                                          size: 18,
+                                      )
+                                      : ListView(
+                                        controller: _scrollController,
+                                        padding: const EdgeInsets.only(
+                                          left: AppSpacing.marginMobile,
+                                          right: AppSpacing.marginMobile,
+                                          top: AppSpacing.stackLg,
+                                          bottom: 24,
+                                        ),
+                                        children: [
+                                          if (subfolders.isNotEmpty) ...[
+                                            _SectionHeader(
+                                              title: 'Subfolders',
+                                              count:
+                                                  '${subfolders.length} items',
+                                              theme: theme,
+                                            ),
+                                            const SizedBox(
+                                              height: AppSpacing.stackMd,
+                                            ),
+                                            ...subfolders.map(
+                                              (entry) => _FolderCard(
+                                                name: entry.key,
+                                                node: entry.value,
+                                                isHighlighted:
+                                                    entry.key ==
+                                                    _highlightedItem,
+                                                theme: theme,
+                                                onTap:
+                                                    entry.value.isEmpty
+                                                        ? null
+                                                        : () {
+                                                          final newSub =
+                                                              _buildSubpath(
+                                                                entry.key,
+                                                              );
+                                                          if (widget
+                                                              .semester
+                                                              .isEmpty) {
+                                                            context.push(
+                                                              '/year/${Uri.encodeComponent(widget.year)}'
+                                                              '/books'
+                                                              '?sub=${Uri.encodeComponent(newSub)}',
+                                                            );
+                                                          } else {
+                                                            context.push(
+                                                              '/year/${Uri.encodeComponent(widget.year)}'
+                                                              '/semester/${Uri.encodeComponent(widget.semester)}'
+                                                              '/module/${Uri.encodeComponent(widget.module)}'
+                                                              '/folder/${Uri.encodeComponent(widget.folder)}'
+                                                              '?sub=${Uri.encodeComponent(newSub)}',
+                                                            );
+                                                          }
+                                                        },
+                                              ),
+                                            ),
+                                            if (files.isNotEmpty)
+                                              const SizedBox(
+                                                height: AppSpacing.stackLg,
+                                              ),
+                                          ],
+                                          if (files.isNotEmpty) ...[
+                                            _SectionHeader(
+                                              title: 'Files',
+                                              theme: theme,
+                                              trailing: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  _ViewToggleButton(
+                                                    icon: Icons.grid_view,
+                                                    isActive: _isGridView,
+                                                    theme: theme,
+                                                    onTap:
+                                                        () => setState(
+                                                          () =>
+                                                              _isGridView =
+                                                                  true,
                                                         ),
-                                                      ],
-                                                    ),
-                                                    Container(
-                                                      width: 48,
-                                                      height: 48,
-                                                      decoration:
-                                                          BoxDecoration(
-                                                        color: color
-                                                            .withAlpha(51),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(12),
-                                                      ),
-                                                      child: Icon(
+                                                  ),
+                                                  _ViewToggleButton(
+                                                    icon: Icons.list,
+                                                    isActive: !_isGridView,
+                                                    theme: theme,
+                                                    onTap:
+                                                        () => setState(
+                                                          () =>
+                                                              _isGridView =
+                                                                  false,
+                                                        ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: AppSpacing.stackMd,
+                                            ),
+                                            if (_isGridView)
+                                              Wrap(
+                                                spacing: 12,
+                                                runSpacing: 12,
+                                                children:
+                                                    files.asMap().entries.map((
+                                                      entry,
+                                                    ) {
+                                                      final fileIndex =
+                                                          entry.key;
+                                                      final file = entry.value;
+                                                      final ext =
+                                                          file.name
+                                                              .split('.')
+                                                              .last
+                                                              .toLowerCase();
+                                                      final (
                                                         icon,
-                                                        color: color,
-                                                        size: 24,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(
-                                                        height: 12),
-                                                    Text(
-                                                      file.name,
-                                                      style: theme
-                                                          .textTheme
-                                                          .bodyMedium
-                                                          ?.copyWith(
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        color: theme
-                                                            .colorScheme
-                                                            .onSurface,
-                                                      ),
-                                                      maxLines: 2,
-                                                      overflow:
-                                                          TextOverflow
-                                                              .ellipsis,
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                    ),
-                                                  ],
+                                                        color,
+                                                        _,
+                                                      ) = _fileTypeInfo(
+                                                        ext,
+                                                        theme,
+                                                      );
+                                                      final isHighlighted =
+                                                          file.name ==
+                                                          _highlightedItem;
+                                                      return GestureDetector(
+                                                        onTap: () {
+                                                          if (file
+                                                              .link
+                                                              .isNotEmpty) {
+                                                            context.push(
+                                                              '/preview',
+                                                              extra: PreviewArgs(
+                                                                files: files,
+                                                                initialIndex:
+                                                                    fileIndex,
+                                                              ),
+                                                            );
+                                                          }
+                                                        },
+                                                        child: AnimatedContainer(
+                                                          duration:
+                                                              const Duration(
+                                                                milliseconds:
+                                                                    300,
+                                                              ),
+                                                          width:
+                                                              (MediaQuery.of(
+                                                                    context,
+                                                                  ).size.width -
+                                                                  44) /
+                                                              2,
+                                                          padding:
+                                                              const EdgeInsets.all(
+                                                                16,
+                                                              ),
+                                                          decoration: BoxDecoration(
+                                                            color:
+                                                                isHighlighted
+                                                                    ? theme
+                                                                        .colorScheme
+                                                                        .primaryContainer
+                                                                        .withAlpha(
+                                                                          51,
+                                                                        )
+                                                                    : theme
+                                                                        .colorScheme
+                                                                        .surface
+                                                                        .withAlpha(
+                                                                          204,
+                                                                        ),
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  12,
+                                                                ),
+                                                            border: Border.all(
+                                                              color:
+                                                                  isHighlighted
+                                                                      ? theme
+                                                                          .colorScheme
+                                                                          .primary
+                                                                          .withAlpha(
+                                                                            153,
+                                                                          )
+                                                                      : theme
+                                                                          .colorScheme
+                                                                          .outlineVariant
+                                                                          .withAlpha(
+                                                                            26,
+                                                                          ),
+                                                            ),
+                                                          ),
+                                                          child: Column(
+                                                            children: [
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .end,
+                                                                children: [
+                                                                  FavoriteStar(
+                                                                    itemType:
+                                                                        'file',
+                                                                    itemPath:
+                                                                        file.link,
+                                                                    displayName:
+                                                                        file.name,
+                                                                    size: 18,
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              Container(
+                                                                width: 48,
+                                                                height: 48,
+                                                                decoration: BoxDecoration(
+                                                                  color: color
+                                                                      .withAlpha(
+                                                                        51,
+                                                                      ),
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                        12,
+                                                                      ),
+                                                                ),
+                                                                child: Icon(
+                                                                  icon,
+                                                                  color: color,
+                                                                  size: 24,
+                                                                ),
+                                                              ),
+                                                              const SizedBox(
+                                                                height: 12,
+                                                              ),
+                                                              Text(
+                                                                file.name,
+                                                                style: theme
+                                                                    .textTheme
+                                                                    .bodyMedium
+                                                                    ?.copyWith(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                      color:
+                                                                          theme
+                                                                              .colorScheme
+                                                                              .onSurface,
+                                                                    ),
+                                                                maxLines: 2,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      );
+                                                    }).toList(),
+                                              )
+                                            else
+                                              ...files.asMap().entries.map(
+                                                (entry) => _FileCard(
+                                                  file: entry.value,
+                                                  theme: theme,
+                                                  onTap: () {
+                                                    if (entry
+                                                        .value
+                                                        .link
+                                                        .isNotEmpty) {
+                                                      context.push(
+                                                        '/preview',
+                                                        extra: PreviewArgs(
+                                                          files: files,
+                                                          initialIndex:
+                                                              entry.key,
+                                                        ),
+                                                      );
+                                                    }
+                                                  },
                                                 ),
                                               ),
-                                            );
-                                          }).toList(),
-                                        )
-                                      else
-                                        ...files.asMap().entries.map(
-                                        (entry) => _FileCard(
-                                          file: entry.value,
-                                          isHighlighted:
-                                              entry.value.name == _highlightedItem,
-                                          theme: theme,
-                                          onTap: () {
-                                            if (entry.value.link.isNotEmpty) {
-                                              context.push('/preview',
-                                                  extra: PreviewArgs(
-                                                    files: files,
-                                                    initialIndex: entry.key,
-                                                  ));
-                                            }
-                                          },
-                                        ),
+                                          ],
+                                        ],
                                       ),
-                                    ],
-                                  ],
-                                ),
-                        ),
-                      ],
+                            ),
+                          ],
+                        );
+                      },
                     );
                   },
-                );
-              },
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -602,10 +672,7 @@ class _Header extends StatelessWidget {
             onTap: () => context.pop(),
             child: Container(
               padding: const EdgeInsets.all(8),
-              child: Icon(
-                Icons.arrow_back,
-                color: theme.colorScheme.primary,
-              ),
+              child: Icon(Icons.arrow_back, color: theme.colorScheme.primary),
             ),
           ),
           const SizedBox(width: 12),
@@ -675,9 +742,10 @@ class _BreadcrumbItem extends StatelessWidget {
     return Text(
       label,
       style: theme.textTheme.labelMedium?.copyWith(
-        color: isActive
-            ? theme.colorScheme.primary
-            : theme.colorScheme.onSurfaceVariant,
+        color:
+            isActive
+                ? theme.colorScheme.primary
+                : theme.colorScheme.onSurfaceVariant,
       ),
     );
   }
@@ -770,10 +838,7 @@ class _SearchBar extends StatelessWidget {
                   color: theme.colorScheme.outlineVariant.withAlpha(51),
                 ),
               ),
-              child: Icon(
-                Icons.filter_list,
-                color: theme.colorScheme.primary,
-              ),
+              child: Icon(Icons.filter_list, color: theme.colorScheme.primary),
             ),
           ),
         ],
@@ -849,9 +914,10 @@ class _ViewToggleButton extends StatelessWidget {
         child: Icon(
           icon,
           size: 20,
-          color: isActive
-              ? theme.colorScheme.primary
-              : theme.colorScheme.onSurfaceVariant,
+          color:
+              isActive
+                  ? theme.colorScheme.primary
+                  : theme.colorScheme.onSurfaceVariant,
         ),
       ),
     );
@@ -884,14 +950,16 @@ class _FolderCard extends StatelessWidget {
           duration: const Duration(milliseconds: 300),
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: isHighlighted
-                ? theme.colorScheme.primaryContainer.withAlpha(38)
-                : theme.colorScheme.surfaceContainer,
+            color:
+                isHighlighted
+                    ? theme.colorScheme.primaryContainer.withAlpha(38)
+                    : theme.colorScheme.surfaceContainer,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: isHighlighted
-                  ? theme.colorScheme.primary.withAlpha(153)
-                  : node.isEmpty
+              color:
+                  isHighlighted
+                      ? theme.colorScheme.primary.withAlpha(153)
+                      : node.isEmpty
                       ? theme.colorScheme.outlineVariant.withAlpha(26)
                       : theme.colorScheme.outlineVariant.withAlpha(26),
             ),
@@ -907,9 +975,10 @@ class _FolderCard extends StatelessWidget {
                 ),
                 child: Icon(
                   node.isEmpty ? Icons.folder_off : Icons.folder,
-                  color: node.isEmpty
-                      ? theme.colorScheme.onSurfaceVariant
-                      : theme.colorScheme.primary,
+                  color:
+                      node.isEmpty
+                          ? theme.colorScheme.onSurfaceVariant
+                          : theme.colorScheme.primary,
                 ),
               ),
               const SizedBox(width: 16),
@@ -920,9 +989,10 @@ class _FolderCard extends StatelessWidget {
                     Text(
                       name,
                       style: theme.textTheme.bodyLarge?.copyWith(
-                        color: node.isEmpty
-                            ? theme.colorScheme.onSurfaceVariant
-                            : theme.colorScheme.onSurface,
+                        color:
+                            node.isEmpty
+                                ? theme.colorScheme.onSurfaceVariant
+                                : theme.colorScheme.onSurface,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -940,10 +1010,7 @@ class _FolderCard extends StatelessWidget {
                 ),
               ),
               if (!node.isEmpty)
-                Icon(
-                  Icons.chevron_right,
-                  color: theme.colorScheme.outline,
-                ),
+                Icon(Icons.chevron_right, color: theme.colorScheme.outline),
               if (node.isEmpty)
                 Text(
                   'Empty',
@@ -961,13 +1028,11 @@ class _FolderCard extends StatelessWidget {
 
 class _FileCard extends ConsumerStatefulWidget {
   final DriveFile file;
-  final bool isHighlighted;
   final ThemeData theme;
   final VoidCallback onTap;
 
   const _FileCard({
     required this.file,
-    this.isHighlighted = false,
     required this.theme,
     required this.onTap,
   });
@@ -982,6 +1047,7 @@ class _FileCardState extends ConsumerState<_FileCard>
   double _snapStartOffset = 0;
   late final AnimationController _snapController;
   static const double _threshold = 100;
+  bool _isFavorited = false;
 
   @override
   void initState() {
@@ -995,6 +1061,7 @@ class _FileCardState extends ConsumerState<_FileCard>
         _dragOffset = _snapStartOffset * (1 - _snapController.value);
       });
     });
+    _loadFavoriteState();
   }
 
   @override
@@ -1003,14 +1070,28 @@ class _FileCardState extends ConsumerState<_FileCard>
     super.dispose();
   }
 
-  Future<void> _toggleFavorite() async {
-    ref.invalidate(favoritesListProvider);
+  Future<void> _loadFavoriteState() async {
     final repo = ref.read(favoritesRepositoryProvider);
     try {
-      await repo.favoriteFile(widget.file.link, widget.file.name);
+      final result = await repo.isFavorite('file', widget.file.link);
+      if (mounted) setState(() => _isFavorited = result);
     } catch (_) {
-      ref.invalidate(favoritesListProvider);
+      // ignore
     }
+  }
+
+  void _toggleFavorite() {
+    setState(() => _isFavorited = !_isFavorited);
+    ref
+        .read(favoritesRepositoryProvider)
+        .favoriteFile(widget.file.link, widget.file.name)
+        .then((_) {
+          ref.invalidate(favoritesListProvider);
+        })
+        .catchError((_) {
+          ref.invalidate(favoritesListProvider);
+          _loadFavoriteState();
+        });
   }
 
   @override
@@ -1055,13 +1136,14 @@ class _FileCardState extends ConsumerState<_FileCard>
                 child: Container(
                   color: widget.theme.colorScheme.primary,
                   alignment: Alignment.center,
-                  child: _dragOffset > 0
-                      ? Icon(
-                          Icons.star,
-                          color: widget.theme.colorScheme.onPrimary,
-                          size: 28,
-                        )
-                      : null,
+                  child:
+                      _dragOffset > 0
+                          ? Icon(
+                            Icons.star,
+                            color: widget.theme.colorScheme.onPrimary,
+                            size: 28,
+                          )
+                          : null,
                 ),
               ),
               Transform.translate(
@@ -1071,13 +1153,10 @@ class _FileCardState extends ConsumerState<_FileCard>
                   child: Container(
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                      color: widget.isHighlighted
-                          ? widget.theme.colorScheme.primaryContainer.withAlpha(38)
-                          : widget.theme.colorScheme.surface.withAlpha(204),
+                      color: widget.theme.colorScheme.surface.withAlpha(204),
                       border: Border.all(
-                        color: widget.isHighlighted
-                            ? widget.theme.colorScheme.primary.withAlpha(153)
-                            : widget.theme.colorScheme.outlineVariant.withAlpha(26),
+                        color: widget.theme.colorScheme.outlineVariant
+                            .withAlpha(26),
                       ),
                     ),
                     child: Row(
@@ -1126,27 +1205,52 @@ class _FileCardState extends ConsumerState<_FileCard>
                             children: [
                               Text(
                                 widget.file.name,
-                                style: widget.theme.textTheme.bodyLarge?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: widget.theme.colorScheme.onSurface,
-                                ),
+                                style: widget.theme.textTheme.bodyLarge
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: widget.theme.colorScheme.onSurface,
+                                    ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
                               Text(
                                 ext.toUpperCase(),
-                                style: widget.theme.textTheme.labelMedium?.copyWith(
-                                  color: widget.theme.colorScheme.onSurfaceVariant,
-                                  letterSpacing: 1.5,
-                                ),
+                                style: widget.theme.textTheme.labelMedium
+                                    ?.copyWith(
+                                      color:
+                                          widget
+                                              .theme
+                                              .colorScheme
+                                              .onSurfaceVariant,
+                                      letterSpacing: 1.5,
+                                    ),
                               ),
                             ],
                           ),
                         ),
-                        FavoriteStar(
-                          itemType: 'file',
-                          itemPath: widget.file.link,
-                          displayName: widget.file.name,
+                        GestureDetector(
+                          onTap: _toggleFavorite,
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 150),
+                            transitionBuilder: (child, animation) {
+                              return ScaleTransition(
+                                scale: animation,
+                                child: child,
+                              );
+                            },
+                            child: Icon(
+                              _isFavorited ? Icons.star : Icons.star_border,
+                              key: ValueKey<bool>(_isFavorited),
+                              color:
+                                  _isFavorited
+                                      ? widget.theme.colorScheme.primary
+                                      : widget
+                                          .theme
+                                          .colorScheme
+                                          .onSurfaceVariant,
+                              size: 22,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -1181,7 +1285,11 @@ class _FileCardState extends ConsumerState<_FileCard>
     case 'pptx':
       return (Icons.slideshow, Colors.orange, false);
     default:
-      return (Icons.insert_drive_file, theme.colorScheme.onSurfaceVariant, false);
+      return (
+        Icons.insert_drive_file,
+        theme.colorScheme.onSurfaceVariant,
+        false,
+      );
   }
 }
 
@@ -1207,17 +1315,19 @@ class _SortOption extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           decoration: BoxDecoration(
-            color: isSelected
-                ? theme.colorScheme.primaryContainer.withAlpha(51)
-                : Colors.transparent,
+            color:
+                isSelected
+                    ? theme.colorScheme.primaryContainer.withAlpha(51)
+                    : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Text(
             label,
             style: theme.textTheme.bodyLarge?.copyWith(
-              color: isSelected
-                  ? theme.colorScheme.primary
-                  : theme.colorScheme.onSurface,
+              color:
+                  isSelected
+                      ? theme.colorScheme.primary
+                      : theme.colorScheme.onSurface,
               fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
             ),
           ),

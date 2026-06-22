@@ -21,7 +21,9 @@ class FolderScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final moduleNodeAsync = ref.watch(driveNodeProvider(drivePathKey([year, semester, module])));
+    final moduleNodeAsync = ref.watch(
+      driveNodeProvider(drivePathKey([year, semester, module])),
+    );
 
     final folderFileCounts = <String, int>{};
     final moduleNode = moduleNodeAsync.asData?.value;
@@ -33,139 +35,152 @@ class FolderScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFF111221),
-      body: SafeArea(
-        child: Stack(
-          children: [
-            // Gradient mesh background
-            Positioned.fill(
-              child: Stack(
-                children: [
-                  Positioned(
-                    top: -40,
-                    left: -40,
-                    width: 200,
-                    height: 200,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: theme.colorScheme.primary.withAlpha(13),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: -40,
-                    right: -40,
-                    width: 200,
-                    height: 200,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: theme.colorScheme.primaryContainer.withAlpha(13),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            Column(
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: AppSpacing.containerMax),
+          child: SafeArea(
+            child: Stack(
               children: [
-                // AppBar
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.marginMobile,
-                    vertical: 16,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF111221).withAlpha(204),
-                    border: Border(
-                      bottom: BorderSide(
-                        color: theme.colorScheme.outlineVariant.withAlpha(77),
-                      ),
-                    ),
-                  ),
-                  child: Row(
+                // Gradient mesh background
+                Positioned.fill(
+                  child: Stack(
                     children: [
-                      GestureDetector(
-                        onTap: () => context.pop(),
+                      Positioned(
+                        top: -40,
+                        left: -40,
+                        width: 200,
+                        height: 200,
                         child: Container(
-                          padding: const EdgeInsets.all(8),
-                          child: Icon(
-                            Icons.arrow_back,
-                            color: theme.colorScheme.primary,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: theme.colorScheme.primary.withAlpha(13),
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '$year / $semester',
-                              style: theme.textTheme.labelMedium?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant,
-                              ),
+                      Positioned(
+                        bottom: -40,
+                        right: -40,
+                        width: 200,
+                        height: 200,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: theme.colorScheme.primaryContainer.withAlpha(
+                              13,
                             ),
-                            Text(
-                              module,
-                              style: theme.textTheme.headlineMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                Column(
+                  children: [
+                    // AppBar
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.marginMobile,
+                        vertical: 16,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF111221).withAlpha(204),
+                        border: Border(
+                          bottom: BorderSide(
+                            color: theme.colorScheme.outlineVariant.withAlpha(
+                              77,
+                            ),
+                          ),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () => context.pop(),
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              child: Icon(
+                                Icons.arrow_back,
                                 color: theme.colorScheme.primary,
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '$year / $semester',
+                                  style: theme.textTheme.labelMedium?.copyWith(
+                                    color: theme.colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                                Text(
+                                  module,
+                                  style: theme.textTheme.headlineMedium
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: theme.colorScheme.primary,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          FavoriteStar(
+                            itemType: 'module',
+                            itemPath:
+                                '$year>subfolders>$semester>subfolders>$module',
+                            displayName: module,
+                          ),
+                        ],
                       ),
-                      FavoriteStar(
-                        itemType: 'module',
-                        itemPath:
-                            '$year>subfolders>$semester>subfolders>$module',
-                        displayName: module,
-                      ),
-                    ],
-                  ),
-                ),
-
-                // Content
-                Expanded(
-                  child: ListView(
-                    padding: const EdgeInsets.fromLTRB(
-                      AppSpacing.marginMobile,
-                      AppSpacing.stackLg,
-                      AppSpacing.marginMobile,
-                      24,
                     ),
-                    children: [
-                      // Badge pill
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.primary.withAlpha(26),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: theme.colorScheme.primary.withAlpha(51),
-                          ),
+
+                    // Content
+                    Expanded(
+                      child: ListView(
+                        padding: const EdgeInsets.fromLTRB(
+                          AppSpacing.marginMobile,
+                          AppSpacing.stackLg,
+                          AppSpacing.marginMobile,
+                          24,
                         ),
-                        child: Text(
-                          'Course Module',
-                          style: theme.textTheme.labelMedium?.copyWith(
-                            color: theme.colorScheme.primary,
-                            letterSpacing: 1.5,
+                        children: [
+                          // Badge pill
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.primary.withAlpha(26),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: theme.colorScheme.primary.withAlpha(51),
+                              ),
+                            ),
+                            child: Text(
+                              'Course Module',
+                              style: theme.textTheme.labelMedium?.copyWith(
+                                color: theme.colorScheme.primary,
+                                letterSpacing: 1.5,
+                              ),
+                            ),
                           ),
-                        ),
+
+                          const SizedBox(height: AppSpacing.stackLg),
+
+                          // Folder grid
+                          _buildFolderGrid(context, theme, folderFileCounts),
+                        ],
                       ),
-
-                      const SizedBox(height: AppSpacing.stackLg),
-
-                      // Folder grid
-                      _buildFolderGrid(context, theme, folderFileCounts),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -184,56 +199,59 @@ class FolderScreen extends ConsumerWidget {
         return Wrap(
           spacing: gap,
           runSpacing: gap,
-          children: kFolderTypes.map((folder) {
-            final fCount = counts[folder] ?? 0;
-            final isEmpty = fCount == 0;
-            final isTests = folder == 'Tests';
-            final iconColor = _folderIconColor(folder, theme);
-            final iconData = _folderIconData(folder);
+          children:
+              kFolderTypes.map((folder) {
+                final fCount = counts[folder] ?? 0;
+                final isEmpty = fCount == 0;
+                final isTests = folder == 'Tests';
+                final iconColor = _folderIconColor(folder, theme);
+                final iconData = _folderIconData(folder);
 
-            // Tests spans full width with horizontal layout
-            if (isTests) {
-              return SizedBox(
-                width: constraints.maxWidth,
-                child: _FolderCard(
-                  folder: folder,
-                  fileCount: fCount,
-                  isEmpty: isEmpty,
-                  iconColor: iconColor,
-                  iconData: iconData,
-                  isHorizontal: true,
-                  onTap: isEmpty
-                      ? null
-                      : () => context.push(
-                        '/year/${Uri.encodeComponent(year)}'
-                        '/semester/${Uri.encodeComponent(semester)}'
-                        '/module/${Uri.encodeComponent(module)}'
-                        '/folder/${Uri.encodeComponent(folder)}',
-                      ),
-                ),
-              );
-            }
-
-            return SizedBox(
-              width: cardWidth,
-              child: _FolderCard(
-                folder: folder,
-                fileCount: fCount,
-                isEmpty: isEmpty,
-                iconColor: iconColor,
-                iconData: iconData,
-                isHorizontal: false,
-                onTap: isEmpty
-                    ? null
-                    : () => context.push(
-                      '/year/${Uri.encodeComponent(year)}'
-                      '/semester/${Uri.encodeComponent(semester)}'
-                      '/module/${Uri.encodeComponent(module)}'
-                      '/folder/${Uri.encodeComponent(folder)}',
+                // Tests spans full width with horizontal layout
+                if (isTests) {
+                  return SizedBox(
+                    width: constraints.maxWidth,
+                    child: _FolderCard(
+                      folder: folder,
+                      fileCount: fCount,
+                      isEmpty: isEmpty,
+                      iconColor: iconColor,
+                      iconData: iconData,
+                      isHorizontal: true,
+                      onTap:
+                          isEmpty
+                              ? null
+                              : () => context.push(
+                                '/year/${Uri.encodeComponent(year)}'
+                                '/semester/${Uri.encodeComponent(semester)}'
+                                '/module/${Uri.encodeComponent(module)}'
+                                '/folder/${Uri.encodeComponent(folder)}',
+                              ),
                     ),
-              ),
-            );
-          }).toList(),
+                  );
+                }
+
+                return SizedBox(
+                  width: cardWidth,
+                  child: _FolderCard(
+                    folder: folder,
+                    fileCount: fCount,
+                    isEmpty: isEmpty,
+                    iconColor: iconColor,
+                    iconData: iconData,
+                    isHorizontal: false,
+                    onTap:
+                        isEmpty
+                            ? null
+                            : () => context.push(
+                              '/year/${Uri.encodeComponent(year)}'
+                              '/semester/${Uri.encodeComponent(semester)}'
+                              '/module/${Uri.encodeComponent(module)}'
+                              '/folder/${Uri.encodeComponent(folder)}',
+                            ),
+                  ),
+                );
+              }).toList(),
         );
       },
     );
@@ -304,9 +322,10 @@ class _FolderCard extends StatelessWidget {
           color: const Color(0xFF15151F).withAlpha(179),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isEmpty
-                ? theme.colorScheme.outlineVariant.withAlpha(51)
-                : theme.colorScheme.outlineVariant.withAlpha(77),
+            color:
+                isEmpty
+                    ? theme.colorScheme.outlineVariant.withAlpha(51)
+                    : theme.colorScheme.outlineVariant.withAlpha(77),
           ),
         ),
         child: isHorizontal ? _horizontalLayout(theme) : _verticalLayout(theme),
@@ -338,9 +357,10 @@ class _FolderCard extends StatelessWidget {
         Text(
           isEmpty ? 'Empty' : '$fileCount Files',
           style: theme.textTheme.labelMedium?.copyWith(
-            color: isEmpty
-                ? theme.colorScheme.onSurfaceVariant.withAlpha(128)
-                : theme.colorScheme.onSurfaceVariant,
+            color:
+                isEmpty
+                    ? theme.colorScheme.onSurfaceVariant.withAlpha(128)
+                    : theme.colorScheme.onSurfaceVariant,
           ),
         ),
       ],
@@ -367,26 +387,27 @@ class _FolderCard extends StatelessWidget {
               Text(
                 folder,
                 style: theme.textTheme.titleMedium?.copyWith(
-                  color: isEmpty ? theme.colorScheme.onSurfaceVariant : Colors.white,
+                  color:
+                      isEmpty
+                          ? theme.colorScheme.onSurfaceVariant
+                          : Colors.white,
                 ),
               ),
               const SizedBox(height: 2),
               Text(
                 isEmpty ? 'Empty' : '$fileCount Files',
                 style: theme.textTheme.labelMedium?.copyWith(
-                  color: isEmpty
-                      ? theme.colorScheme.onSurfaceVariant.withAlpha(128)
-                      : theme.colorScheme.onSurfaceVariant,
+                  color:
+                      isEmpty
+                          ? theme.colorScheme.onSurfaceVariant.withAlpha(128)
+                          : theme.colorScheme.onSurfaceVariant,
                 ),
               ),
             ],
           ),
         ),
         if (!isEmpty)
-          Icon(
-            Icons.chevron_right,
-            color: theme.colorScheme.outline,
-          ),
+          Icon(Icons.chevron_right, color: theme.colorScheme.outline),
       ],
     );
   }

@@ -119,13 +119,26 @@ class FavoritesScreen extends ConsumerStatefulWidget {
 class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
   int _selectedTab = 0;
   late final PageController _pageController;
-  List<FavoriteItem> _localFavorites = [];
   final Set<String> _removingIds = {};
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: 0);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      ref.listen(favoritesListProvider, (prev, next) {
+        next.whenData((favorites) {
+          if (_removingIds.isNotEmpty && mounted) {
+            final allRemoved = _removingIds.every((key) {
+              return !favorites.any(
+                  (f) => '${f.itemType}:${f.itemPath}' == key);
+            });
+            if (allRemoved) setState(() => _removingIds.clear());
+          }
+        });
+      });
+    });
   }
 
   @override
@@ -140,14 +153,8 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
 
     setState(() => _removingIds.add(key));
 
-    await Future.delayed(const Duration(milliseconds: 350));
+    await Future.delayed(const Duration(milliseconds: 400));
     if (!mounted) return;
-
-    setState(() {
-      _localFavorites.removeWhere(
-          (f) => f.itemType == item.itemType && f.itemPath == item.itemPath);
-      _removingIds.remove(key);
-    });
 
     final repo = ref.read(favoritesRepositoryProvider);
     try {
@@ -155,9 +162,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
       ref.invalidate(favoritesListProvider);
     } catch (_) {
       if (mounted) {
-        setState(() {
-          _localFavorites.insert(0, item);
-        });
+        setState(() => _removingIds.remove(key));
         ref.invalidate(favoritesListProvider);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Failed to remove favorite')),
@@ -424,16 +429,16 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                       ),
                     ),
                     data: (favorites) {
-                      if (_removingIds.isEmpty) {
-                        _localFavorites = List.from(favorites);
-                      }
-                      final modules = _localFavorites
+                      final displayFavorites = favorites.where((f) {
+                        return !_removingIds.contains('${f.itemType}:${f.itemPath}');
+                      }).toList();
+                      final modules = displayFavorites
                           .where((f) => f.itemType == 'module')
                           .toList();
-                      final files = _localFavorites
+                      final files = displayFavorites
                           .where((f) => f.itemType == 'file')
                           .toList();
-                      final onlineResources = _localFavorites
+                      final onlineResources = displayFavorites
                           .where((f) => f.itemType == 'online_resource')
                           .toList();
                       final counts = [modules.length, files.length, onlineResources.length];

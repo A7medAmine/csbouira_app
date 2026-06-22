@@ -15,6 +15,8 @@ void showUploadReviewSheet({
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
+    enableDrag: false,
+    isDismissible: false,
     backgroundColor: Theme.of(context).colorScheme.surface,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),

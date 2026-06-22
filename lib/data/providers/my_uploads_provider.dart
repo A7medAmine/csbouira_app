@@ -8,6 +8,7 @@ final myUploadsProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async
   final result = await supabase
       .from('uploads')
       .select()
+      .eq('user_id', user.id)
       .order('created_at', ascending: false);
   return result;
 });

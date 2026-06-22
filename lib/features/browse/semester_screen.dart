@@ -115,78 +115,90 @@ class SemesterScreen extends ConsumerWidget {
 
                 // Content
                 Expanded(
-                  child: ListView(
-                    padding: const EdgeInsets.fromLTRB(
-                      AppSpacing.marginMobile,
-                      AppSpacing.marginMobile,
-                      AppSpacing.marginMobile,
-                      24,
-                    ),
-                    children: [
-                      // Academic year badge + description
-                      Row(
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        maxWidth: AppSpacing.containerMax,
+                      ),
+                      child: ListView(
+                        padding: const EdgeInsets.fromLTRB(
+                          AppSpacing.marginMobile,
+                          AppSpacing.marginMobile,
+                          AppSpacing.marginMobile,
+                          24,
+                        ),
                         children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.primary.withAlpha(26),
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                color: theme.colorScheme.primary.withAlpha(51),
+                          // Academic year badge + description
+                          Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: theme.colorScheme.primary.withAlpha(
+                                    26,
+                                  ),
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                    color: theme.colorScheme.primary.withAlpha(
+                                      51,
+                                    ),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Academic Year 2025/2026',
+                                  style: theme.textTheme.labelMedium?.copyWith(
+                                    color: theme.colorScheme.primary,
+                                  ),
+                                ),
                               ),
-                            ),
-                            child: Text(
-                              'Academic Year 2025/2026',
-                              style: theme.textTheme.labelMedium?.copyWith(
-                                color: theme.colorScheme.primary,
-                              ),
+                            ],
+                          ),
+                          const SizedBox(height: AppSpacing.stackMd),
+                          Text(
+                            'Select a semester to access courses, tutorials, and academic materials for your $year.',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
                             ),
                           ),
+
+                          const SizedBox(height: AppSpacing.stackLg),
+
+                          // Semester cards
+                          ...semesters.asMap().entries.map((entry) {
+                            final idx = entry.key;
+                            final sem = entry.value;
+                            final count = moduleCounts[sem] ?? 0;
+
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                bottom:
+                                    idx < semesters.length - 1
+                                        ? AppSpacing.stackMd
+                                        : 0,
+                              ),
+                              child: _SemesterCard(
+                                semester: sem,
+                                moduleCount: count,
+                                year: year,
+                              ),
+                            );
+                          }),
+
+                          const SizedBox(height: AppSpacing.stackMd),
+
+                          // Books & Exercises card
+                          _BooksExercisesCard(year: year),
+
+                          const SizedBox(height: AppSpacing.stackLg),
+
+                          // Online Resources section
+                          _OnlineResourcesSection(resources: yearResources),
                         ],
                       ),
-                      const SizedBox(height: AppSpacing.stackMd),
-                      Text(
-                        'Select a semester to access courses, tutorials, and academic materials for your $year.',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-
-                      const SizedBox(height: AppSpacing.stackLg),
-
-                      // Semester cards
-                      ...semesters.asMap().entries.map((entry) {
-                        final idx = entry.key;
-                        final sem = entry.value;
-                        final count = moduleCounts[sem] ?? 0;
-
-                        return Padding(
-                          padding: EdgeInsets.only(
-                            bottom: idx < semesters.length - 1
-                                ? AppSpacing.stackMd
-                                : 0,
-                          ),
-                          child: _SemesterCard(
-                            semester: sem,
-                            moduleCount: count,
-                            year: year,
-                          ),
-                        );
-                      }),
-
-                      const SizedBox(height: AppSpacing.stackMd),
-
-                      // Books & Exercises card
-                      _BooksExercisesCard(year: year),
-
-                      const SizedBox(height: AppSpacing.stackLg),
-
-                      // Online Resources section
-                      _OnlineResourcesSection(resources: yearResources),
-                    ],
+                    ),
                   ),
                 ),
               ],
@@ -200,16 +212,26 @@ class SemesterScreen extends ConsumerWidget {
 
 IconData _semesterIcon(int num) {
   switch (num) {
-    case 1: return Icons.filter_1;
-    case 2: return Icons.filter_2;
-    case 3: return Icons.filter_3;
-    case 4: return Icons.filter_4;
-    case 5: return Icons.filter_5;
-    case 6: return Icons.filter_6;
-    case 7: return Icons.filter_7;
-    case 8: return Icons.filter_8;
-    case 9: return Icons.filter_9;
-    default: return Icons.filter_1;
+    case 1:
+      return Icons.filter_1;
+    case 2:
+      return Icons.filter_2;
+    case 3:
+      return Icons.filter_3;
+    case 4:
+      return Icons.filter_4;
+    case 5:
+      return Icons.filter_5;
+    case 6:
+      return Icons.filter_6;
+    case 7:
+      return Icons.filter_7;
+    case 8:
+      return Icons.filter_8;
+    case 9:
+      return Icons.filter_9;
+    default:
+      return Icons.filter_1;
   }
 }
 
@@ -227,7 +249,8 @@ class _SemesterCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final semNum = int.tryParse(semester.replaceAll(RegExp(r'[^0-9]'), '')) ?? 0;
+    final semNum =
+        int.tryParse(semester.replaceAll(RegExp(r'[^0-9]'), '')) ?? 0;
     final label = semester;
     final icon = _semesterIcon(semNum);
     final iconColor = theme.colorScheme.primary;
@@ -235,9 +258,10 @@ class _SemesterCard extends StatelessWidget {
     final glowColor = theme.colorScheme.primary;
 
     return GestureDetector(
-      onTap: () => context.push(
-        '/year/${Uri.encodeComponent(year)}/semester/${Uri.encodeComponent(semester)}',
-      ),
+      onTap:
+          () => context.push(
+            '/year/${Uri.encodeComponent(year)}/semester/${Uri.encodeComponent(semester)}',
+          ),
       child: Container(
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
@@ -347,111 +371,109 @@ class _BooksExercisesCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-final isMaster = year.startsWith('Master');
-if (isMaster) {
-  return Container(
-    padding: const EdgeInsets.all(24),
-    decoration: BoxDecoration(
-      color: theme.colorScheme.surfaceContainer.withAlpha(128),
-      borderRadius: BorderRadius.circular(16),
-      border: Border.all(
-        color: theme.colorScheme.outlineVariant.withAlpha(77),
-      ),
-    ),
-    child: Row(
-      children: [
-        Icon(
-          Icons.menu_book,
-          color: theme.colorScheme.onSurfaceVariant,
-          size: 32,
-        ),
-        const SizedBox(width: 24),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Books & Exercices',
-                style: theme.textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.onSurface,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'Empty',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ],
+    final isMaster = year.startsWith('Master');
+    if (isMaster) {
+      return Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surfaceContainer.withAlpha(128),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: theme.colorScheme.outlineVariant.withAlpha(77),
           ),
         ),
-      ],
-    ),
-  );
-}
-return GestureDetector(
-  onTap: () => context.push(
-    '/year/${Uri.encodeComponent(year)}/books',
-  ),
-  child: Container(
-    padding: const EdgeInsets.all(24),
-    decoration: BoxDecoration(
-      color: const Color(0xFF15151F).withAlpha(204),
-      borderRadius: BorderRadius.circular(16),
-      border: Border.all(
-        color: theme.colorScheme.outlineVariant.withAlpha(77),
-      ),
-    ),
-    child: Row(
-      children: [
-        Container(
-          width: 64,
-          height: 64,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                theme.colorScheme.primary.withAlpha(51),
-                theme.colorScheme.surfaceContainerHighest,
-              ],
+        child: Row(
+          children: [
+            Icon(
+              Icons.menu_book,
+              color: theme.colorScheme.onSurfaceVariant,
+              size: 32,
             ),
-          ),
-          child: Icon(
-            Icons.menu_book,
-            color: theme.colorScheme.primary,
-            size: 32,
+            const SizedBox(width: 24),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Books & Exercices',
+                    style: theme.textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Empty',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    return GestureDetector(
+      onTap: () => context.push('/year/${Uri.encodeComponent(year)}/books'),
+      child: Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: const Color(0xFF15151F).withAlpha(204),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: theme.colorScheme.outlineVariant.withAlpha(77),
           ),
         ),
-        const SizedBox(width: 24),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Books & Exercices',
-                style: theme.textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.onSurface,
+        child: Row(
+          children: [
+            Container(
+              width: 64,
+              height: 64,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    theme.colorScheme.primary.withAlpha(51),
+                    theme.colorScheme.surfaceContainerHighest,
+                  ],
                 ),
               ),
-              const SizedBox(height: 4),
-              Text(
-                'Access digital library and solved problem sets',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
+              child: Icon(
+                Icons.menu_book,
+                color: theme.colorScheme.primary,
+                size: 32,
               ),
-            ],
-          ),
+            ),
+            const SizedBox(width: 24),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Books & Exercices',
+                    style: theme.textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Access digital library and solved problem sets',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-      ],
-    ),
-  ),
-);
+      ),
+    );
   }
 }
 
@@ -475,8 +497,12 @@ class _OnlineResourcesSection extends StatelessWidget {
     }
 
     items.sort((a, b) {
-      final aIsYt = a.resource.url.contains('youtube') || a.resource.url.contains('youtu.be');
-      final bIsYt = b.resource.url.contains('youtube') || b.resource.url.contains('youtu.be');
+      final aIsYt =
+          a.resource.url.contains('youtube') ||
+          a.resource.url.contains('youtu.be');
+      final bIsYt =
+          b.resource.url.contains('youtube') ||
+          b.resource.url.contains('youtu.be');
       if (aIsYt && !bIsYt) return -1;
       if (!aIsYt && bIsYt) return 1;
       return 0;
@@ -499,17 +525,18 @@ class _OnlineResourcesSection extends StatelessWidget {
           height: 220,
           child: ListView(
             scrollDirection: Axis.horizontal,
-            children: items.map((item) {
-              return Padding(
-                padding: EdgeInsets.only(
-                  right: items.last == item ? 0 : AppSpacing.stackMd,
-                ),
-                child: _OnlineResourceCard(
-                  subject: item.subject,
-                  resource: item.resource,
-                ),
-              );
-            }).toList(),
+            children:
+                items.map((item) {
+                  return Padding(
+                    padding: EdgeInsets.only(
+                      right: items.last == item ? 0 : AppSpacing.stackMd,
+                    ),
+                    child: _OnlineResourceCard(
+                      subject: item.subject,
+                      resource: item.resource,
+                    ),
+                  );
+                }).toList(),
           ),
         ),
       ],
@@ -527,18 +554,16 @@ class _OnlineResourceCard extends ConsumerWidget {
   final String subject;
   final OnlineResource resource;
 
-  const _OnlineResourceCard({
-    required this.subject,
-    required this.resource,
-  });
+  const _OnlineResourceCard({required this.subject, required this.resource});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final thumbAsync = ref.watch(resourceThumbnailProvider(resource.url));
-    final typeIcon = resource.type.toLowerCase().contains('youtube')
-        ? Icons.play_circle_fill
-        : Icons.language;
+    final typeIcon =
+        resource.type.toLowerCase().contains('youtube')
+            ? Icons.play_circle_fill
+            : Icons.language;
 
     return GestureDetector(
       onTap: () {
@@ -566,14 +591,18 @@ class _OnlineResourceCard extends ConsumerWidget {
               child: SizedBox(
                 width: double.infinity,
                 height: 100,
-                child: thumbAsync.asData?.value != null
-                    ? CachedNetworkImage(
-                        imageUrl: thumbAsync.asData!.value!,
-                        fit: BoxFit.cover,
-                        placeholder: (_, __) => _thumbnailFallback(theme, typeIcon),
-                        errorWidget: (_, __, ___) => _thumbnailFallback(theme, typeIcon),
-                      )
-                    : _thumbnailFallback(theme, typeIcon),
+                child:
+                    thumbAsync.asData?.value != null
+                        ? CachedNetworkImage(
+                          imageUrl: thumbAsync.asData!.value!,
+                          fit: BoxFit.cover,
+                          placeholder:
+                              (_, __) => _thumbnailFallback(theme, typeIcon),
+                          errorWidget:
+                              (_, __, ___) =>
+                                  _thumbnailFallback(theme, typeIcon),
+                        )
+                        : _thumbnailFallback(theme, typeIcon),
               ),
             ),
             const SizedBox(height: AppSpacing.stackMd),
