@@ -7,6 +7,7 @@ import '../../core/theme/app_radius.dart';
 import '../../data/models/downloaded_file.dart';
 import '../../data/providers/downloads_providers.dart';
 import '../../data/services/download_service.dart';
+import 'local_file_viewer.dart';
 
 class DownloadsScreen extends ConsumerWidget {
   const DownloadsScreen({super.key});
@@ -161,7 +162,24 @@ class _DownloadCardState extends ConsumerState<_DownloadCard> {
     return '${date.day}/${date.month}/${date.year}';
   }
 
+  bool get _isViewableInApp {
+    final ext = widget.item.fileName.split('.').last.toLowerCase();
+    return ext == 'pdf' || {'jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'}.contains(ext);
+  }
+
   Future<void> _openFile() async {
+    if (_isViewableInApp) {
+      if (!mounted) return;
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => LocalFileViewerScreen(
+            filePath: widget.item.localPath,
+            fileName: widget.item.fileName,
+          ),
+        ),
+      );
+      return;
+    }
     final service = ref.read(downloadServiceProvider);
     final result = await service.openFile(widget.item.localPath);
     if (result.type == ResultType.noAppToOpen) {
