@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../app.dart';
 import '../../core/theme/app_colors.dart';
 import '../../data/models/drive_node.dart';
+import '../../data/providers/downloads_providers.dart';
+import '../../data/services/download_service.dart';
 import '../../shared/widgets/favorite_star.dart';
 import 'preview_args.dart';
 import 'widgets/pdf_viewer.dart';
@@ -25,14 +28,14 @@ String _getExtension(String name) {
   return name.substring(dotIndex + 1).toLowerCase();
 }
 
-class PreviewScreen extends StatefulWidget {
+class PreviewScreen extends ConsumerStatefulWidget {
   const PreviewScreen({super.key});
 
   @override
-  State<PreviewScreen> createState() => _PreviewScreenState();
+  ConsumerState<PreviewScreen> createState() => _PreviewScreenState();
 }
 
-class _PreviewScreenState extends State<PreviewScreen> {
+class _PreviewScreenState extends ConsumerState<PreviewScreen> {
   int _currentIndex = 0;
   late List<DriveFile> _files;
 
@@ -104,16 +107,48 @@ class _PreviewScreenState extends State<PreviewScreen> {
   }
 
   Future<void> _downloadFile() async {
-    final url = _currentFile.downloadLink ?? _currentFile.link;
-    final uri = Uri.parse(url);
+    final service = ref.read(downloadServiceProvider);
+    final messenger = ScaffoldMessenger.of(context);
+
+    messenger.showSnackBar(
+      const SnackBar(
+        content: Row(
+          children: [
+            SizedBox(
+              width: 18,
+              height: 18,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+            SizedBox(width: 12),
+            Text('Downloading...'),
+          ],
+        ),
+        duration: Duration(seconds: 30),
+      ),
+    );
+
     try {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } catch (_) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Could not open link')),
-        );
-      }
+      final downloaded = await service.downloadFile(_currentFile);
+      messenger.hideCurrentSnackBar();
+      ref.invalidate(downloadsListProvider);
+
+      if (!mounted) return;
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text('"${downloaded.fileName}" downloaded'),
+          duration: const Duration(seconds: 4),
+          action: SnackBarAction(
+            label: 'View',
+            onPressed: () => context.push('/profile/my-downloads'),
+          ),
+        ),
+      );
+    } catch (e) {
+      messenger.hideCurrentSnackBar();
+      if (!mounted) return;
+      messenger.showSnackBar(
+        SnackBar(content: Text('Download failed: $e')),
+      );
     }
   }
 

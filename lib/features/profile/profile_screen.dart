@@ -517,6 +517,13 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
                   const SizedBox(height: AppSpacing.stackSm),
                   _SettingsRow(
                     theme: theme,
+                    icon: Icons.download_outlined,
+                    label: 'Downloads',
+                    onTap: () => context.push('/profile/my-downloads'),
+                  ),
+                  const SizedBox(height: AppSpacing.stackSm),
+                  _SettingsRow(
+                    theme: theme,
                     icon: Icons.favorite,
                     label: 'Favorites',
                     onTap: () => context.push('/favorites'),
@@ -686,6 +693,13 @@ class _LoggedInProfileShell extends ConsumerWidget {
                         icon: Icons.upload_file,
                         label: 'My Uploads',
                         onTap: () => context.push('/profile/my-uploads'),
+                      ),
+                      const SizedBox(height: AppSpacing.stackSm),
+                      _SettingsRow(
+                        theme: theme,
+                        icon: Icons.download_outlined,
+                        label: 'Downloads',
+                        onTap: () => context.push('/profile/my-downloads'),
                       ),
                       const SizedBox(height: AppSpacing.stackSm),
                       _SettingsRow(

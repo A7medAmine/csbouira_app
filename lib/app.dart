@@ -13,6 +13,7 @@ import 'features/browse/file_screen.dart';
 import 'features/browse/folder_screen.dart';
 import 'features/browse/module_screen.dart';
 import 'features/browse/semester_screen.dart';
+import 'features/downloads/downloads_screen.dart';
 import 'features/favorites/favorites_screen.dart';
 import 'features/home/home_screen.dart';
 import 'features/preview/preview_screen.dart';
@@ -233,6 +234,14 @@ final _routerProvider = Provider<GoRouter>((ref) {
                     pageBuilder: (_, state) => _buildTransitionPage(
                       key: state.pageKey,
                       child: const MyUploadsScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path: 'my-downloads',
+                    name: 'myDownloads',
+                    pageBuilder: (_, state) => _buildTransitionPage(
+                      key: state.pageKey,
+                      child: const DownloadsScreen(),
                     ),
                   ),
                 ],
