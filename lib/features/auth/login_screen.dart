@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../core/theme/app_radius.dart';
@@ -348,23 +347,12 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          width: 64,
-          height: 64,
-          decoration: BoxDecoration(
-            color: theme.colorScheme.primaryContainer,
-            borderRadius: BorderRadius.circular(AppRadius.xl),
-            boxShadow: [
-              BoxShadow(
-                color: theme.colorScheme.primaryContainer.withAlpha(77),
-                blurRadius: 24,
-              ),
-            ],
-          ),
-          child: Icon(
-            Icons.terminal,
-            color: theme.colorScheme.onPrimaryContainer,
-            size: 40,
+        ClipRRect(
+          borderRadius: BorderRadius.circular(AppRadius.xl),
+          child: Image.asset(
+            'images/csb-hero-logo_org.png',
+            width: 64,
+            height: 64,
           ),
         ),
         const SizedBox(height: AppSpacing.stackMd),
@@ -639,7 +627,7 @@ class _AuthCard extends StatelessWidget {
                           color: Colors.black54,
                         ),
                       )
-                    : const Icon(FontAwesomeIcons.google, size: 20),
+                    : Image.asset('images/Google.png', width: 20, height: 20),
                 label: Text(
                   'Continue with Google',
                   style: theme.textTheme.bodyLarge?.copyWith(
