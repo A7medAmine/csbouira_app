@@ -226,16 +226,21 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
     if (items.isEmpty) {
       return _FavoritesEmptyState(theme: theme, tabIndex: tabIndex);
     }
-    return ScrollConfiguration(
-      behavior: const _VerticalOnlyScrollBehavior(),
-      child: ListView(
-        padding: const EdgeInsets.fromLTRB(
-          AppSpacing.marginMobile,
-          AppSpacing.stackLg,
-          AppSpacing.marginMobile,
-          24,
-        ),
-        children: [
+    return RefreshIndicator(
+      onRefresh: () async {
+        ref.invalidate(favoritesListProvider);
+        await ref.read(favoritesListProvider.future);
+      },
+      child: ScrollConfiguration(
+        behavior: const _VerticalOnlyScrollBehavior(),
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.marginMobile,
+            AppSpacing.stackLg,
+            AppSpacing.marginMobile,
+            24,
+          ),
+          children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -301,6 +306,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
           );
         }),
       ],
+      ),
       ),
     );
   }

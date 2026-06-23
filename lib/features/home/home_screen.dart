@@ -8,15 +8,7 @@ import '../../data/providers/auth_providers.dart';
 import '../../data/providers/drive_providers.dart';
 import '../../shared/widgets/avatar_widget.dart';
 import '../../shared/widgets/network_banner.dart';
-
-String _initials(String name) {
-  if (name.isEmpty) return 'G';
-  final parts = name.trim().split(RegExp(r'\s+'));
-  if (parts.length >= 2) {
-    return '${parts.first[0]}${parts.last[0]}'.toUpperCase();
-  }
-  return name[0].toUpperCase();
-}
+import '../../shared/widgets/user_avatar.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -56,7 +48,7 @@ class HomeScreen extends ConsumerWidget {
       avatarUrl = null;
     }
 
-    final avatarInitials = _initials(displayName);
+    final avatarInitials = userInitials(displayName);
 
     return Scaffold(
       backgroundColor: const Color(0xFF0D0D14),

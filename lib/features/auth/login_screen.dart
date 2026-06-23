@@ -160,14 +160,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         final supabase = ref.read(supabaseProvider);
         final meta = user.userMetadata;
         try {
-          await supabase.from('profiles').insert({
+          final googlePhotoUrl = account.photoUrl;
+          debugPrint('\x1B[31m[GoogleSignIn] account.photoUrl: $googlePhotoUrl\x1B[0m');
+          await supabase.from('profiles').upsert({
             'id': user.id,
             'full_name': meta?['full_name'] ?? account.displayName ?? user.email ?? 'User',
             'email': user.email ?? '',
-            'avatar_url': meta?['avatar_url'] ?? meta?['picture'],
-          });
-        } catch (_) {
-          debugPrint('\x1B[31m[GoogleSignIn] Profile insert skipped (likely already exists).\x1B[0m');
+            'avatar_url': meta?['avatar_url'] ?? meta?['picture'] ?? googlePhotoUrl,
+          }, onConflict: 'id');
+        } catch (e) {
+          debugPrint('\x1B[31m[GoogleSignIn] Profile upsert failed: $e\x1B[0m');
         }
 
         if (await _promptMergeIfNeeded(user.id)) {

@@ -12,6 +12,7 @@ import '../../data/providers/favorites_providers.dart';
 import '../../data/providers/upload_count_provider.dart';
 import '../../shared/widgets/avatar_widget.dart';
 import '../../shared/widgets/network_banner.dart';
+import '../../shared/widgets/user_avatar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -370,15 +371,6 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
     }
   }
 
-  String _initials(String name) {
-    if (name.isEmpty) return 'G';
-    final parts = name.trim().split(RegExp(r'\s+'));
-    if (parts.length >= 2) {
-      return '${parts.first[0]}${parts.last[0]}'.toUpperCase();
-    }
-    return name[0].toUpperCase();
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = widget.theme;
@@ -428,7 +420,7 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
                 children: [
                   AvatarWidget(
                     size: 96,
-                    initials: _initials(_name),
+                    initials: userInitials(_name),
                     avatarBase64: _avatarBase64,
                     onEdit: _editAvatar,
                     showEditButton: true,
@@ -533,6 +525,13 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
                   const SizedBox(height: AppSpacing.stackSm),
                   _SettingsRow(
                     theme: theme,
+                    icon: Icons.leaderboard_outlined,
+                    label: 'Leaderboard',
+                    onTap: () => context.push('/profile/leaderboard'),
+                  ),
+                  const SizedBox(height: AppSpacing.stackSm),
+                  _SettingsRow(
+                    theme: theme,
                     icon: Icons.info_outline,
                     label: 'About CS Bouira',
                     onTap: () => context.push('/about'),
@@ -581,15 +580,6 @@ class _LoggedInProfileShell extends ConsumerWidget {
     required this.theme,
     required this.user,
   });
-
-  String _initials(String name) {
-    if (name.isEmpty) return '?';
-    final parts = name.trim().split(RegExp(r'\s+'));
-    if (parts.length >= 2) {
-      return '${parts.first[0]}${parts.last[0]}'.toUpperCase();
-    }
-    return name[0].toUpperCase();
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -652,9 +642,9 @@ class _LoggedInProfileShell extends ConsumerWidget {
                    constraints: const BoxConstraints(maxWidth: 440),
                    child: Column(
                      children: [
-                       AvatarWidget(
-                        size: 96,
-                        initials: _initials(fullName),
+                        AvatarWidget(
+                         size: 96,
+                         initials: userInitials(fullName),
                         avatarUrl: avatarUrl,
                         showEditButton: false,
                         boxShadow: [
@@ -711,6 +701,13 @@ class _LoggedInProfileShell extends ConsumerWidget {
                         icon: Icons.favorite,
                         label: 'Favorites',
                         onTap: () => context.push('/favorites'),
+                      ),
+                      const SizedBox(height: AppSpacing.stackSm),
+                      _SettingsRow(
+                        theme: theme,
+                        icon: Icons.leaderboard_outlined,
+                        label: 'Leaderboard',
+                        onTap: () => context.push('/profile/leaderboard'),
                       ),
                       const SizedBox(height: AppSpacing.stackSm),
                       _SettingsRow(

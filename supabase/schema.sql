@@ -83,3 +83,63 @@ create policy "Users can view their own uploads" on uploads
 
 create policy "Users can insert their own uploads" on uploads
   for insert with check (auth.uid() = user_id);
+
+-- Leaderboard: expose aggregated upload counts (bypass RLS via SECURITY DEFINER)
+
+create or replace function get_leaderboard(limit_count integer default 20)
+returns table(
+  user_id uuid,
+  full_name text,
+  avatar_url text,
+  upload_count bigint,
+  rank bigint
+)
+language plpgsql
+security definer
+set search_path = ''
+as $$
+begin
+  return query
+  select
+    p.id,
+    p.full_name,
+    p.avatar_url,
+    count(u.id),
+    row_number() over (order by count(u.id) desc)
+  from public.profiles p
+  join public.uploads u on u.user_id = p.id
+  group by p.id, p.full_name, p.avatar_url
+  having count(u.id) > 0
+  order by upload_count desc
+  limit limit_count;
+end;
+$$;
+
+create or replace function get_user_rank(p_user_id uuid)
+returns table(
+  user_rank bigint,
+  upload_count bigint
+)
+language plpgsql
+security definer
+set search_path = ''
+as $$
+begin
+  return query
+  select ranked.rank, ranked.upload_count
+  from (
+    select
+      p.id,
+      count(u.id) as upload_count,
+      row_number() over (order by count(u.id) desc) as rank
+    from public.profiles p
+    join public.uploads u on u.user_id = p.id
+    group by p.id
+    having count(u.id) > 0
+  ) ranked
+  where ranked.id = p_user_id;
+end;
+$$;
+
+grant execute on function get_leaderboard to anon, authenticated;
+grant execute on function get_user_rank to anon, authenticated;
