@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:open_filex/open_filex.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_radius.dart';
 import '../../data/models/downloaded_file.dart';
@@ -167,7 +168,11 @@ class _DownloadCardState extends ConsumerState<_DownloadCard> {
     return ext == 'pdf' || {'jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'}.contains(ext);
   }
 
+  static const _officeExtensions = {'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx'};
+
   Future<void> _openFile() async {
+    final ext = widget.item.fileName.split('.').last.toLowerCase();
+
     if (_isViewableInApp) {
       if (!mounted) return;
       Navigator.of(context).push(
@@ -180,6 +185,17 @@ class _DownloadCardState extends ConsumerState<_DownloadCard> {
       );
       return;
     }
+
+    if (_officeExtensions.contains(ext)) {
+      final uri = Uri.tryParse(widget.item.driveLink);
+      if (uri != null) {
+        try {
+          await launchUrl(uri, mode: LaunchMode.externalApplication);
+          return;
+        } catch (_) {}
+      }
+    }
+
     final service = ref.read(downloadServiceProvider);
     final result = await service.openFile(widget.item.localPath);
     if (result.type == ResultType.noAppToOpen) {
