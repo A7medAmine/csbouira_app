@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 
@@ -39,20 +41,14 @@ class AboutScreen extends StatelessWidget {
                 Center(
                   child: Column(
                     children: [
-                      Container(
-                        width: 80,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.primaryContainer,
-                          borderRadius: BorderRadius.circular(AppRadius.xl),
-                          boxShadow: [
-                            BoxShadow(
-                              color: theme.colorScheme.primaryContainer.withAlpha(77),
-                              blurRadius: 24,
-                            ),
-                          ],
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(AppRadius.xl),
+                        child: Image.asset(
+                          'images/csb-hero-logo_org.png',
+                          width: 80,
+                          height: 80,
+                          fit: BoxFit.cover,
                         ),
-                        child: Icon(Icons.terminal, color: theme.colorScheme.onPrimaryContainer, size: 48),
                       ),
                       const SizedBox(height: AppSpacing.stackMd),
                       Text(
@@ -77,16 +73,9 @@ class AboutScreen extends StatelessWidget {
                   theme: theme,
                   children: [
                     Text(
-                      'The Academic Resource Hub for Computer Science students at the University of Bouira.',
+                      'CS Bouira is the ultimate academic resource hub for Computer Science students at the University of Bouira. Access a comprehensive collection of course materials, lecture notes, exercises, exams, and study resources organized by year, semester, and module — all in one place.',
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: theme.colorScheme.onSurface.withAlpha(230),
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.stackMd),
-                    Text(
-                      'CS Bouira provides a centralized platform for accessing course materials, lecture notes, exercises, exams, and other academic resources across all years and semesters of the Computer Science program.',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurface.withAlpha(204),
                       ),
                     ),
                   ],
@@ -98,9 +87,121 @@ class AboutScreen extends StatelessWidget {
                   children: [
                     _FeatureRow(theme: theme, text: 'Browse resources by year, semester, and module'),
                     _FeatureRow(theme: theme, text: 'Search across all course materials'),
-                    _FeatureRow(theme: theme, text: 'Download and preview documents'),
-                    _FeatureRow(theme: theme, text: 'Upload and share resources'),
+                    _FeatureRow(theme: theme, text: 'Download and preview PDFs, documents, and images'),
+                    _FeatureRow(theme: theme, text: 'Upload and share academic resources'),
                     _FeatureRow(theme: theme, text: 'Bookmark favorites for quick access'),
+                    _FeatureRow(theme: theme, text: 'QR code scanner for instant resource links'),
+                    _FeatureRow(theme: theme, text: 'Offline access to downloaded materials'),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.stackMd),
+                _SectionCard(
+                  theme: theme,
+                  title: 'Creator',
+                  children: [
+                    GestureDetector(
+                      onTap: () => _launchUrl('https://github.com/zedsalim'),
+                      child: Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(24),
+                            child: CachedNetworkImage(
+                              imageUrl: 'https://github.com/zedsalim.png',
+                              width: 48,
+                              height: 48,
+                              fit: BoxFit.cover,
+                              placeholder: (_, __) => Container(
+                                width: 48,
+                                height: 48,
+                                color: theme.colorScheme.surfaceContainer,
+                                child: Icon(Icons.person, color: theme.colorScheme.primary),
+                              ),
+                              errorWidget: (_, __, ___) => Container(
+                                width: 48,
+                                height: 48,
+                                color: theme.colorScheme.surfaceContainer,
+                                child: Icon(Icons.person, color: theme.colorScheme.primary),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: AppSpacing.stackMd),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Salim Zed',
+                                  style: theme.textTheme.bodyLarge?.copyWith(
+                                    color: theme.colorScheme.onSurface,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  'Original creator of CS Bouira website & API',
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Icon(Icons.chevron_right, color: theme.colorScheme.outline),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.stackSm),
+                    GestureDetector(
+                      onTap: () => _launchUrl('https://github.com/A7medAmine'),
+                      child: Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(24),
+                            child: CachedNetworkImage(
+                              imageUrl: 'https://github.com/A7medAmine.png',
+                              width: 48,
+                              height: 48,
+                              fit: BoxFit.cover,
+                              placeholder: (_, __) => Container(
+                                width: 48,
+                                height: 48,
+                                color: theme.colorScheme.surfaceContainer,
+                                child: Icon(Icons.person, color: theme.colorScheme.primary),
+                              ),
+                              errorWidget: (_, __, ___) => Container(
+                                width: 48,
+                                height: 48,
+                                color: theme.colorScheme.surfaceContainer,
+                                child: Icon(Icons.person, color: theme.colorScheme.primary),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: AppSpacing.stackMd),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Ahmed Amine',
+                                  style: theme.textTheme.bodyLarge?.copyWith(
+                                    color: theme.colorScheme.onSurface,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  'Android app developer',
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Icon(Icons.chevron_right, color: theme.colorScheme.outline),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: AppSpacing.stackMd),
@@ -108,27 +209,44 @@ class AboutScreen extends StatelessWidget {
                   theme: theme,
                   title: 'Contact',
                   children: [
-                    _FeatureRow(theme: theme, icon: Icons.mail_outline, text: 'support@csbouira.dz'),
+                    GestureDetector(
+                      onTap: () => _launchUrl('mailto:support@csbouira.dz'),
+                      child: _FeatureRow(theme: theme, icon: Icons.mail_outline, text: 'support@csbouira.dz'),
+                    ),
                     const SizedBox(height: AppSpacing.stackSm),
-                    _FeatureRow(theme: theme, icon: Icons.language, text: 'www.csbouira.dz'),
+                    GestureDetector(
+                      onTap: () => _launchUrl('https://csbouira.xyz/'),
+                      child: _FeatureRow(theme: theme, icon: Icons.language, text: 'csbouira.xyz'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.stackMd),
+                _SectionCard(
+                  theme: theme,
+                  title: 'License',
+                  children: [
+                    Text(
+                      'This application is released under the MIT License.\n\nCopyright © 2026 Ahmed Amine. All rights reserved.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files, to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software.',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurface.withAlpha(179),
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: AppSpacing.stackLg),
-                Center(
-                  child: Text(
-                    'Built with Flutter & Supabase',
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant.withAlpha(153),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.stackMd),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  Future<void> _launchUrl(String url) async {
+    final uri = Uri.parse(url);
+    try {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (_) {}
   }
 }
 
