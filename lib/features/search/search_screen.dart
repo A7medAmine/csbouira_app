@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../data/models/drive_node.dart';
 import '../../data/providers/drive_providers.dart';
+import '../../shared/widgets/fetch_error_widget.dart';
+import '../../shared/widgets/network_banner.dart';
 
 
 enum SearchResultType { module, folder, file }
@@ -103,6 +105,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   },
                   theme: theme,
                 ),
+                const NetworkBanner(),
                 _FilterChips(
                   selectedYear: _filterYear,
                   selectedSemester: _filterSemester,
@@ -211,7 +214,14 @@ class _SearchScreenState extends State<SearchScreen> {
                 height: 100,
                 child: Center(child: CircularProgressIndicator()),
               ),
-              error: (_, __) => const SizedBox(height: 0),
+              error: (_, __) => const Padding(
+                padding: EdgeInsets.all(16),
+                child: Text(
+                  'Could not load filters. Check your connection.',
+                  style: TextStyle(color: Colors.grey, fontSize: 13),
+                  textAlign: TextAlign.center,
+                ),
+              ),
               data: (root) {
                 final options = optionsBuilder(root);
                 return SizedBox(
@@ -686,7 +696,10 @@ class _SearchResults extends ConsumerWidget {
 
     return rootAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (err, _) => Center(child: Text('Failed to search: $err')),
+      error: (err, _) => FetchErrorWidget(
+        error: err,
+        message: 'Failed to search.',
+      ),
       data: (root) {
         final results = _performSearch(
           query,

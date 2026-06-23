@@ -11,6 +11,7 @@ import '../../data/providers/auth_providers.dart';
 import '../../data/providers/favorites_providers.dart';
 import '../../data/providers/upload_count_provider.dart';
 import '../../shared/widgets/avatar_widget.dart';
+import '../../shared/widgets/network_banner.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -412,6 +413,7 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
       body: SafeArea(
         child: Stack(
           children: [
+            const NetworkBanner(),
             Center(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(
@@ -634,21 +636,22 @@ class _LoggedInProfileShell extends ConsumerWidget {
         ),
       ),
       body: SafeArea(
-        child: Stack(
-          children: [
-            Center(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(
-                  AppSpacing.marginMobile,
-                  24,
-                  AppSpacing.marginMobile,
-                  24,
-                ),
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 440),
-                  child: Column(
-                    children: [
-                      AvatarWidget(
+         child: Stack(
+           children: [
+             const NetworkBanner(),
+             Center(
+               child: SingleChildScrollView(
+                 padding: const EdgeInsets.fromLTRB(
+                   AppSpacing.marginMobile,
+                   24,
+                   AppSpacing.marginMobile,
+                   24,
+                 ),
+                 child: ConstrainedBox(
+                   constraints: const BoxConstraints(maxWidth: 440),
+                   child: Column(
+                     children: [
+                       AvatarWidget(
                         size: 96,
                         initials: _initials(fullName),
                         avatarUrl: avatarUrl,

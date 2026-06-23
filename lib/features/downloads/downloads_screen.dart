@@ -8,6 +8,7 @@ import '../../core/theme/app_radius.dart';
 import '../../data/models/downloaded_file.dart';
 import '../../data/providers/downloads_providers.dart';
 import '../../data/services/download_service.dart';
+import '../../shared/widgets/fetch_error_widget.dart';
 import 'local_file_viewer.dart';
 
 class DownloadsScreen extends ConsumerWidget {
@@ -45,13 +46,9 @@ class DownloadsScreen extends ConsumerWidget {
       ),
       body: downloadsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, _) => Center(
-          child: Text(
-            'Failed to load downloads: $err',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.error,
-            ),
-          ),
+        error: (err, _) => FetchErrorWidget(
+          error: err,
+          message: 'Failed to load downloads.',
         ),
         data: (downloads) {
           if (downloads.isEmpty) {

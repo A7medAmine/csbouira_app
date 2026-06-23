@@ -7,6 +7,7 @@ import '../../data/navigation_data.dart';
 import '../../data/providers/auth_providers.dart';
 import '../../data/providers/drive_providers.dart';
 import '../../shared/widgets/avatar_widget.dart';
+import '../../shared/widgets/network_banner.dart';
 
 String _initials(String name) {
   if (name.isEmpty) return 'G';
@@ -98,6 +99,7 @@ class HomeScreen extends ConsumerWidget {
                       ],
                     ),
 
+                    const NetworkBanner(),
                     const SizedBox(height: 24),
 
                     // Hero section

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../data/providers/drive_providers.dart';
 import '../../shared/widgets/favorite_star.dart';
+import '../../shared/widgets/fetch_error_widget.dart';
 
 String _moduleInitials(String name) {
   final words = name.split(RegExp(r'[\s\-]+'));
@@ -142,7 +143,7 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
                             ),
                         error:
                             (err, _) =>
-                                Center(child: Text('Failed to load: $err')),
+                                FetchErrorWidget(error: err, message: 'Failed to load modules.'),
                         data: (node) {
                           if (node == null)
                             return const Center(

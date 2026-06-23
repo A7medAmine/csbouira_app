@@ -8,6 +8,7 @@ import '../../data/providers/auth_providers.dart';
 import '../../data/providers/drive_providers.dart';
 import '../../data/providers/favorites_providers.dart';
 import '../../shared/widgets/favorite_star.dart';
+import '../../shared/widgets/fetch_error_widget.dart';
 import '../preview/preview_args.dart';
 
 class FileScreen extends StatefulWidget {
@@ -235,7 +236,7 @@ class _FileScreenState extends State<FileScreen> {
                               const Center(child: CircularProgressIndicator()),
                       error:
                           (err, _) =>
-                              Center(child: Text('Failed to load: $err')),
+                              FetchErrorWidget(error: err, message: 'Failed to load files.'),
                       data: (node) {
                         if (node == null) {
                           return Center(

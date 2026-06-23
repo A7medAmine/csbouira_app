@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../core/theme/app_radius.dart';
@@ -79,9 +80,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           'email': _emailController.text.trim(),
         });
 
-        final mergeService = ref.read(guestMergeServiceProvider);
-        await mergeService.mergeGuestDataIntoAccount(userId);
-        ref.invalidate(favoritesListProvider);
+        if (await _promptMergeIfNeeded(userId)) {
+          final mergeService = ref.read(guestMergeServiceProvider);
+          await mergeService.mergeGuestDataIntoAccount(userId);
+          ref.invalidate(favoritesListProvider);
+        }
       } else {
         await authService.signInWithEmail(
           _emailController.text.trim(),
@@ -90,9 +93,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
         final user = authService.currentUser;
         if (user != null) {
-          final mergeService = ref.read(guestMergeServiceProvider);
-          await mergeService.mergeGuestDataIntoAccount(user.id);
-          ref.invalidate(favoritesListProvider);
+          if (await _promptMergeIfNeeded(user.id)) {
+            final mergeService = ref.read(guestMergeServiceProvider);
+            await mergeService.mergeGuestDataIntoAccount(user.id);
+            ref.invalidate(favoritesListProvider);
+          }
         }
       }
 
@@ -164,11 +169,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           debugPrint('\x1B[31m[GoogleSignIn] Profile insert skipped (likely already exists).\x1B[0m');
         }
 
-        debugPrint('\x1B[31m[GoogleSignIn] Merging guest data for user ${user.id}...\x1B[0m');
-        final mergeService = ref.read(guestMergeServiceProvider);
-        await mergeService.mergeGuestDataIntoAccount(user.id);
-        ref.invalidate(favoritesListProvider);
-        debugPrint('\x1B[31m[GoogleSignIn] Guest merge complete.\x1B[0m');
+        if (await _promptMergeIfNeeded(user.id)) {
+          debugPrint('\x1B[31m[GoogleSignIn] Merging guest data for user ${user.id}...\x1B[0m');
+          final mergeService = ref.read(guestMergeServiceProvider);
+          await mergeService.mergeGuestDataIntoAccount(user.id);
+          ref.invalidate(favoritesListProvider);
+          debugPrint('\x1B[31m[GoogleSignIn] Guest merge complete.\x1B[0m');
+        }
       }
 
       debugPrint('\x1B[31m[GoogleSignIn] Navigating to home.\x1B[0m');
@@ -186,6 +193,68 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     } finally {
       if (mounted) setState(() => _googleLoading = false);
     }
+  }
+
+  Future<bool> _promptMergeIfNeeded(String userId) async {
+    final localCache = ref.read(localFavoritesCacheProvider);
+    final localFavorites = await localCache.getAll();
+    if (localFavorites.isEmpty) return false;
+
+    if (!mounted) return false;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) {
+        final theme = Theme.of(ctx);
+        return AlertDialog(
+          backgroundColor: theme.colorScheme.surfaceContainer,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppRadius.lg),
+          ),
+          title: Row(
+            children: [
+              Icon(Icons.favorite, color: theme.colorScheme.primary, size: 24),
+              const SizedBox(width: 8),
+              Text(
+                'Merge Favorites',
+                style: theme.textTheme.headlineMedium?.copyWith(
+                  color: theme.colorScheme.onSurface,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          content: Text(
+            'We found ${localFavorites.length} item${localFavorites.length == 1 ? '' : 's'} saved in your local favorites. Would you like to add them to your account?',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(false),
+              child: Text(
+                'Skip',
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(true),
+              child: Text(
+                'Merge',
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: theme.colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+
+    return confirmed ?? false;
   }
 
   String? _validateEmail(String? value) {
@@ -559,40 +628,34 @@ class _AuthCard extends StatelessWidget {
             const SizedBox(height: AppSpacing.stackMd),
             SizedBox(
               height: 52,
-              child: OutlinedButton.icon(
+              child: ElevatedButton.icon(
                 onPressed: googleLoading ? null : onGoogleSignIn,
                 icon: googleLoading
-                    ? SizedBox(
+                    ? const SizedBox(
                         width: 20,
                         height: 20,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          color: theme.colorScheme.onSurface,
+                          color: Colors.black54,
                         ),
                       )
-                    : Image.asset(
-                        'images/google_logo.png',
-                        width: 20,
-                        height: 20,
-                        errorBuilder: (_, __, ___) => Icon(
-                          Icons.g_mobiledata,
-                          color: theme.colorScheme.onSurface,
-                          size: 24,
-                        ),
-                      ),
+                    : const Icon(FontAwesomeIcons.google, size: 20),
                 label: Text(
                   'Continue with Google',
                   style: theme.textTheme.bodyLarge?.copyWith(
-                    color: theme.colorScheme.onSurface,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-                style: OutlinedButton.styleFrom(
-                  side: BorderSide(
-                    color: theme.colorScheme.outlineVariant.withAlpha(77),
-                  ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.black87,
+                  disabledBackgroundColor: Colors.white70,
+                  disabledForegroundColor: Colors.black38,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppRadius.md),
+                    borderRadius: BorderRadius.circular(AppRadius.lg),
                   ),
+                  elevation: 0,
                 ),
               ),
             ),

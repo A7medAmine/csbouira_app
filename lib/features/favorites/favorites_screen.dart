@@ -11,6 +11,8 @@ import '../../data/providers/drive_providers.dart';
 import '../../data/providers/favorites_providers.dart';
 import '../../data/providers/thumbnail_providers.dart';
 import '../../data/services/file_cache_service.dart';
+import '../../shared/widgets/fetch_error_widget.dart';
+import '../../shared/widgets/network_banner.dart';
 import '../preview/preview_args.dart';
 
 
@@ -400,19 +402,17 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                   ),
                 ),
 
+                const NetworkBanner(),
+
                 // Content
                 Expanded(
                   child: favoritesAsync.when(
                     loading: () => const Center(
                       child: CircularProgressIndicator(),
                     ),
-                    error: (err, _) => Center(
-                      child: Text(
-                        'Failed to load favorites: $err',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.error,
-                        ),
-                      ),
+                    error: (err, _) => FetchErrorWidget(
+                      error: err,
+                      message: 'Failed to load favorites.',
                     ),
                     data: (favorites) {
                       final displayFavorites = favorites.where((f) {

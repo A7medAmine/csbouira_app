@@ -19,6 +19,7 @@ import '../../data/providers/upload_count_provider.dart';
 import '../../data/providers/upload_state_provider.dart';
 import '../../data/services/local_profile_cache.dart';
 import '../../data/services/upload_service.dart' show CancelToken, UploadService;
+import '../../shared/widgets/network_banner.dart';
 import 'upload_review_screen.dart';
 
 final _uploadServiceProvider = Provider<UploadService>((ref) {
@@ -646,6 +647,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
         child: Column(
           children: [
             _AppBar(theme: theme),
+            const NetworkBanner(),
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(
@@ -1307,46 +1309,29 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
 
   Widget _buildSubmitButton(ThemeData theme, UploadFormState uploadState) {
     if (uploadState.isUploading) {
-      final progressPercent = (uploadState.progress * 100).clamp(0, 100).toInt();
       return Column(
         children: [
           SizedBox(
             width: double.infinity,
-            child: FilledButton(
+            child: FilledButton.icon(
               onPressed: null,
+              icon: const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.white70,
+                ),
+              ),
+              label: const Text('Uploading\u2026'),
               style: FilledButton.styleFrom(
                 backgroundColor: theme.colorScheme.surfaceContainerHighest,
                 disabledBackgroundColor: theme.colorScheme.surfaceContainerHighest,
+                disabledForegroundColor: theme.colorScheme.onSurfaceVariant,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(AppRadius.md),
                 ),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
-                      child: LinearProgressIndicator(
-                        value: uploadState.progress,
-                        minHeight: 6,
-                        backgroundColor: theme.colorScheme.surfaceContainerHighest,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          theme.colorScheme.primary,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Text(
-                    'Uploading\u2026 $progressPercent%',
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
               ),
             ),
           ),

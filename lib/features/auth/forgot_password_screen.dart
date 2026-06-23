@@ -77,6 +77,20 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
     });
 
     try {
+      final supabase = Supabase.instance.client;
+      final profile = await supabase
+          .from('profiles')
+          .select('email')
+          .eq('email', email)
+          .maybeSingle();
+
+      if (profile == null) {
+        if (mounted) {
+          setState(() => _error = 'This email is not registered.');
+        }
+        return;
+      }
+
       final authService = ref.read(authServiceProvider);
       await authService.sendPasswordResetOtp(email);
 

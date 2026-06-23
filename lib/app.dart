@@ -257,6 +257,19 @@ final _routerProvider = Provider<GoRouter>((ref) {
               ),
             ],
           ),
+          // Branch 5: Downloads
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/downloads',
+                name: 'downloads',
+                pageBuilder: (_, state) => _buildTransitionPage(
+                  key: state.pageKey,
+                  child: const DownloadsScreen(),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
       GoRoute(
@@ -351,15 +364,15 @@ class _ShellScaffoldState extends State<_ShellScaffold> {
           canPop: false,
           onPopInvokedWithResult: _onPopInvokedWithResult,
           child: Scaffold(
-               body: AnimatedSwitcher(
-                 duration: const Duration(milliseconds: 180),
-                 switchInCurve: Curves.easeInOut,
-                 switchOutCurve: Curves.easeInOut,
-                 child: KeyedSubtree(
-                   key: ValueKey<int>(widget.navigationShell.currentIndex),
-                   child: widget.navigationShell,
-                 ),
-               ),
+            body: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 180),
+              switchInCurve: Curves.easeInOut,
+              switchOutCurve: Curves.easeInOut,
+              child: KeyedSubtree(
+                key: ValueKey<int>(widget.navigationShell.currentIndex),
+                child: widget.navigationShell,
+              ),
+            ),
             bottomNavigationBar: isFullScreen
                 ? null
                 : AppBottomNav(

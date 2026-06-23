@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../data/providers/my_uploads_provider.dart';
+import '../../shared/widgets/fetch_error_widget.dart';
 
 class MyUploadsScreen extends ConsumerWidget {
   const MyUploadsScreen({super.key});
@@ -32,13 +33,9 @@ class MyUploadsScreen extends ConsumerWidget {
       ),
       body: uploadsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, _) => Center(
-          child: Text(
-            'Failed to load uploads.',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.error,
-            ),
-          ),
+        error: (err, _) => FetchErrorWidget(
+          error: err,
+          message: 'Failed to load uploads.',
         ),
         data: (uploads) {
           if (uploads.isEmpty) {
