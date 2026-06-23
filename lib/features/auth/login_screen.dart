@@ -60,9 +60,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       final authService = ref.read(authServiceProvider);
 
       if (_isSignup) {
+        final name = _fullNameController.text.trim();
         final response = await authService.signUpWithEmail(
           _emailController.text.trim(),
           _passwordController.text,
+          data: {'full_name': name},
         );
 
         if (response.user == null) {

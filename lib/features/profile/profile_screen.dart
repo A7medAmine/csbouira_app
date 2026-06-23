@@ -597,10 +597,11 @@ class _LoggedInProfileShell extends ConsumerWidget {
     final profile = profileAsync.asData?.value;
 
     final meta = user.userMetadata;
+    final emailName = user.email?.split('@').first;
     final fullName = (profile?['full_name'] as String?) ??
         meta?['full_name'] as String? ??
         meta?['name'] as String? ??
-        user.email ??
+        emailName ??
         'User';
     final email = (profile?['email'] as String?) ?? user.email ?? '';
     final avatarUrl = (profile?['avatar_url'] as String?) ??

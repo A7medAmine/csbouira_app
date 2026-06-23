@@ -9,8 +9,8 @@ class AuthService {
 
   Stream<AuthState> get authStateChanges => _supabase.auth.onAuthStateChange;
 
-  Future<AuthResponse> signUpWithEmail(String email, String password) {
-    return _supabase.auth.signUp(email: email, password: password);
+  Future<AuthResponse> signUpWithEmail(String email, String password, {Map<String, dynamic>? data}) {
+    return _supabase.auth.signUp(email: email, password: password, data: data);
   }
 
   Future<AuthResponse> signInWithEmail(String email, String password) {

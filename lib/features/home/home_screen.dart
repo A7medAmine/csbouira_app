@@ -36,11 +36,12 @@ class HomeScreen extends ConsumerWidget {
       final profileAsync = ref.watch(profileProvider(user.id));
       final profile = profileAsync.asData?.value;
       final meta = user.userMetadata;
+      final emailName = user.email?.split('@').first;
       displayName =
           (profile?['full_name'] as String?) ??
           meta?['full_name'] as String? ??
           meta?['name'] as String? ??
-          user.email ??
+          emailName ??
           'User';
       avatarUrl =
           (profile?['avatar_url'] as String?) ??
