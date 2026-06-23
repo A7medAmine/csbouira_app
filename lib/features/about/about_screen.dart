@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 
@@ -216,11 +217,12 @@ class AboutScreen extends StatelessWidget {
                           Container(
                             width: 48,
                             height: 48,
+                            alignment: Alignment.center,
                             decoration: BoxDecoration(
                               color: theme.colorScheme.surfaceContainer,
                               borderRadius: BorderRadius.circular(AppRadius.md),
                             ),
-                            child: Icon(Icons.code, color: theme.colorScheme.primary, size: 24),
+                            child: FaIcon(FontAwesomeIcons.github, color: theme.colorScheme.primary, size: 24),
                           ),
                           const SizedBox(width: AppSpacing.stackMd),
                           Expanded(
@@ -246,6 +248,23 @@ class AboutScreen extends StatelessWidget {
                           ),
                           Icon(Icons.chevron_right, color: theme.colorScheme.outline),
                         ],
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.stackSm),
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: () => _launchUrl('https://github.com/A7medAmine/csbouira_app/issues/new'),
+                        icon: FaIcon(FontAwesomeIcons.bug, size: 16),
+                        label: const Text('Report an Issue'),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: theme.colorScheme.primary,
+                          side: BorderSide(color: theme.colorScheme.primary.withAlpha(77)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(AppRadius.md),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                        ),
                       ),
                     ),
                   ],
