@@ -24,6 +24,7 @@ class GuestMergeService {
               'item_path': fav.itemPath,
               'display_name': fav.displayName,
               if (fav.resourceType != null) 'resource_type': fav.resourceType,
+              if (fav.folderPath != null) 'folder_path': fav.folderPath,
             },
             onConflict: 'user_id, item_type, item_path',
           );

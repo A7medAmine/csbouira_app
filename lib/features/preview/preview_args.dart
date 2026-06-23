@@ -8,8 +8,13 @@ class PreviewArgs {
   /// Index of the tapped file within [files].
   final int initialIndex;
 
+  /// Optional path segments for the folder containing these files.
+  /// Used by the QR share feature to encode the file's location.
+  final List<String>? folderPath;
+
   const PreviewArgs({
     required this.files,
     required this.initialIndex,
+    this.folderPath,
   });
 }

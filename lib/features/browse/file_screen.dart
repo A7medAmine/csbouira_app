@@ -471,6 +471,8 @@ class _FileScreenState extends State<FileScreen> {
                                                                 files: files,
                                                                 initialIndex:
                                                                     fileIndex,
+                                                                folderPath:
+                                                                    _segments,
                                                               ),
                                                             );
                                                           }
@@ -600,21 +602,26 @@ class _FileScreenState extends State<FileScreen> {
                                                 (entry) => _FileCard(
                                                   file: entry.value,
                                                   theme: theme,
+                                                  isHighlighted:
+                                                      entry.value.name ==
+                                                      _highlightedItem,
                                                   onTap: () {
-                                                    if (entry
-                                                        .value
-                                                        .link
-                                                        .isNotEmpty) {
-                                                      context.push(
-                                                        '/preview',
-                                                        extra: PreviewArgs(
-                                                          files: files,
-                                                          initialIndex:
-                                                              entry.key,
-                                                        ),
-                                                      );
-                                                    }
-                                                  },
+                                                     if (entry
+                                                         .value
+                                                         .link
+                                                         .isNotEmpty) {
+                                                       context.push(
+                                                         '/preview',
+                                                         extra: PreviewArgs(
+                                                           files: files,
+                                                           initialIndex:
+                                                               entry.key,
+                                                           folderPath:
+                                                               _segments,
+                                                         ),
+                                                       );
+                                                     }
+                                                   },
                                                 ),
                                               ),
                                           ],
@@ -1030,11 +1037,13 @@ class _FileCard extends ConsumerStatefulWidget {
   final DriveFile file;
   final ThemeData theme;
   final VoidCallback onTap;
+  final bool isHighlighted;
 
   const _FileCard({
     required this.file,
     required this.theme,
     required this.onTap,
+    this.isHighlighted = false,
   });
 
   @override
@@ -1080,18 +1089,16 @@ class _FileCardState extends ConsumerState<_FileCard>
     }
   }
 
-  void _toggleFavorite() {
+  Future<void> _toggleFavorite() async {
     setState(() => _isFavorited = !_isFavorited);
-    ref
-        .read(favoritesRepositoryProvider)
-        .favoriteFile(widget.file.link, widget.file.name)
-        .then((_) {
-          ref.invalidate(favoritesListProvider);
-        })
-        .catchError((_) {
-          ref.invalidate(favoritesListProvider);
-          _loadFavoriteState();
-        });
+    try {
+      await ref.read(favoritesListProvider.notifier).toggleFile(
+        widget.file.link,
+        widget.file.name,
+      );
+    } catch (_) {
+      _loadFavoriteState();
+    }
   }
 
   @override
@@ -1148,17 +1155,24 @@ class _FileCardState extends ConsumerState<_FileCard>
               ),
               Transform.translate(
                 offset: Offset(-_dragOffset.clamp(0, 100).toDouble(), 0),
-                child: SizedBox(
-                  height: 76,
-                  child: Container(
-                    padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      color: widget.theme.colorScheme.surface.withAlpha(204),
-                      border: Border.all(
-                        color: widget.theme.colorScheme.outlineVariant
-                            .withAlpha(26),
+                  child: SizedBox(
+                    height: 76,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: widget.isHighlighted
+                            ? widget.theme.colorScheme.primaryContainer
+                                .withAlpha(51)
+                            : widget.theme.colorScheme.surface.withAlpha(204),
+                        border: Border.all(
+                          color: widget.isHighlighted
+                              ? widget.theme.colorScheme.primary
+                                  .withAlpha(153)
+                              : widget.theme.colorScheme.outlineVariant
+                                  .withAlpha(26),
+                        ),
                       ),
-                    ),
                     child: Row(
                       children: [
                         Stack(

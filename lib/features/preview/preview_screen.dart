@@ -9,8 +9,10 @@ import '../../core/theme/app_colors.dart';
 import '../../data/models/drive_node.dart';
 import '../../data/providers/downloads_providers.dart';
 import '../../data/services/download_service.dart';
+import '../../data/services/qr_share_service.dart';
 import '../../shared/widgets/favorite_star.dart';
 import 'preview_args.dart';
+import 'share_modal.dart';
 import 'widgets/pdf_viewer.dart';
 import 'widgets/image_viewer.dart';
 import 'widgets/doc_viewer.dart';
@@ -28,6 +30,8 @@ String _getExtension(String name) {
   return name.substring(dotIndex + 1).toLowerCase();
 }
 
+enum _OverflowAction { download, share, openInDrive }
+
 class PreviewScreen extends ConsumerStatefulWidget {
   const PreviewScreen({super.key});
 
@@ -38,6 +42,7 @@ class PreviewScreen extends ConsumerStatefulWidget {
 class _PreviewScreenState extends ConsumerState<PreviewScreen> {
   int _currentIndex = 0;
   late List<DriveFile> _files;
+  List<String>? _folderPath;
 
   // PDF page tracking
   PdfViewerController? _pdfController;
@@ -51,6 +56,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
     if (extra is PreviewArgs && _files.isEmpty) {
       _files = extra.files;
       _currentIndex = extra.initialIndex;
+      _folderPath = extra.folderPath;
     }
   }
 
@@ -165,6 +171,38 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
     }
   }
 
+  ShareFileData? _buildShareData() {
+    final folderPath = _folderPath;
+    if (folderPath == null || folderPath.length < 2) return null;
+
+    if (folderPath.length <= 2) {
+      return ShareFileData(
+        grade: folderPath[0],
+        semester: '',
+        module: '',
+        folder: folderPath[1],
+        fileIndex: _currentIndex,
+        subpath: folderPath.length > 2 ? folderPath.sublist(2).join('>') : null,
+      );
+    }
+    return ShareFileData(
+      grade: folderPath[0],
+      semester: folderPath[1],
+      module: folderPath[2],
+      folder: folderPath.length >= 4 ? folderPath[3] : '',
+      fileIndex: _currentIndex,
+      subpath: folderPath.length > 4 ? folderPath.sublist(4).join('>') : null,
+    );
+  }
+
+  void _showShareModal() {
+    final shareData = _buildShareData();
+    showDialog(
+      context: context,
+      builder: (ctx) => ShareModal(file: _currentFile, shareData: shareData),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_files.isEmpty) {
@@ -185,7 +223,11 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
               ? null
               : AppBar(
                   backgroundColor: const Color(0xFF111221),
+                  actionsPadding: EdgeInsets.zero,
+                  titleSpacing: 0,
                   leading: IconButton(
+                    constraints: const BoxConstraints(),
+                    padding: EdgeInsets.zero,
                     icon: Icon(
                       Icons.arrow_back,
                       color: theme.colorScheme.primary,
@@ -219,29 +261,77 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
                       itemType: 'file',
                       itemPath: _currentFile.link,
                       displayName: _currentFile.name,
+                      folderPath: _folderPath?.join('>'),
+                      size: 28,
                     ),
-                    IconButton(
-                      icon: Icon(
+                    GestureDetector(
+                      onTap: _toggleFullScreen,
+                      child: Icon(
                         isFullScreen
                             ? Icons.fullscreen_exit
                             : Icons.fullscreen,
                         color: theme.colorScheme.onSurfaceVariant,
+                        size: 28,
                       ),
-                      onPressed: _toggleFullScreen,
                     ),
-                    IconButton(
+                    PopupMenuButton<_OverflowAction>(
                       icon: Icon(
-                        Icons.download,
+                        Icons.more_vert,
                         color: theme.colorScheme.onSurfaceVariant,
+                        size: 28,
                       ),
-                      onPressed: _downloadFile,
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.open_in_new,
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                      onPressed: _openExternally,
+                      padding: EdgeInsets.zero,
+                      onSelected: (action) {
+                        switch (action) {
+                          case _OverflowAction.download:
+                            _downloadFile();
+                          case _OverflowAction.share:
+                            _showShareModal();
+                          case _OverflowAction.openInDrive:
+                            _openExternally();
+                        }
+                      },
+                      itemBuilder: (_) => [
+                        PopupMenuItem(
+                          value: _OverflowAction.download,
+                          child: SizedBox(
+                            width: 160,
+                            child: Row(
+                              children: [
+                                const Icon(Icons.download, size: 20),
+                                const SizedBox(width: 12),
+                                const Text('Download'),
+                              ],
+                            ),
+                          ),
+                        ),
+                        PopupMenuItem(
+                          value: _OverflowAction.share,
+                          child: SizedBox(
+                            width: 160,
+                            child: Row(
+                              children: [
+                                const Icon(Icons.qr_code, size: 20),
+                                const SizedBox(width: 12),
+                                const Text('Share QR'),
+                              ],
+                            ),
+                          ),
+                        ),
+                        PopupMenuItem(
+                          value: _OverflowAction.openInDrive,
+                          child: SizedBox(
+                            width: 160,
+                            child: Row(
+                              children: [
+                                const Icon(Icons.open_in_new, size: 20),
+                                const SizedBox(width: 12),
+                                const Text('Open in Google Drive'),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

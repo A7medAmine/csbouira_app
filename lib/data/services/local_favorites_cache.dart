@@ -15,7 +15,7 @@ class LocalFavoritesCache {
   }
 
   Future<void> addFavorite(
-      String itemType, String itemPath, String displayName, {String? resourceType}) async {
+      String itemType, String itemPath, String displayName, {String? resourceType, String? folderPath}) async {
     final items = await getAll();
     items.removeWhere((f) => f.itemPath == itemPath && f.itemType == itemType);
     items.insert(
@@ -25,6 +25,7 @@ class LocalFavoritesCache {
         itemPath: itemPath,
         displayName: displayName,
         resourceType: resourceType,
+        folderPath: folderPath,
       ),
     );
     await _save(items);
@@ -58,6 +59,7 @@ class LocalFavoriteItem {
   final String itemPath;
   final String displayName;
   final String? resourceType;
+  final String? folderPath;
   final DateTime createdAt;
 
   LocalFavoriteItem({
@@ -65,6 +67,7 @@ class LocalFavoriteItem {
     required this.itemPath,
     required this.displayName,
     this.resourceType,
+    this.folderPath,
     DateTime? createdAt,
   }) : createdAt = createdAt ?? DateTime.now();
 
@@ -73,6 +76,7 @@ class LocalFavoriteItem {
         'itemPath': itemPath,
         'displayName': displayName,
         if (resourceType != null) 'resourceType': resourceType,
+        if (folderPath != null) 'folderPath': folderPath,
         'createdAt': createdAt.toIso8601String(),
       };
 
@@ -82,6 +86,7 @@ class LocalFavoriteItem {
         itemPath: json['itemPath'] as String,
         displayName: json['displayName'] as String,
         resourceType: json['resourceType'] as String?,
+        folderPath: json['folderPath'] as String?,
         createdAt: DateTime.parse(json['createdAt'] as String),
       );
 }

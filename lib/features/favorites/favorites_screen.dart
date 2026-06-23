@@ -7,7 +7,6 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_radius.dart';
 import '../../data/models/drive_node.dart';
-import '../../data/providers/auth_providers.dart';
 import '../../data/providers/drive_providers.dart';
 import '../../data/providers/favorites_providers.dart';
 import '../../data/providers/thumbnail_providers.dart';
@@ -153,33 +152,19 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
 
     setState(() => _removingIds.add(key));
 
-    await Future.delayed(const Duration(milliseconds: 400));
+    await ref.read(favoritesListProvider.notifier).remove(
+      item.itemType,
+      item.itemPath,
+    );
     if (!mounted) return;
 
-    final repo = ref.read(favoritesRepositoryProvider);
-    try {
-      await repo.removeFavorite(item.itemType, item.itemPath);
-      ref.invalidate(favoritesListProvider);
-    } catch (_) {
-      if (mounted) {
-        setState(() => _removingIds.remove(key));
-        ref.invalidate(favoritesListProvider);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to remove favorite')),
-        );
-      }
-      return;
-    }
-
-    if (mounted) {
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Removed from favorites'),
-          duration: const Duration(seconds: 2),
-        ),
-      );
-    }
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Removed from favorites'),
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 
   void _navigateTo(FavoriteItem item) {
@@ -207,6 +192,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
       context.push('/preview', extra: PreviewArgs(
         files: [file],
         initialIndex: 0,
+        folderPath: item.folderPath?.split('>'),
       ));
     } else if (item.itemType == 'online_resource') {
       final uri = Uri.tryParse(item.itemPath);

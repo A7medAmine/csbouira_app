@@ -17,6 +17,7 @@ import 'features/downloads/downloads_screen.dart';
 import 'features/favorites/favorites_screen.dart';
 import 'features/home/home_screen.dart';
 import 'features/preview/preview_screen.dart';
+import 'features/scan/qr_scanner_screen.dart';
 import 'features/profile/my_uploads_screen.dart';
 import 'features/profile/profile_screen.dart';
 import 'features/search/search_screen.dart';
@@ -172,6 +173,14 @@ final _routerProvider = Provider<GoRouter>((ref) {
                     pageBuilder: (_, state) => _buildTransitionPage(
                       key: state.pageKey,
                       child: const PreviewScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path: 'scan',
+                    name: 'scan',
+                    pageBuilder: (_, state) => _buildTransitionPage(
+                      key: state.pageKey,
+                      child: const QrScannerScreen(),
                     ),
                   ),
                 ],

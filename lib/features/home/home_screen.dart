@@ -124,46 +124,62 @@ class HomeScreen extends ConsumerWidget {
                     const SizedBox(height: 24),
 
                     // Search bar
-                    GestureDetector(
-                      onTap: () => context.push('/search'),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.stackMd,
-                          vertical: 14,
-                        ),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.surfaceContainer,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: theme.colorScheme.outlineVariant.withAlpha(
-                              77,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => context.push('/search'),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: AppSpacing.stackMd,
+                                vertical: 14,
+                              ),
+                              decoration: BoxDecoration(
+                                color: theme.colorScheme.surfaceContainer,
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: theme.colorScheme.outlineVariant.withAlpha(
+                                    77,
+                                  ),
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.search,
+                                    color: theme.colorScheme.outline,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Text(
+                                      'Search courses, files, or exams...',
+                                      style: theme.textTheme.bodyMedium?.copyWith(
+                                        color: theme.colorScheme.onSurfaceVariant,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.search,
-                              color: theme.colorScheme.outline,
-                              size: 20,
+                        const SizedBox(width: 8),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.surfaceContainer,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: theme.colorScheme.outlineVariant.withAlpha(77),
                             ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Text(
-                                'Search courses, files, or exams...',
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: theme.colorScheme.onSurfaceVariant,
-                                ),
-                              ),
-                            ),
-                            Icon(
-                              Icons.tune,
-                              color: theme.colorScheme.outline,
-                              size: 20,
-                            ),
-                          ],
+                          ),
+                          child: IconButton(
+                            icon: const Icon(Icons.qr_code_scanner),
+                            color: theme.colorScheme.onSurfaceVariant,
+                            onPressed: () => context.push('/scan'),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
 
                     const SizedBox(height: 32),

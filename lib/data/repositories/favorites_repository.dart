@@ -19,7 +19,7 @@ class FavoritesRepository {
   String? get _userId => _authService.currentUser?.id;
 
   Future<void> addFavorite(
-      String itemType, String itemPath, String displayName, {String? resourceType}) async {
+      String itemType, String itemPath, String displayName, {String? resourceType, String? folderPath}) async {
     if (_isLoggedIn) {
       await _supabase.from('favorites').insert({
         'user_id': _userId,
@@ -27,9 +27,11 @@ class FavoritesRepository {
         'item_path': itemPath,
         'display_name': displayName,
         if (resourceType != null) 'resource_type': resourceType,
+        if (folderPath != null) 'folder_path': folderPath,
       });
     } else {
-      await _local.addFavorite(itemType, itemPath, displayName, resourceType: resourceType);
+      await _local.addFavorite(itemType, itemPath, displayName,
+          resourceType: resourceType, folderPath: folderPath);
     }
   }
 
