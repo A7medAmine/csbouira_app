@@ -207,6 +207,52 @@ class AboutScreen extends StatelessWidget {
                 const SizedBox(height: AppSpacing.stackMd),
                 _SectionCard(
                   theme: theme,
+                  title: 'Source Code',
+                  children: [
+                    GestureDetector(
+                      onTap: () => _launchUrl('https://github.com/A7medAmine/csbouira_app'),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 48,
+                            height: 48,
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.surfaceContainer,
+                              borderRadius: BorderRadius.circular(AppRadius.md),
+                            ),
+                            child: Icon(Icons.code, color: theme.colorScheme.primary, size: 24),
+                          ),
+                          const SizedBox(width: AppSpacing.stackMd),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'GitHub Repository',
+                                  style: theme.textTheme.bodyLarge?.copyWith(
+                                    color: theme.colorScheme.onSurface,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  'github.com/A7medAmine/csbouira_app',
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Icon(Icons.chevron_right, color: theme.colorScheme.outline),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.stackMd),
+                _SectionCard(
+                  theme: theme,
                   title: 'Contact',
                   children: [
                     GestureDetector(
