@@ -656,14 +656,22 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
         } else {
           final cache = LocalProfileCache();
           await cache.incrementUploadCount();
+          await cache.addUploadEntry({
+            'file_name': uploadFileName,
+            'module_name': moduleName,
+            'grade': _selectedGrade!,
+            'semester': _mapSemester(_selectedSemester!),
+            'file_type': fileType,
+            'created_at': DateTime.now().toIso8601String(),
+          });
         }
       } else {
         lastError = '$uploadFileName: ${result.message ?? "Upload failed"}';
       }
     }
 
+    ref.invalidate(uploadCountProvider);
     if (user != null) {
-      ref.invalidate(uploadCountProvider);
       ref.invalidate(myUploadsProvider);
     }
 

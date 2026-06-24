@@ -154,13 +154,19 @@ class MyUploadsScreen extends ConsumerWidget {
                       const SizedBox(height: AppSpacing.stackSm),
                       Row(
                         children: [
-                          _Tag(theme: theme, label: grade),
-                          const SizedBox(width: 6),
-                          _Tag(theme: theme, label: semester),
-                          const SizedBox(width: 6),
-                          _Tag(theme: theme, label: fileType),
+                          Expanded(
+                            child: Wrap(
+                              spacing: 6,
+                              runSpacing: 4,
+                              children: [
+                                _Tag(theme: theme, label: grade),
+                                _Tag(theme: theme, label: semester),
+                                _Tag(theme: theme, label: fileType),
+                              ],
+                            ),
+                          ),
                           if (date.isNotEmpty) ...[
-                            const Spacer(),
+                            const SizedBox(width: 6),
                             Text(
                               date,
                               style: theme.textTheme.labelSmall?.copyWith(
@@ -198,6 +204,8 @@ class _Tag extends StatelessWidget {
       ),
       child: Text(
         label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
         style: theme.textTheme.labelSmall?.copyWith(
           color: theme.colorScheme.primary,
           fontSize: 10,
