@@ -39,6 +39,120 @@ const _grades = [
   'Master 2 IA',
 ];
 
+const _gradeShortcuts = {
+  'Licence 1': 'L1',
+  'Licence 2': 'L2',
+  'Licence 3 SI': 'L3 SI',
+  'Master 1 GSI': 'M1 GSI',
+  'Master 1 ISIL': 'M1 ISIL',
+  'Master 1 IA': 'M1 IA',
+  'Master 2 GSI': 'M2 GSI',
+  'Master 2 ISIL': 'M2 ISIL',
+  'Master 2 IA': 'M2 IA',
+};
+
+const _moduleShortcuts = {
+  'Algèbre 1': 'ALG1',
+  'Algorithmique Et Structure De Données 1': 'ASD1',
+  'Analyse 1': 'ANA1',
+  'Anglais 1': 'ANG1',
+  'Physique 1': 'PHY1',
+  'Structure Machine 1': 'SM1',
+  'Terminologie Scientifique': 'TS',
+  'Doc Scanner Testing': 'DST',
+  'Algèbre 2': 'ALG2',
+  'Algorithmique Et Structure De Données 2': 'ASD2',
+  'Analyse 2': 'ANA2',
+  'Outils De Programmation Pour Les Mathématiques': 'OPM',
+  'Physique 2': 'PHY2',
+  'Probabilités Et Statistique Descriptive': 'PSD',
+  'Structure Machine 2': 'SM2',
+  "Technologie De L'Information Et De La Communication": 'TIC',
+  'Algorithmique Et Structure De Données 3': 'ASD3',
+  'Anglais 3': 'ANG3',
+  'Architecture Des Ordinateurs': 'AO',
+  'Logique Mathématique': 'LM',
+  'Méthodes Numériques': 'MN',
+  "Systèmes D'Information": 'SI',
+  'Theorie Des Graphes': 'TG',
+  'Anglais 4': 'ANG4',
+  'Base De Donnees': 'BD',
+  "Developpement D'applications Web": 'DAW',
+  'Programmation Orienté Objet': 'POO',
+  'Reseaux': 'RES',
+  "Système D'exploitation 1": 'SE1',
+  'Theorie Des Langages': 'TL',
+  'Compilation': 'COMP',
+  'Economie numérique et veille stratégique': 'ENVS',
+  'Génie Logiciel': 'GL',
+  'IHM': 'IHM',
+  'Probabilités': 'PROBA',
+  'Programmation Linéaire': 'PL',
+  "Systèmes d'exploitation 2": 'SE2',
+  'Application Mobile': 'AM',
+  'Créer Une Startup': 'CUS',
+  'Données Semi Structurées': 'DSS',
+  'Intelligence Artificielle': 'IA',
+  'Rédaction Scientifique': 'RS',
+  'Sécurité Informatique': 'SECI',
+  'Algorithmique avancée et complexité': 'AAC',
+  'Architecture et administration des bases de données': 'AABD',
+  'Architectures modernes des systèmes informatiques': 'AMSI',
+  'Cloud computing': 'CC',
+  'Implementation Methods and technologies': 'IMT',
+  'Réseaux des couches basses': 'RCB',
+  "Systèmes d'exploitation": 'SE',
+  'Systèmes de communication vocaux et vidéos': 'SCVV',
+  'Cybercriminalité': 'CYBER',
+  "Gestion de l'incertain": 'GI',
+  'Inforgraphie': 'INFO',
+  'Internet of Things': 'IoT',
+  'Les Middlewares pour les systèmes répartis': 'MSR',
+  'Les réseaux IP': 'RIP',
+  'Machine learning': 'ML',
+  'Modélisation et Architectures logicielles': 'MAL',
+  'Analyse de données': 'AD',
+  'Bases de données avancées': 'BDA',
+  "Fondements de l'intelligence artificielle": 'FIA',
+  'Introduction au Machine Learning': 'IML',
+  'Introduction au traitement automatique des langues naturelles': 'ITALN',
+  'Modélisation et architectures logicielles': 'MAL',
+  "Systèmes d'Information géographiques": 'SIG',
+  'Algorithmique Avancée et Complexité': 'AAC',
+  'Base de Données Avancées': 'BDA',
+  "Méthodes d'optimisation": 'MO',
+  'Représentation des connaissances': 'RC',
+  'Réseaux Avancés': 'RA',
+  'Technologies Émergentes': 'TE',
+  'Computer Vision': 'CV',
+  'Deep Learning': 'DL',
+  "Gestion de l'Incertain": 'GI',
+  'Gestion de projets informatiques': 'GPI',
+  'Modélisation et simulation': 'MS',
+  'Systèmes Multi Agents': 'SMA',
+  'Virtualisation et Cloud': 'VC',
+  'Big Data': 'BIGD',
+  'Blockchain': 'BLOCK',
+  'Computational Intelligence': 'CINT',
+  'Evaluation de performances': 'EP',
+  'Methodolohie de recherche et de documentation': 'MRD',
+  'Mobile Networks': 'MNET',
+  'System On Chip': 'SOC',
+  'Introduction aux ERP': 'ERP',
+  'Méthodologie de recherche et de documentation': 'MRD',
+  'Ontologie et sémantique web': 'OSW',
+  'Programmation pour le Big data': 'PBD',
+  "Sécurité des systèmes d'information": 'SSI',
+  "Systèmes d'Information Coopératifs": 'SIC',
+  'Systèmes décisionnels et entrepôt de données': 'SDED',
+  'Application de Deep Learning': 'ADL',
+  'Calcul intensif': 'CALC',
+  'Modèles stochastiques pour la simulation': 'MSS',
+  'Programmation pour le Big Data': 'PBD',
+  'Robotique': 'ROBO',
+  'Vision artificielle': 'VA',
+};
+
 const _semestersByGrade = {
   'Licence 1': ['S01', 'S02'],
   'Licence 2': ['S03', 'S04'],
@@ -496,6 +610,14 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
       _currentUploadIndex = i;
       stateNotifier.setUploading();
 
+      final ext = file.fileName.contains('.')
+          ? file.fileName.substring(file.fileName.lastIndexOf('.'))
+          : '';
+      final year = DateTime.now().year.toString();
+      final moduleShort = _moduleShortcuts[moduleName] ?? moduleName;
+      final gradeShort = _gradeShortcuts[_selectedGrade] ?? _selectedGrade!;
+      final uploadFileName = '$fileType $moduleShort $gradeShort-${_mapSemester(_selectedSemester!)}-$year$ext';
+
       final cancelToken = CancelToken();
       _cancelToken = cancelToken;
 
@@ -506,7 +628,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
         moduleName: moduleName,
         grade: _selectedGrade!,
         semester: _mapSemester(_selectedSemester!),
-        fileName: file.fileName,
+        fileName: uploadFileName,
         fileBytes: file.bytes,
         mimeType: file.mimeType,
         onProgress: (progress) {
@@ -524,7 +646,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
             final supabase = ref.read(supabaseProvider);
             await supabase.from('uploads').insert({
               'user_id': user.id,
-              'file_name': file.fileName,
+              'file_name': uploadFileName,
               'module_name': moduleName,
               'grade': _selectedGrade!,
               'semester': _mapSemester(_selectedSemester!),
@@ -536,7 +658,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
           await cache.incrementUploadCount();
         }
       } else {
-        lastError = '${file.fileName}: ${result.message ?? "Upload failed"}';
+        lastError = '$uploadFileName: ${result.message ?? "Upload failed"}';
       }
     }
 
