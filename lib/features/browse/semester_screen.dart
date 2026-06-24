@@ -105,10 +105,7 @@ class SemesterScreen extends ConsumerWidget {
                           ),
                         ),
                       ),
-                      Icon(
-                        Icons.more_vert,
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
+
                     ],
                   ),
                 ),

@@ -256,31 +256,39 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
                   ),
                   centerTitle: true,
                   actions: [
-                    FavoriteStar(
-                      key: ValueKey<String>(_currentFile.link),
-                      itemType: 'file',
-                      itemPath: _currentFile.link,
-                      displayName: _currentFile.name,
-                      folderPath: _folderPath?.join('>'),
-                      size: 28,
-                    ),
-                    GestureDetector(
-                      onTap: _toggleFullScreen,
-                      child: Icon(
-                        isFullScreen
-                            ? Icons.fullscreen_exit
-                            : Icons.fullscreen,
-                        color: theme.colorScheme.onSurfaceVariant,
+                    Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 1),
+                      child: FavoriteStar(
+                        key: ValueKey<String>(_currentFile.link),
+                        itemType: 'file',
+                        itemPath: _currentFile.link,
+                        displayName: _currentFile.name,
+                        folderPath: _folderPath?.join('>'),
                         size: 28,
                       ),
                     ),
-                    PopupMenuButton<_OverflowAction>(
-                      icon: Icon(
-                        Icons.more_vert,
-                        color: theme.colorScheme.onSurfaceVariant,
-                        size: 28,
+                    Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 1),
+                      child: GestureDetector(
+                        onTap: _toggleFullScreen,
+                        child: Icon(
+                          isFullScreen
+                              ? Icons.fullscreen_exit
+                              : Icons.fullscreen,
+                          color: theme.colorScheme.onSurfaceVariant,
+                          size: 28,
+                        ),
                       ),
-                      padding: EdgeInsets.zero,
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 2),
+                      child: PopupMenuButton<_OverflowAction>(
+                        icon: Icon(
+                          Icons.more_vert,
+                          color: theme.colorScheme.onSurfaceVariant,
+                          size: 28,
+                        ),
+                        padding: EdgeInsets.zero,
                       onSelected: (action) {
                         switch (action) {
                           case _OverflowAction.download:
@@ -332,6 +340,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
                           ),
                         ),
                       ],
+                    ),
                     ),
                   ],
                 ),

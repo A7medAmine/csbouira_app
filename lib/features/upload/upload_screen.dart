@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -214,16 +215,24 @@ class UploadScreen extends ConsumerStatefulWidget {
   ConsumerState<UploadScreen> createState() => _UploadScreenState();
 }
 
+class _FileReviewResult {
+  final SelectedUploadFile file;
+  final bool approveAll;
+  const _FileReviewResult(this.file, {this.approveAll = false});
+}
+
 class _UploadScreenState extends ConsumerState<UploadScreen> {
   String? _selectedCategory;
   String? _selectedGrade;
   String? _selectedSemester;
   String? _selectedModule;
 
-  SelectedUploadFile? _selectedFile;
+  final List<SelectedUploadFile> _selectedFiles = [];
+  int _currentUploadIndex = 0;
 
   List<String> _allModules = [];
   CancelToken? _cancelToken;
+  bool _uploadCancelled = false;
 
   bool get _isFormValid =>
       _selectedCategory != null &&
@@ -231,7 +240,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
       _selectedSemester != null &&
       _selectedModule != null &&
       _selectedModule!.trim().isNotEmpty &&
-      _selectedFile != null;
+      _selectedFiles.isNotEmpty;
 
   @override
   void initState() {
@@ -309,50 +318,72 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['pdf', 'docx', 'zip', 'doc', 'ppt', 'pptx'],
-      allowMultiple: false,
+      allowMultiple: true,
       withData: true,
     );
     if (result == null || result.files.isEmpty) return;
 
-    final platformFile = result.files.first;
-    if (platformFile.bytes == null) return;
+    final maxBytes = UploadConstants.maxFileSizeBytes;
+    final maxMB = maxBytes ~/ (1024 * 1024);
 
-    final mimeType = mime_pkg.lookupMimeType(platformFile.name) ?? 'application/octet-stream';
+    final validFiles = <SelectedUploadFile>[];
+    for (final platformFile in result.files) {
+      if (platformFile.bytes == null) continue;
 
-    if (platformFile.bytes!.length > UploadConstants.maxFileSizeBytes) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'File exceeds ${UploadConstants.maxFileSizeBytes ~/ (1024 * 1024)}MB limit.',
+      if (platformFile.bytes!.length > maxBytes) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('${platformFile.name} exceeds $maxMB MB limit and was skipped.'),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Theme.of(context).colorScheme.error,
             ),
-            behavior: SnackBarBehavior.floating,
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+          );
+        }
+        continue;
       }
-      return;
+
+      final mimeType = mime_pkg.lookupMimeType(platformFile.name) ?? 'application/octet-stream';
+      validFiles.add(SelectedUploadFile(
+        bytes: platformFile.bytes!,
+        fileName: platformFile.name,
+        mimeType: mimeType,
+      ));
     }
 
-    final selected = SelectedUploadFile(
-      bytes: platformFile.bytes!,
-      fileName: platformFile.name,
-      mimeType: mimeType,
+    final totalCount = validFiles.length;
+    for (int i = 0; i < totalCount; i++) {
+      if (!mounted) return;
+      final result = await _promptReviewFile(validFiles[i], currentIndex: i + 1, totalCount: totalCount);
+      if (result == null) continue;
+
+      if (mounted) {
+        setState(() => _selectedFiles.add(result.file));
+      }
+
+      if (result.approveAll && mounted) {
+        setState(() {
+          for (int j = i + 1; j < totalCount; j++) {
+            _selectedFiles.add(validFiles[j]);
+          }
+        });
+        break;
+      }
+    }
+  }
+
+  Future<_FileReviewResult?> _promptReviewFile(SelectedUploadFile file, {int currentIndex = 1, int totalCount = 1}) {
+    final completer = Completer<_FileReviewResult?>();
+    showUploadReviewSheet(
+      context: context,
+      file: file,
+      currentIndex: currentIndex,
+      totalCount: totalCount,
+      onRetake: () => completer.complete(null),
+      onConfirm: (confirmed) => completer.complete(_FileReviewResult(confirmed, approveAll: false)),
+      onApproveAll: () => completer.complete(_FileReviewResult(file, approveAll: true)),
     );
-
-    if (mounted) {
-      showUploadReviewSheet(
-        context: context,
-        file: selected,
-        onRetake: () {
-          _selectedFile = null;
-          _showFilePickerOptions();
-        },
-        onConfirm: (confirmed) {
-          setState(() => _selectedFile = confirmed);
-        },
-      );
-    }
+    return completer.future;
   }
 
   Future<void> _scanFile() async {
@@ -386,17 +417,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
         );
 
         if (mounted) {
-          showUploadReviewSheet(
-            context: context,
-            file: selected,
-            onRetake: () {
-              _selectedFile = null;
-              _showFilePickerOptions();
-            },
-            onConfirm: (confirmed) {
-              setState(() => _selectedFile = confirmed);
-            },
-          );
+          setState(() => _selectedFiles.add(selected));
         }
       } on DocScanException {
         return;
@@ -426,11 +447,6 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
 
   Future<void> _submit() async {
     if (!_isFormValid) return;
-    final stateNotifier = ref.read(uploadStateProvider.notifier);
-    stateNotifier.setUploading();
-
-    final cancelToken = CancelToken();
-    _cancelToken = cancelToken;
 
     final user = ref.read(currentUserProvider);
     String fullName;
@@ -448,7 +464,8 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
       final guestProfile = ref.read(guestProfileProvider).asData?.value ?? {};
       final guestName = guestProfile['name'] as String? ?? '';
       fullName = guestName.isNotEmpty ? guestName : 'Guest';
-      email = guestProfile['email'] as String? ?? '';
+      final rawEmail = guestProfile['email'] as String? ?? '';
+      email = rawEmail.isNotEmpty ? rawEmail : 'guest@csbouira.dz';
     }
 
     final categoryMap = {
@@ -462,53 +479,92 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
     };
 
     final moduleName = _selectedModule!.trim();
-
+    final fileType = categoryMap[_selectedCategory]!;
     final service = ref.read(_uploadServiceProvider);
-    final result = await service.uploadResource(
-      fullName: fullName,
-      email: email,
-      fileType: categoryMap[_selectedCategory]!,
-      moduleName: moduleName,
-      grade: _selectedGrade!,
-      semester: _mapSemester(_selectedSemester!),
-      fileName: _selectedFile!.fileName,
-      fileBytes: _selectedFile!.bytes,
-      mimeType: _selectedFile!.mimeType,
-      onProgress: (progress) {
-        stateNotifier.setProgress(progress);
-      },
-      cancelToken: cancelToken,
-    );
+    final stateNotifier = ref.read(uploadStateProvider.notifier);
 
-    _cancelToken = null;
-    if (!mounted) return;
+    int successCount = 0;
+    String? lastError;
 
-    if (result.success) {
-      stateNotifier.setSuccess();
-      if (user != null) {
-        try {
-          final supabase = ref.read(supabaseProvider);
-          await supabase.from('uploads').insert({
-            'user_id': user.id,
-            'file_name': _selectedFile!.fileName,
-            'module_name': moduleName,
-            'grade': _selectedGrade!,
-            'semester': _mapSemester(_selectedSemester!),
-            'file_type': categoryMap[_selectedCategory]!,
-          });
-        } catch (_) {}
-        ref.invalidate(uploadCountProvider);
-        ref.invalidate(myUploadsProvider);
+    _uploadCancelled = false;
+
+    for (int i = 0; i < _selectedFiles.length; i++) {
+      if (_uploadCancelled) break;
+      if (!mounted) return;
+
+      final file = _selectedFiles[i];
+      _currentUploadIndex = i;
+      stateNotifier.setUploading();
+
+      final cancelToken = CancelToken();
+      _cancelToken = cancelToken;
+
+      final result = await service.uploadResource(
+        fullName: fullName,
+        email: email,
+        fileType: fileType,
+        moduleName: moduleName,
+        grade: _selectedGrade!,
+        semester: _mapSemester(_selectedSemester!),
+        fileName: file.fileName,
+        fileBytes: file.bytes,
+        mimeType: file.mimeType,
+        onProgress: (progress) {
+          stateNotifier.setProgress(progress);
+        },
+        cancelToken: cancelToken,
+      );
+
+      _cancelToken = null;
+
+      if (result.success) {
+        successCount++;
+        if (user != null) {
+          try {
+            final supabase = ref.read(supabaseProvider);
+            await supabase.from('uploads').insert({
+              'user_id': user.id,
+              'file_name': file.fileName,
+              'module_name': moduleName,
+              'grade': _selectedGrade!,
+              'semester': _mapSemester(_selectedSemester!),
+              'file_type': fileType,
+            });
+          } catch (_) {}
+        } else {
+          final cache = LocalProfileCache();
+          await cache.incrementUploadCount();
+        }
       } else {
-        final cache = LocalProfileCache();
-        await cache.incrementUploadCount();
+        lastError = '${file.fileName}: ${result.message ?? "Upload failed"}';
       }
-    } else {
-      stateNotifier.setError(result);
+    }
+
+    if (user != null) {
+      ref.invalidate(uploadCountProvider);
+      ref.invalidate(myUploadsProvider);
+    }
+
+    if (mounted) {
+      _currentUploadIndex = 0;
+      if (successCount > 0) {
+        stateNotifier.setSuccess();
+      } else if (lastError != null) {
+        stateNotifier.setError(UploadResult(
+          success: false,
+          message: lastError,
+          errorType: UploadErrorType.serverError,
+        ));
+      }
     }
   }
 
   Widget _buildSuccessScreen(ThemeData theme) {
+    final count = _selectedFiles.length;
+    final label = count == 1
+        ? 'Your resource has been uploaded successfully.'
+        : 'All $count resources have been uploaded successfully.';
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -544,7 +600,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Your resource has been uploaded successfully.',
+                        label,
                         textAlign: TextAlign.center,
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant,
@@ -555,7 +611,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
                         width: double.infinity,
                         child: FilledButton(
                           onPressed: _resetForm,
-                          child: const Text('Upload another'),
+                          child: const Text('Upload more'),
                         ),
                       ),
                       const SizedBox(height: 12),
@@ -586,13 +642,14 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
   void _resetForm() {
     _cancelToken?.cancel();
     _cancelToken = null;
+    _uploadCancelled = false;
     ref.read(uploadStateProvider.notifier).reset();
     setState(() {
       _selectedCategory = null;
       _selectedGrade = null;
       _selectedSemester = null;
       _selectedModule = null;
-      _selectedFile = null;
+      _selectedFiles.clear();
     });
   }
 
@@ -618,7 +675,8 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
       final guestProfile = ref.watch(guestProfileProvider).asData?.value ?? {};
       final guestName = guestProfile['name'] as String? ?? '';
       displayName = guestName.isNotEmpty ? guestName : 'Guest';
-      email = guestProfile['email'] as String? ?? '';
+      final rawEmail = guestProfile['email'] as String? ?? '';
+      email = rawEmail.isNotEmpty ? rawEmail : 'guest@csbouira.dz';
     }
 
     final driveAsync = ref.watch(driveRootDataProvider);
@@ -1149,8 +1207,8 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
             ),
           ),
         ),
-        if (_selectedFile != null)
-          _buildFileSelected(theme)
+        if (_selectedFiles.isNotEmpty)
+          _buildFilesSelected(theme)
         else
           _buildFileEmpty(theme),
       ],
@@ -1209,73 +1267,76 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
     );
   }
 
-  Widget _buildFileSelected(ThemeData theme) {
-    final file = _selectedFile!;
+  Widget _buildFilesSelected(ThemeData theme) {
     return Column(
       children: [
-        Container(
-          padding: const EdgeInsets.all(AppSpacing.stackSm),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainerLow,
-            borderRadius: BorderRadius.circular(AppRadius.md),
-            border: Border.all(
-              color: theme.colorScheme.primaryContainer.withAlpha(77),
+        ...List.generate(_selectedFiles.length, (i) {
+          final file = _selectedFiles[i];
+          return Container(
+            margin: const EdgeInsets.only(bottom: 6),
+            padding: const EdgeInsets.all(AppSpacing.stackSm),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerLow,
+              borderRadius: BorderRadius.circular(AppRadius.md),
+              border: Border.all(
+                color: theme.colorScheme.primaryContainer.withAlpha(77),
+              ),
             ),
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primaryContainer.withAlpha(51),
-                  borderRadius: BorderRadius.circular(AppRadius.sm),
+            child: Row(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primaryContainer.withAlpha(51),
+                    borderRadius: BorderRadius.circular(AppRadius.sm),
+                  ),
+                  child: Icon(
+                    file.mimeType == 'application/pdf'
+                        ? Icons.picture_as_pdf
+                        : Icons.description,
+                    size: 20,
+                    color: theme.colorScheme.primary,
+                  ),
                 ),
-                child: Icon(
-                  file.mimeType == 'application/pdf'
-                      ? Icons.picture_as_pdf
-                      : Icons.description,
-                  size: 20,
-                  color: theme.colorScheme.primary,
-                ),
-              ),
-              const SizedBox(width: AppSpacing.stackSm),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      file.fileName,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurface,
-                        fontWeight: FontWeight.w500,
+                const SizedBox(width: AppSpacing.stackSm),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        file.fileName,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onSurface,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      file.formattedSize,
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
+                      const SizedBox(height: 2),
+                      Text(
+                        file.formattedSize,
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              IconButton(
-                onPressed: () {
-                  setState(() => _selectedFile = null);
-                },
-                icon: Icon(
-                  Icons.close,
-                  color: theme.colorScheme.onSurfaceVariant,
-                  size: 20,
+                IconButton(
+                  onPressed: () {
+                    setState(() => _selectedFiles.removeAt(i));
+                  },
+                  icon: Icon(
+                    Icons.close,
+                    color: theme.colorScheme.onSurfaceVariant,
+                    size: 20,
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ),
+              ],
+            ),
+          );
+        }),
         const SizedBox(height: 8),
         GestureDetector(
           onTap: _showFilePickerOptions,
@@ -1291,11 +1352,11 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.refresh, size: 18, color: theme.colorScheme.primary),
+                Icon(Icons.add, size: 18, color: theme.colorScheme.primary),
                 const SizedBox(width: 6),
                 Text(
-                  'Change file',
-              style: theme.textTheme.bodyMedium?.copyWith(
+                  'Add more files',
+                  style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.primary,
                   ),
                 ),
@@ -1303,12 +1364,25 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
             ),
           ),
         ),
+        if (_selectedFiles.length > 1) ...[
+          const SizedBox(height: 6),
+          Text(
+            '${_selectedFiles.length} file${_selectedFiles.length == 1 ? '' : 's'} selected',
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
       ],
     );
   }
 
   Widget _buildSubmitButton(ThemeData theme, UploadFormState uploadState) {
     if (uploadState.isUploading) {
+      final total = _selectedFiles.length;
+      final fileLabel = total == 1
+          ? 'Uploading\u2026'
+          : 'Uploading ${_currentUploadIndex + 1} of $total\u2026';
       return Column(
         children: [
           SizedBox(
@@ -1323,7 +1397,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
                   color: Colors.white70,
                 ),
               ),
-              label: const Text('Uploading\u2026'),
+              label: Text(fileLabel),
               style: FilledButton.styleFrom(
                 backgroundColor: theme.colorScheme.surfaceContainerHighest,
                 disabledBackgroundColor: theme.colorScheme.surfaceContainerHighest,
@@ -1340,6 +1414,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
             width: double.infinity,
             child: OutlinedButton.icon(
               onPressed: () {
+                _uploadCancelled = true;
                 _cancelToken?.cancel();
               },
               icon: const Icon(Icons.close, size: 18),
@@ -1460,16 +1535,7 @@ class _AppBar extends StatelessWidget {
               ),
             ),
           ),
-          GestureDetector(
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Icon(
-                Icons.more_vert,
-                color: theme.colorScheme.primary,
-                size: 24,
-              ),
-            ),
-          ),
+
         ],
       ),
     );

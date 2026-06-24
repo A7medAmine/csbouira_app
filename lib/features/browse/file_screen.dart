@@ -719,15 +719,7 @@ class _Header extends StatelessWidget {
               ],
             ),
           ),
-          GestureDetector(
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              child: Icon(
-                Icons.more_vert,
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ),
+
         ],
       ),
     );

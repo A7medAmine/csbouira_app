@@ -11,6 +11,9 @@ void showUploadReviewSheet({
   required SelectedUploadFile file,
   required VoidCallback onRetake,
   required ValueChanged<SelectedUploadFile> onConfirm,
+  VoidCallback? onApproveAll,
+  int currentIndex = 1,
+  int totalCount = 1,
 }) {
   showModalBottomSheet(
     context: context,
@@ -23,6 +26,8 @@ void showUploadReviewSheet({
     ),
     builder: (ctx) => _UploadReviewSheet(
       file: file,
+      currentIndex: currentIndex,
+      totalCount: totalCount,
       onRetake: () {
         Navigator.pop(ctx);
         onRetake();
@@ -31,19 +36,31 @@ void showUploadReviewSheet({
         Navigator.pop(ctx);
         onConfirm(file);
       },
+      onApproveAll: onApproveAll != null
+          ? () {
+              Navigator.pop(ctx);
+              onApproveAll();
+            }
+          : null,
     ),
   );
 }
 
 class _UploadReviewSheet extends StatefulWidget {
   final SelectedUploadFile file;
+  final int currentIndex;
+  final int totalCount;
   final VoidCallback onRetake;
   final VoidCallback onConfirm;
+  final VoidCallback? onApproveAll;
 
   const _UploadReviewSheet({
     required this.file,
+    required this.currentIndex,
+    required this.totalCount,
     required this.onRetake,
     required this.onConfirm,
+    this.onApproveAll,
   });
 
   @override
@@ -87,7 +104,9 @@ class _UploadReviewSheetState extends State<_UploadReviewSheet> {
               children: [
                 const SizedBox(width: 40),
                 Text(
-                  'Review File',
+                  widget.totalCount > 1
+                      ? '${widget.currentIndex} of ${widget.totalCount}'
+                      : 'Review File',
                   style: theme.textTheme.titleLarge?.copyWith(
                     color: theme.colorScheme.onSurface,
                     fontWeight: FontWeight.w600,
@@ -119,37 +138,57 @@ class _UploadReviewSheetState extends State<_UploadReviewSheet> {
           // -- action buttons -------------------------------------------------------
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-            child: Row(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: widget.onRetake,
-                    icon: const Icon(Icons.refresh, size: 18),
-                    label: const Text('Retake / Choose Again'),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: theme.colorScheme.onSurface,
-                      side: BorderSide(color: theme.colorScheme.outlineVariant),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppRadius.md),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: widget.onRetake,
+                        icon: const Icon(Icons.refresh, size: 18),
+                        label: const Text('Retake / Choose Again'),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: theme.colorScheme.onSurface,
+                          side: BorderSide(color: theme.colorScheme.outlineVariant),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(AppRadius.md),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: FilledButton.icon(
+                        onPressed: widget.onConfirm,
+                        icon: const Icon(Icons.check, size: 18),
+                        label: const Text('Use This File'),
+                        style: FilledButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(AppRadius.md),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                if (widget.totalCount > 1 && widget.onApproveAll != null) ...[
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    width: double.infinity,
+                    child: TextButton.icon(
+                      onPressed: widget.onApproveAll,
+                      icon: const Icon(Icons.done_all, size: 18),
+                      label: Text('Approve All (${widget.totalCount - widget.currentIndex + 1} remaining)'),
+                      style: TextButton.styleFrom(
+                        foregroundColor: theme.colorScheme.primary,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: FilledButton.icon(
-                    onPressed: widget.onConfirm,
-                    icon: const Icon(Icons.check, size: 18),
-                    label: const Text('Use This File'),
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppRadius.md),
-                      ),
-                    ),
-                  ),
-                ),
+                ],
               ],
             ),
           ),

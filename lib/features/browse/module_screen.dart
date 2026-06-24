@@ -126,10 +126,7 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
                               ),
                             ),
                           ),
-                          Icon(
-                            Icons.more_vert,
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
+
                         ],
                       ),
                     ),
