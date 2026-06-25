@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:csbouira_app/l10n/app_localizations.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../data/models/drive_node.dart';
 import '../../data/providers/auth_providers.dart';
@@ -73,6 +74,7 @@ class _FileScreenState extends State<FileScreen> {
   }
 
   void _showFilterSheet() {
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
       backgroundColor: const Color(0xFF1D1E2E),
@@ -88,7 +90,7 @@ class _FileScreenState extends State<FileScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Sort by',
+                l10n.sortBy,
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                   color: theme.colorScheme.onSurface,
@@ -96,7 +98,7 @@ class _FileScreenState extends State<FileScreen> {
               ),
               const SizedBox(height: 16),
               _SortOption(
-                label: 'Name (A-Z)',
+                label: l10n.sortByNameAZ,
                 isSelected: _sortMode == _SortMode.nameAsc,
                 onTap: () {
                   setState(() => _sortMode = _SortMode.nameAsc);
@@ -104,7 +106,7 @@ class _FileScreenState extends State<FileScreen> {
                 },
               ),
               _SortOption(
-                label: 'Name (Z-A)',
+                label: l10n.sortByNameZA,
                 isSelected: _sortMode == _SortMode.nameDesc,
                 onTap: () {
                   setState(() => _sortMode = _SortMode.nameDesc);
@@ -112,7 +114,7 @@ class _FileScreenState extends State<FileScreen> {
                 },
               ),
               _SortOption(
-                label: 'Type',
+                label: l10n.sortByType,
                 isSelected: _sortMode == _SortMode.type,
                 onTap: () {
                   setState(() => _sortMode = _SortMode.type);
@@ -206,6 +208,7 @@ class _FileScreenState extends State<FileScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final highlightFromRoute =
         GoRouterState.of(context).uri.queryParameters['highlight'];
 
@@ -236,12 +239,12 @@ class _FileScreenState extends State<FileScreen> {
                               const Center(child: CircularProgressIndicator()),
                       error:
                           (err, _) =>
-                              FetchErrorWidget(error: err, message: 'Failed to load files.'),
+                              FetchErrorWidget(error: err, message: l10n.failedToLoadFiles),
                       data: (node) {
                         if (node == null) {
                           return Center(
                             child: Text(
-                              'Folder not found',
+                              l10n.folderNotFound,
                               style: theme.textTheme.bodyLarge?.copyWith(
                                 color: theme.colorScheme.onSurfaceVariant,
                               ),
@@ -326,8 +329,8 @@ class _FileScreenState extends State<FileScreen> {
                                             ),
                                             Text(
                                               query.isNotEmpty
-                                                  ? 'No matching files or folders'
-                                                  : 'No files available',
+                                                  ? l10n.noMatchingFilesOrFolders
+                                                  : l10n.noFilesAvailable,
                                               style: theme.textTheme.bodyLarge
                                                   ?.copyWith(
                                                     color:
@@ -350,9 +353,9 @@ class _FileScreenState extends State<FileScreen> {
                                         children: [
                                           if (subfolders.isNotEmpty) ...[
                                             _SectionHeader(
-                                              title: 'Subfolders',
+                                              title: l10n.sortBySubfolders,
                                               count:
-                                                  '${subfolders.length} items',
+                                                  l10n.itemsCount(subfolders.length),
                                               theme: theme,
                                             ),
                                             const SizedBox(
@@ -401,7 +404,7 @@ class _FileScreenState extends State<FileScreen> {
                                           ],
                                           if (files.isNotEmpty) ...[
                                             _SectionHeader(
-                                              title: 'Files',
+                                              title: l10n.sortByFiles,
                                               theme: theme,
                                               trailing: Row(
                                                 mainAxisSize: MainAxisSize.min,
@@ -488,8 +491,8 @@ class _FileScreenState extends State<FileScreen> {
                                                               (MediaQuery.of(
                                                                     context,
                                                                   ).size.width -
-                                                                  44) /
-                                                              2,
+                                                                   44) /
+                                                               2,
                                                           padding:
                                                               const EdgeInsets.all(
                                                                 16,
@@ -659,6 +662,7 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.fromLTRB(
         AppSpacing.marginMobile,
@@ -693,7 +697,7 @@ class _Header extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
-                      _BreadcrumbItem(label: 'Drive', theme: theme),
+                      _BreadcrumbItem(label: l10n.breadcrumbDrive, theme: theme),
                       _BreadcrumbChevron(theme: theme),
                       _BreadcrumbItem(label: year, theme: theme),
                       _BreadcrumbChevron(theme: theme),
@@ -761,7 +765,9 @@ class _BreadcrumbChevron extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4),
       child: Icon(
-        Icons.chevron_right,
+        Directionality.of(context) == TextDirection.rtl
+            ? Icons.chevron_left
+            : Icons.chevron_right,
         size: 14,
         color: theme.colorScheme.outline,
       ),
@@ -784,6 +790,7 @@ class _SearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.fromLTRB(
         AppSpacing.marginMobile,
@@ -815,7 +822,7 @@ class _SearchBar extends StatelessWidget {
                     size: 20,
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
-                  hintText: 'Search files and folders...',
+                  hintText: l10n.searchFilesAndFolders,
                   hintStyle: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant.withAlpha(128),
                   ),
@@ -942,6 +949,7 @@ class _FolderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final fileCount = node.totalFiles;
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.stackMd),
       child: GestureDetector(
@@ -1000,7 +1008,7 @@ class _FolderCard extends StatelessWidget {
                     if (!node.isEmpty) ...[
                       const SizedBox(height: 4),
                       Text(
-                        '$fileCount files',
+                        l10n.fileCount(fileCount),
                         style: theme.textTheme.labelMedium?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
@@ -1010,10 +1018,15 @@ class _FolderCard extends StatelessWidget {
                 ),
               ),
               if (!node.isEmpty)
-                Icon(Icons.chevron_right, color: theme.colorScheme.outline),
+                Icon(
+                  Directionality.of(context) == TextDirection.rtl
+                      ? Icons.chevron_left
+                      : Icons.chevron_right,
+                  color: theme.colorScheme.outline,
+                ),
               if (node.isEmpty)
                 Text(
-                  'Empty',
+                  l10n.folderEmpty,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
@@ -1098,6 +1111,8 @@ class _FileCardState extends ConsumerState<_FileCard>
   Widget build(BuildContext context) {
     final ext = widget.file.name.split('.').last.toLowerCase();
     final (icon, color, showBadge) = _fileTypeInfo(ext, widget.theme);
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
+    final l10n = AppLocalizations.of(context)!;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.stackSm),
@@ -1108,7 +1123,9 @@ class _FileCardState extends ConsumerState<_FileCard>
         },
         onHorizontalDragUpdate: (details) {
           setState(() {
-            _dragOffset = (_dragOffset - details.delta.dx).clamp(0, 300);
+            _dragOffset = (isRtl
+                ? _dragOffset + details.delta.dx
+                : _dragOffset - details.delta.dx).clamp(0, 300);
           });
         },
         onHorizontalDragEnd: (_) {
@@ -1129,7 +1146,8 @@ class _FileCardState extends ConsumerState<_FileCard>
             clipBehavior: Clip.none,
             children: [
               Positioned(
-                right: 0,
+                right: isRtl ? null : 0,
+                left: isRtl ? 0 : null,
                 top: 0,
                 bottom: 0,
                 width: _dragOffset.clamp(0, 100).toDouble(),
@@ -1147,7 +1165,10 @@ class _FileCardState extends ConsumerState<_FileCard>
                 ),
               ),
               Transform.translate(
-                offset: Offset(-_dragOffset.clamp(0, 100).toDouble(), 0),
+                offset: Offset(
+                  (isRtl ? 1 : -1) * _dragOffset.clamp(0, 100).toDouble(),
+                  0,
+                ),
                   child: SizedBox(
                     height: 76,
                     child: AnimatedContainer(
@@ -1193,7 +1214,7 @@ class _FileCardState extends ConsumerState<_FileCard>
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                   child: Text(
-                                    'PDF',
+                                    l10n.pdfBadge,
                                     style: TextStyle(
                                       fontSize: 8,
                                       fontWeight: FontWeight.bold,

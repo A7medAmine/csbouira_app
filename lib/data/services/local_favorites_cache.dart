@@ -47,6 +47,10 @@ class LocalFavoritesCache {
     await prefs.remove(_key);
   }
 
+  Future<void> replaceAll(List<LocalFavoriteItem> items) async {
+    await _save(items);
+  }
+
   Future<void> _save(List<LocalFavoriteItem> items) async {
     final prefs = await SharedPreferences.getInstance();
     final data = jsonEncode(items.map((e) => e.toJson()).toList());

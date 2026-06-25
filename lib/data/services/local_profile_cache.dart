@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalProfileCache {
@@ -5,6 +6,7 @@ class LocalProfileCache {
   static const _keyEmail = 'guest_profile_email';
   static const _keyAvatar = 'guest_profile_avatar';
   static const _keyUploadCount = 'guest_upload_count';
+  static const _keyUploadHistory = 'guest_upload_history';
 
   Future<String> getName() async {
     final prefs = await SharedPreferences.getInstance();
@@ -50,10 +52,35 @@ class LocalProfileCache {
     await prefs.setInt(_keyUploadCount, (prefs.getInt(_keyUploadCount) ?? 0) + 1);
   }
 
+  Future<List<Map<String, dynamic>>> getUploadHistory() async {
+    final prefs = await SharedPreferences.getInstance();
+    final data = prefs.getString(_keyUploadHistory);
+    if (data == null) return [];
+    final list = jsonDecode(data) as List;
+    return list.cast<Map<String, dynamic>>();
+  }
+
+  Future<void> addUploadEntry(Map<String, dynamic> entry) async {
+    final items = await getUploadHistory();
+    items.insert(0, entry);
+    await _saveUploadHistory(items);
+  }
+
+  Future<void> clearUploadHistory() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_keyUploadHistory);
+  }
+
+  Future<void> _saveUploadHistory(List<Map<String, dynamic>> items) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_keyUploadHistory, jsonEncode(items));
+  }
+
   Future<void> clear() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_keyName);
     await prefs.remove(_keyEmail);
     await prefs.remove(_keyAvatar);
+    await prefs.remove(_keyUploadHistory);
   }
 }

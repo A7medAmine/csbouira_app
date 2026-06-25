@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:csbouira_app/l10n/app_localizations.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../data/navigation_data.dart';
@@ -59,9 +60,9 @@ class HomeScreen extends ConsumerWidget {
             child: Stack(
               children: [
                 ListView(
-                  padding: const EdgeInsets.only(
-                    left: AppSpacing.marginMobile,
-                    right: AppSpacing.marginMobile,
+                  padding: const EdgeInsetsDirectional.only(
+                    start: AppSpacing.marginMobile,
+                    end: AppSpacing.marginMobile,
                     top: 0,
                     bottom: 24,
                   ),
@@ -72,7 +73,7 @@ class HomeScreen extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'CS BOUIRA',
+                          AppLocalizations.of(context)!.appTitle.toUpperCase(),
                           style: theme.textTheme.headlineMedium?.copyWith(
                             fontWeight: FontWeight.w800,
                             color: theme.colorScheme.primary,
@@ -100,7 +101,7 @@ class HomeScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Welcome, $displayName',
+                          AppLocalizations.of(context)!.homeWelcome(displayName),
                           style: theme.textTheme.headlineLarge?.copyWith(
                             fontWeight: FontWeight.w700,
                             color: Colors.white,
@@ -108,7 +109,7 @@ class HomeScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Access all Computer Science resources from University of Bouira in one place.',
+                          AppLocalizations.of(context)!.homeSubtitle,
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
@@ -148,7 +149,7 @@ class HomeScreen extends ConsumerWidget {
                                   const SizedBox(width: 12),
                                   Expanded(
                                     child: Text(
-                                      'Search courses, files, or exams...',
+                                      AppLocalizations.of(context)!.searchHint,
                                       style: theme.textTheme.bodyMedium?.copyWith(
                                         color: theme.colorScheme.onSurfaceVariant,
                                       ),
@@ -185,7 +186,7 @@ class HomeScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          'Academic Path',
+                          AppLocalizations.of(context)!.academicPath,
                           style: theme.textTheme.headlineMedium?.copyWith(
                             color: Colors.white,
                           ),
@@ -202,7 +203,7 @@ class HomeScreen extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(AppRadius.full),
                           ),
                           child: Text(
-                            'SELECT YEAR',
+                            AppLocalizations.of(context)!.selectYear,
                             style: theme.textTheme.labelMedium?.copyWith(
                               color: theme.colorScheme.primary,
                             ),
@@ -348,13 +349,39 @@ class _YearCard extends StatelessWidget {
 
   const _YearCard({required this.year, required this.fileCount});
 
+  String _localizedName(AppLocalizations l10n) {
+    switch (year.name) {
+      case 'Licence 1': return l10n.gradeLicence1;
+      case 'Licence 2': return l10n.gradeLicence2;
+      case 'Licence 3 SI': return l10n.gradeLicence3Si;
+      case 'Master 1 GSI': return l10n.gradeMaster1Gsi;
+      case 'Master 1 ISIL': return l10n.gradeMaster1Isil;
+      case 'Master 1 IA': return l10n.gradeMaster1Ia;
+      case 'Master 2 GSI': return l10n.gradeMaster2Gsi;
+      case 'Master 2 ISIL': return l10n.gradeMaster2Isil;
+      case 'Master 2 IA': return l10n.gradeMaster2Ia;
+      default: return year.name;
+    }
+  }
+
+  String _localizedLevel(AppLocalizations l10n) {
+    switch (year.level) {
+      case 'Bachelor': return l10n.levelBachelor;
+      case 'Bachelor Final Year': return l10n.levelBachelorFinalYear;
+      case 'Master': return l10n.levelMaster;
+      default: return year.level;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final isNew = year.badge == 'NEW';
 
     return GestureDetector(
-      onTap: () => context.push('/year/${Uri.encodeComponent(year.name)}'),
+      onTap:
+          () => context.push('/year/${Uri.encodeComponent(year.name)}'),
       child: Container(
         constraints: const BoxConstraints(minHeight: 140),
         padding: const EdgeInsets.all(AppSpacing.stackMd),
@@ -388,7 +415,7 @@ class _YearCard extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 4),
                     child: Text(
-                      year.level.toUpperCase(),
+                      _localizedLevel(l10n).toUpperCase(),
                       style: theme.textTheme.labelMedium?.copyWith(
                         color: theme.colorScheme.primary,
                       ),
@@ -399,9 +426,9 @@ class _YearCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        year.name,
+                        _localizedName(l10n),
                         style:
-                            year.name.length > 12
+                            _localizedName(l10n).length > 12
                                 ? theme.textTheme.titleMedium?.copyWith(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,
@@ -438,7 +465,7 @@ class _YearCard extends StatelessWidget {
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    '$fileCount files',
+                    AppLocalizations.of(context)!.fileCountOnYear(fileCount),
                     style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
@@ -471,19 +498,19 @@ class _StatsSection extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _StatItem(value: '2.4k+', label: 'Users'),
+          _StatItem(value: '2.4k+', label: AppLocalizations.of(context)!.statsUsers),
           Container(
             width: 1,
             height: 32,
             color: theme.colorScheme.outlineVariant.withAlpha(77),
           ),
-          _StatItem(value: '15k', label: 'Files'),
+          _StatItem(value: '15k', label: AppLocalizations.of(context)!.statsFiles),
           Container(
             width: 1,
             height: 32,
             color: theme.colorScheme.outlineVariant.withAlpha(77),
           ),
-          _StatItem(value: '12', label: 'Specials'),
+          _StatItem(value: '12', label: AppLocalizations.of(context)!.statsSpecials),
         ],
       ),
     );

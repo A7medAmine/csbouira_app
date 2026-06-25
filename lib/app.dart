@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'core/providers/locale_provider.dart';
 import 'core/theme/app_theme.dart';
 import 'data/providers/auth_providers.dart';
 import 'data/providers/favorites_providers.dart';
@@ -25,6 +27,7 @@ import 'features/search/search_screen.dart';
 import 'features/splash/splash_screen.dart';
 import 'features/upload/upload_screen.dart';
 import 'shared/widgets/app_bottom_nav.dart';
+import 'l10n/app_localizations.dart';
 
 class _AuthRefreshNotifier extends ChangeNotifier {
   void trigger() => notifyListeners();
@@ -59,7 +62,6 @@ CustomTransitionPage<void> _buildTransitionPage({
 final _routerProvider = Provider<GoRouter>((ref) {
   ref.listen(authStateProvider, (_, __) {
     _authRefreshNotifier.trigger();
-    // Refresh favorites and profile data when auth state changes (login/logout)
     ref.invalidate(favoritesListProvider);
   });
 
@@ -90,7 +92,6 @@ final _routerProvider = Provider<GoRouter>((ref) {
           return _ShellScaffold(navigationShell: navigationShell);
         },
         branches: [
-          // Branch 0: Home
           StatefulShellBranch(
             routes: [
               GoRoute(
@@ -188,7 +189,6 @@ final _routerProvider = Provider<GoRouter>((ref) {
               ),
             ],
           ),
-          // Branch 1: Search
           StatefulShellBranch(
             routes: [
               GoRoute(
@@ -201,7 +201,6 @@ final _routerProvider = Provider<GoRouter>((ref) {
               ),
             ],
           ),
-          // Branch 2: Favorites
           StatefulShellBranch(
             routes: [
               GoRoute(
@@ -214,7 +213,6 @@ final _routerProvider = Provider<GoRouter>((ref) {
               ),
             ],
           ),
-          // Branch 3: Upload
           StatefulShellBranch(
             routes: [
               GoRoute(
@@ -227,7 +225,6 @@ final _routerProvider = Provider<GoRouter>((ref) {
               ),
             ],
           ),
-          // Branch 4: Profile
           StatefulShellBranch(
             routes: [
               GoRoute(
@@ -266,7 +263,6 @@ final _routerProvider = Provider<GoRouter>((ref) {
               ),
             ],
           ),
-          // Branch 5: Downloads
           StatefulShellBranch(
             routes: [
               GoRoute(
@@ -330,13 +326,11 @@ class _ShellScaffoldState extends State<_ShellScaffold> {
   void _onPopInvokedWithResult(bool didPop, _) {
     if (didPop) return;
 
-    // If a text field currently has focus, dismiss the keyboard only.
     final primaryFocus = FocusManager.instance.primaryFocus;
     if (primaryFocus != null && primaryFocus.context?.widget is EditableText) {
       primaryFocus.unfocus();
       return;
     }
-    // Fallback for any open keyboard without focus.
     if (MediaQuery.of(context).viewInsets.bottom > 0) {
       FocusScope.of(context).unfocus();
       return;
@@ -356,8 +350,9 @@ class _ShellScaffoldState extends State<_ShellScaffold> {
     if (_lastBackPress == null ||
         now.difference(_lastBackPress!) > const Duration(seconds: 2)) {
       _lastBackPress = now;
+      final appLoc = AppLocalizations.of(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Press back again to exit')),
+        SnackBar(content: Text(appLoc!.pressBackAgain)),
       );
     } else {
       SystemNavigator.pop();
@@ -394,29 +389,53 @@ class _ShellScaffoldState extends State<_ShellScaffold> {
   }
 }
 
-class CSBouiraApp extends ConsumerWidget {
+class CSBouiraApp extends ConsumerStatefulWidget {
   const CSBouiraApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final router = ref.watch(_routerProvider);
+  ConsumerState<CSBouiraApp> createState() => _CSBouiraAppState();
+}
 
-return MaterialApp.router(
-        title: 'CS Bouira',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.light,
-        darkTheme: AppTheme.dark,
-        themeMode: ThemeMode.dark,
-        routerConfig: router,
-        // Lock text scaling to 1.0 to ignore system font size settings.
-        builder: (context, child) {
-          return MediaQuery(
-            data: MediaQuery.of(context).copyWith(
-              textScaler: const TextScaler.linear(1.0),
-            ),
-            child: child!,
-          );
-        },
-      );
+class _CSBouiraAppState extends ConsumerState<CSBouiraApp> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(localeProvider.notifier).loadSavedLocale();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final router = ref.watch(_routerProvider);
+    final locale = ref.watch(localeProvider);
+
+    return MaterialApp.router(
+      title: 'CS Bouira',
+      debugShowCheckedModeBanner: false,
+      locale: locale,
+      theme: AppTheme.light(locale),
+      darkTheme: AppTheme.dark(locale),
+      themeMode: ThemeMode.dark,
+      routerConfig: router,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en'),
+        Locale('ar'),
+      ],
+      builder: (context, child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(
+            textScaler: const TextScaler.linear(1.0),
+          ),
+          child: child!,
+        );
+      },
+    );
   }
 }

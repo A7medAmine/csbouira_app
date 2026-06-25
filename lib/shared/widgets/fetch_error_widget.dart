@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:csbouira_app/l10n/app_localizations.dart';
 
 class FetchErrorWidget extends StatelessWidget {
   final Object? error;
@@ -10,6 +11,7 @@ class FetchErrorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -31,7 +33,7 @@ class FetchErrorWidget extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              message ?? 'Failed to load data',
+              message ?? l10n.fetchErrorFailedToLoad,
               style: theme.textTheme.bodyLarge?.copyWith(
                 color: theme.colorScheme.onSurface,
               ),
@@ -39,7 +41,7 @@ class FetchErrorWidget extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Check your internet connection and try again.',
+              l10n.fetchErrorCheckConnection,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -82,7 +84,7 @@ class FetchErrorWidget extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      'View Downloads',
+                      l10n.fetchErrorViewDownloads,
                       style: theme.textTheme.labelMedium?.copyWith(
                         color: theme.colorScheme.primary,
                         fontWeight: FontWeight.w600,

@@ -7,6 +7,7 @@ import '../../data/models/leaderboard_entry.dart';
 import '../../data/providers/auth_providers.dart';
 import '../../data/providers/leaderboard_providers.dart';
 import '../../shared/widgets/user_avatar.dart';
+import 'package:csbouira_app/l10n/app_localizations.dart';
 
 class LeaderboardScreen extends ConsumerWidget {
   const LeaderboardScreen({super.key});
@@ -28,7 +29,7 @@ class LeaderboardScreen extends ConsumerWidget {
           onPressed: () => context.pop(),
         ),
         title: Text(
-          'Leaderboard',
+          AppLocalizations.of(context)!.leaderboardTitle,
           style: theme.textTheme.headlineMedium?.copyWith(
             color: theme.colorScheme.primary,
             fontWeight: FontWeight.bold,
@@ -68,7 +69,7 @@ class LeaderboardScreen extends ConsumerWidget {
                           size: 64, color: theme.colorScheme.outlineVariant),
                       const SizedBox(height: AppSpacing.stackMd),
                       Text(
-                        'No contributors yet',
+                        AppLocalizations.of(context)!.leaderboardEmpty,
                         style: theme.textTheme.headlineMedium?.copyWith(
                           color: theme.colorScheme.onSurface,
                         ),
@@ -318,7 +319,7 @@ class _LeaderboardRow extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '${entry.uploadCount} upload${entry.uploadCount == 1 ? '' : 's'}',
+                  AppLocalizations.of(context)!.leaderboardUploadCount(entry.uploadCount),
                   style: theme.textTheme.labelMedium?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
@@ -374,7 +375,7 @@ class _CurrentUserRankCard extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            'Your Rank',
+            AppLocalizations.of(context)!.leaderboardYourRank,
             style: theme.textTheme.labelMedium?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
@@ -389,7 +390,7 @@ class _CurrentUserRankCard extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            '$count upload${count == 1 ? '' : 's'}',
+            AppLocalizations.of(context)!.leaderboardUploadCount(count),
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
@@ -445,7 +446,7 @@ class _GuestPrompt extends StatelessWidget {
                 ),
               ),
               child: Text(
-                'Log In or Sign Up',
+                AppLocalizations.of(context)!.profileGuestButton,
                 style: theme.textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),

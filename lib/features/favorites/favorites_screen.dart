@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:csbouira_app/l10n/app_localizations.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_radius.dart';
 import '../../data/models/drive_node.dart';
@@ -163,7 +164,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: const Text('Removed from favorites'),
+        content: Text(AppLocalizations.of(context)!.removedFromFavorites),
         duration: const Duration(seconds: 2),
       ),
     );
@@ -204,14 +205,14 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
     }
   }
 
-  String _tabTitle(int index) {
+  String _tabTitle(int index, AppLocalizations l10n) {
     switch (index) {
       case 0:
-        return 'Saved Modules';
+        return l10n.favoritesSavedModules;
       case 1:
-        return 'Saved Files';
+        return l10n.favoritesSavedFiles;
       case 2:
-        return 'Online Resources';
+        return l10n.favoritesOnlineResources;
       default:
         return '';
     }
@@ -222,9 +223,10 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
     required int tabIndex,
     required ThemeData theme,
     required AsyncValue<DriveRootData> rootAsync,
+    required AppLocalizations l10n,
   }) {
     if (items.isEmpty) {
-      return _FavoritesEmptyState(theme: theme, tabIndex: tabIndex);
+      return _FavoritesEmptyState(theme: theme, tabIndex: tabIndex, l10n: l10n);
     }
     return RefreshIndicator(
       onRefresh: () async {
@@ -245,13 +247,13 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              _tabTitle(tabIndex),
+              _tabTitle(tabIndex, l10n),
               style: theme.textTheme.headlineMedium?.copyWith(
                 color: Colors.white,
               ),
             ),
             Text(
-              '${items.length} Total',
+              l10n.favoritesTotal(items.length),
               style: theme.textTheme.labelMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -269,6 +271,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                 item: item,
                 rootAsync: rootAsync,
                 theme: theme,
+                l10n: l10n,
                 onRemove: () => _removeFavorite(item),
                 onTap: () => _navigateTo(item),
               );
@@ -316,6 +319,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
     final theme = Theme.of(context);
     final favoritesAsync = ref.watch(favoritesListProvider);
     final rootAsync = ref.watch(driveRootDataProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: const Color(0xFF111221),
@@ -397,7 +401,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          'Favorites',
+                          l10n.favoritesTitle,
                           style: theme.textTheme.headlineMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: theme.colorScheme.primary,
@@ -418,7 +422,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                     ),
                     error: (err, _) => FetchErrorWidget(
                       error: err,
-                      message: 'Failed to load favorites.',
+                      message: l10n.failedToLoadFavorites,
                     ),
                     data: (favorites) {
                       final displayFavorites = favorites.where((f) {
@@ -449,6 +453,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                               setState(() => _selectedTab = i);
                             },
                             theme: theme,
+                            l10n: l10n,
                           ),
                           Expanded(
                             child: PageView(
@@ -462,18 +467,21 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                                   tabIndex: 0,
                                   theme: theme,
                                   rootAsync: rootAsync,
+                                  l10n: l10n,
                                 ),
                                 _buildTabPage(
                                   items: files,
                                   tabIndex: 1,
                                   theme: theme,
                                   rootAsync: rootAsync,
+                                  l10n: l10n,
                                 ),
                                 _buildTabPage(
                                   items: onlineResources,
                                   tabIndex: 2,
                                   theme: theme,
                                   rootAsync: rootAsync,
+                                  l10n: l10n,
                                 ),
                               ],
                             ),
@@ -499,17 +507,19 @@ class _FavoritesTabBar extends StatelessWidget {
   final List<int> counts;
   final ValueChanged<int> onTabChanged;
   final ThemeData theme;
+  final AppLocalizations l10n;
 
   const _FavoritesTabBar({
     required this.selectedTab,
     required this.counts,
     required this.onTabChanged,
     required this.theme,
+    required this.l10n,
   });
 
   @override
   Widget build(BuildContext context) {
-    final labels = ['Modules', 'Files', 'Resources'];
+    final labels = [l10n.favoritesTabModules, l10n.favoritesTabFiles, l10n.favoritesTabResources];
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.marginMobile,
@@ -557,10 +567,10 @@ class _TabItem extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.only(
+        padding: const EdgeInsetsDirectional.only(
           top: 12,
           bottom: 12,
-          right: 12,
+          end: 12,
         ),
         decoration: BoxDecoration(
           border: Border(
@@ -620,6 +630,7 @@ class _ModuleFavoriteCard extends StatelessWidget {
   final FavoriteItem item;
   final AsyncValue<DriveRootData> rootAsync;
   final ThemeData theme;
+  final AppLocalizations l10n;
   final VoidCallback onRemove;
   final VoidCallback onTap;
 
@@ -627,6 +638,7 @@ class _ModuleFavoriteCard extends StatelessWidget {
     required this.item,
     required this.rootAsync,
     required this.theme,
+    required this.l10n,
     required this.onRemove,
     required this.onTap,
   });
@@ -648,8 +660,8 @@ class _ModuleFavoriteCard extends StatelessWidget {
       if (modNode != null) {
         final fc = modNode.totalFiles;
         final folC = modNode.subfolders.length;
-        if (fc > 0) fileCountStr = '$fc files';
-        if (folC > 0) folderCountStr = '$folC folders';
+        if (fc > 0) fileCountStr = l10n.favoritesFileCount(fc);
+        if (folC > 0) folderCountStr = l10n.favoritesFolderCount(folC);
       }
     }
 
@@ -800,7 +812,7 @@ class _ModuleFavoriteCard extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      'View Module',
+                      l10n.viewModule,
                       style: theme.textTheme.labelMedium?.copyWith(
                         color: theme.colorScheme.primary,
                       ),
@@ -1031,10 +1043,12 @@ Widget _favoritesThumbnailFallback(IconData icon, ThemeData theme) {
 class _FavoritesEmptyState extends StatelessWidget {
   final ThemeData theme;
   final int tabIndex;
+  final AppLocalizations l10n;
 
   const _FavoritesEmptyState({
     required this.theme,
     required this.tabIndex,
+    required this.l10n,
   });
 
   @override
@@ -1042,18 +1056,18 @@ class _FavoritesEmptyState extends StatelessWidget {
     final (icon, title, subtitle) = switch (tabIndex) {
       0 => (
         Icons.menu_book,
-        'No modules saved',
-        'Star a module to save it here\nfor quick access.',
+        l10n.noModulesSaved,
+        l10n.noModulesSavedHint,
       ),
       1 => (
         Icons.insert_drive_file,
-        'No files saved',
-        'Star a file to save it here\nfor quick access.',
+        l10n.noFilesSaved,
+        l10n.noFilesSavedHint,
       ),
       _ => (
         Icons.language,
-        'No resources saved',
-        'Star an online resource to save it here\nfor quick access.',
+        l10n.noResourcesSaved,
+        l10n.noResourcesSavedHint,
       ),
     };
 
@@ -1128,7 +1142,7 @@ class _FavoritesEmptyState extends StatelessWidget {
                 ],
               ),
               child: Text(
-                'Browse Home',
+                l10n.browseHome,
                 style: theme.textTheme.labelMedium?.copyWith(
                   color: theme.colorScheme.onPrimary,
                   fontWeight: FontWeight.bold,

@@ -5,6 +5,7 @@ import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../data/providers/my_uploads_provider.dart';
 import '../../shared/widgets/fetch_error_widget.dart';
+import 'package:csbouira_app/l10n/app_localizations.dart';
 
 class MyUploadsScreen extends ConsumerWidget {
   const MyUploadsScreen({super.key});
@@ -24,7 +25,7 @@ class MyUploadsScreen extends ConsumerWidget {
           onPressed: () => context.pop(),
         ),
         title: Text(
-          'My Uploads',
+          AppLocalizations.of(context)!.myUploadsTitle,
           style: theme.textTheme.headlineMedium?.copyWith(
             color: theme.colorScheme.primary,
             fontWeight: FontWeight.bold,
@@ -50,14 +51,14 @@ class MyUploadsScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'No uploads yet',
+                    AppLocalizations.of(context)!.myUploadsEmpty,
                     style: theme.textTheme.titleLarge?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Your uploaded resources will appear here.',
+                    AppLocalizations.of(context)!.myUploadsEmptyHint,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant.withAlpha(153),
                     ),
@@ -154,13 +155,19 @@ class MyUploadsScreen extends ConsumerWidget {
                       const SizedBox(height: AppSpacing.stackSm),
                       Row(
                         children: [
-                          _Tag(theme: theme, label: grade),
-                          const SizedBox(width: 6),
-                          _Tag(theme: theme, label: semester),
-                          const SizedBox(width: 6),
-                          _Tag(theme: theme, label: fileType),
+                          Expanded(
+                            child: Wrap(
+                              spacing: 6,
+                              runSpacing: 4,
+                              children: [
+                                _Tag(theme: theme, label: grade),
+                                _Tag(theme: theme, label: semester),
+                                _Tag(theme: theme, label: fileType),
+                              ],
+                            ),
+                          ),
                           if (date.isNotEmpty) ...[
-                            const Spacer(),
+                            const SizedBox(width: 6),
                             Text(
                               date,
                               style: theme.textTheme.labelSmall?.copyWith(
@@ -198,6 +205,8 @@ class _Tag extends StatelessWidget {
       ),
       child: Text(
         label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
         style: theme.textTheme.labelSmall?.copyWith(
           color: theme.colorScheme.primary,
           fontSize: 10,

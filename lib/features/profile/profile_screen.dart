@@ -14,6 +14,8 @@ import '../../shared/widgets/avatar_widget.dart';
 import '../../shared/widgets/network_banner.dart';
 import '../../shared/widgets/user_avatar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:csbouira_app/l10n/app_localizations.dart';
+import 'package:csbouira_app/core/providers/locale_provider.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -61,7 +63,7 @@ class _StatsGrid extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'UPLOADS',
+                  AppLocalizations.of(context)!.profileStatUploads,
                   style: theme.textTheme.labelMedium?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                     letterSpacing: 1,
@@ -85,7 +87,7 @@ class _StatsGrid extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'FAVORITES',
+                  AppLocalizations.of(context)!.profileStatFavorites,
                   style: theme.textTheme.labelMedium?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                     letterSpacing: 1,
@@ -126,12 +128,14 @@ class _SettingsRow extends StatelessWidget {
   final IconData icon;
   final String label;
   final VoidCallback onTap;
+  final Widget? trailing;
 
   const _SettingsRow({
     required this.theme,
     required this.icon,
     required this.label,
     required this.onTap,
+    this.trailing,
   });
 
   @override
@@ -168,7 +172,7 @@ class _SettingsRow extends StatelessWidget {
                 ),
               ),
             ),
-            Icon(
+            trailing ?? Icon(
               Icons.chevron_right,
               color: theme.colorScheme.outline,
               size: 24,
@@ -176,6 +180,71 @@ class _SettingsRow extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+// ── Language picker ─────────────────────────────────────────────────────────
+
+Future<void> _showLanguagePicker(BuildContext context, WidgetRef ref) async {
+  final locale = ref.read(localeProvider);
+  await showModalBottomSheet(
+    context: context,
+    backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+    ),
+    builder: (ctx) => SafeArea(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            title: Text(AppLocalizations.of(ctx)!.profileLanguageEnglish),
+            trailing: locale.languageCode == 'en'
+                ? const Icon(Icons.check)
+                : null,
+            onTap: () {
+              ref.read(localeProvider.notifier).setLocale('en');
+              Navigator.of(ctx).pop();
+            },
+          ),
+          ListTile(
+            title: Text(AppLocalizations.of(ctx)!.profileLanguageArabic),
+            trailing: locale.languageCode == 'ar'
+                ? const Icon(Icons.check)
+                : null,
+            onTap: () {
+              ref.read(localeProvider.notifier).setLocale('ar');
+              Navigator.of(ctx).pop();
+            },
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+class _LanguagePickerRow extends ConsumerWidget {
+  final ThemeData theme;
+
+  const _LanguagePickerRow({required this.theme});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final locale = ref.watch(localeProvider);
+    return _SettingsRow(
+      theme: theme,
+      icon: Icons.language,
+      label: AppLocalizations.of(context)!.profileLanguage,
+      trailing: Text(
+        locale.languageCode == 'ar'
+            ? AppLocalizations.of(context)!.profileLanguageArabic
+            : AppLocalizations.of(context)!.profileLanguageEnglish,
+        style: theme.textTheme.bodyMedium?.copyWith(
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
+      ),
+      onTap: () => _showLanguagePicker(context, ref),
     );
   }
 }
@@ -246,7 +315,7 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
           borderRadius: BorderRadius.circular(AppRadius.lg),
         ),
         title: Text(
-          'Edit Name',
+          AppLocalizations.of(context)!.profileEditNameTitle,
           style: widget.theme.textTheme.headlineMedium?.copyWith(
             color: widget.theme.colorScheme.onSurface,
             fontWeight: FontWeight.bold,
@@ -259,7 +328,7 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
             color: widget.theme.colorScheme.onSurface,
           ),
           decoration: InputDecoration(
-            hintText: 'Enter your name',
+            hintText: AppLocalizations.of(context)!.profileEditNameHint,
             hintStyle: TextStyle(
               color: widget.theme.colorScheme.onSurfaceVariant,
             ),
@@ -274,7 +343,7 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
             child: Text(
-              'Cancel',
+              AppLocalizations.of(context)!.profileEditNameCancel,
               style: widget.theme.textTheme.labelMedium?.copyWith(
                 color: widget.theme.colorScheme.onSurfaceVariant,
               ),
@@ -283,7 +352,7 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(controller.text.trim()),
             child: Text(
-              'Save',
+              AppLocalizations.of(context)!.profileEditNameSave,
               style: widget.theme.textTheme.labelMedium?.copyWith(
                 color: widget.theme.colorScheme.primary,
                 fontWeight: FontWeight.bold,
@@ -313,7 +382,7 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
           borderRadius: BorderRadius.circular(AppRadius.lg),
         ),
         title: Text(
-          'Edit Email',
+          AppLocalizations.of(context)!.profileEditEmailTitle,
           style: widget.theme.textTheme.headlineMedium?.copyWith(
             color: widget.theme.colorScheme.onSurface,
             fontWeight: FontWeight.bold,
@@ -327,7 +396,7 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
             color: widget.theme.colorScheme.onSurface,
           ),
           decoration: InputDecoration(
-            hintText: 'Enter your email',
+            hintText: AppLocalizations.of(context)!.profileEditEmailHint,
             hintStyle: TextStyle(
               color: widget.theme.colorScheme.onSurfaceVariant,
             ),
@@ -342,7 +411,7 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
             child: Text(
-              'Cancel',
+              AppLocalizations.of(context)!.profileEditNameCancel,
               style: widget.theme.textTheme.labelMedium?.copyWith(
                 color: widget.theme.colorScheme.onSurfaceVariant,
               ),
@@ -351,7 +420,7 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(controller.text.trim()),
             child: Text(
-              'Save',
+              AppLocalizations.of(context)!.profileEditNameSave,
               style: widget.theme.textTheme.labelMedium?.copyWith(
                 color: widget.theme.colorScheme.primary,
                 fontWeight: FontWeight.bold,
@@ -395,7 +464,7 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
           },
         ),
         title: Text(
-          'Profile',
+          AppLocalizations.of(context)!.profileTitle,
           style: theme.textTheme.headlineMedium?.copyWith(
             color: theme.colorScheme.primary,
             fontWeight: FontWeight.bold,
@@ -438,7 +507,7 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          _name.isNotEmpty ? _name : 'Guest',
+                          _name.isNotEmpty ? _name : AppLocalizations.of(context)!.profileGuestName,
                           style: theme.textTheme.headlineLarge?.copyWith(
                             color: theme.colorScheme.onSurface,
                             fontWeight: FontWeight.bold,
@@ -460,7 +529,7 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          _email.isNotEmpty ? _email : 'Add your email',
+                          _email.isNotEmpty ? _email : AppLocalizations.of(context)!.profileEmailPlaceholder,
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: _email.isNotEmpty
                                 ? theme.colorScheme.onSurfaceVariant
@@ -486,7 +555,7 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
                       borderRadius: BorderRadius.circular(AppRadius.full),
                     ),
                     child: Text(
-                      'GUEST',
+                      AppLocalizations.of(context)!.profileGuestBadge,
                       style: theme.textTheme.labelMedium?.copyWith(
                         color: theme.colorScheme.primary,
                         letterSpacing: 1.5,
@@ -505,37 +574,39 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
                   _SettingsRow(
                     theme: theme,
                     icon: Icons.upload_file,
-                    label: 'My Uploads',
+                    label: AppLocalizations.of(context)!.profileSettingMyUploads,
                     onTap: () => context.push('/profile/my-uploads'),
                   ),
                   const SizedBox(height: AppSpacing.stackSm),
                   _SettingsRow(
                     theme: theme,
                     icon: Icons.download_outlined,
-                    label: 'Downloads',
+                    label: AppLocalizations.of(context)!.profileSettingDownloads,
                     onTap: () => context.push('/profile/my-downloads'),
                   ),
                   const SizedBox(height: AppSpacing.stackSm),
                   _SettingsRow(
                     theme: theme,
                     icon: Icons.favorite,
-                    label: 'Favorites',
+                    label: AppLocalizations.of(context)!.profileSettingFavorites,
                     onTap: () => context.push('/favorites'),
                   ),
                   const SizedBox(height: AppSpacing.stackSm),
                   _SettingsRow(
                     theme: theme,
                     icon: Icons.leaderboard_outlined,
-                    label: 'Leaderboard',
+                    label: AppLocalizations.of(context)!.profileSettingLeaderboard,
                     onTap: () => context.push('/profile/leaderboard'),
                   ),
                   const SizedBox(height: AppSpacing.stackSm),
                   _SettingsRow(
                     theme: theme,
                     icon: Icons.info_outline,
-                    label: 'About CS Bouira',
+                    label: AppLocalizations.of(context)!.profileSettingAbout,
                     onTap: () => context.push('/about'),
                   ),
+                  const SizedBox(height: AppSpacing.stackSm),
+                  _LanguagePickerRow(theme: theme),
                   const SizedBox(height: AppSpacing.stackLg),
                   SizedBox(
                     width: double.infinity,
@@ -551,7 +622,7 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
                         ),
                       ),
                       child: Text(
-                        'Log In or Sign Up',
+                        AppLocalizations.of(context)!.profileGuestButton,
                         style: theme.textTheme.headlineMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -619,7 +690,7 @@ class _LoggedInProfileShell extends ConsumerWidget {
           },
         ),
         title: Text(
-          'Profile',
+          AppLocalizations.of(context)!.profileTitle,
           style: theme.textTheme.headlineMedium?.copyWith(
             color: theme.colorScheme.primary,
             fontWeight: FontWeight.bold,
@@ -685,37 +756,39 @@ class _LoggedInProfileShell extends ConsumerWidget {
                       _SettingsRow(
                         theme: theme,
                         icon: Icons.upload_file,
-                        label: 'My Uploads',
+                        label: AppLocalizations.of(context)!.profileSettingMyUploads,
                         onTap: () => context.push('/profile/my-uploads'),
                       ),
                       const SizedBox(height: AppSpacing.stackSm),
                       _SettingsRow(
                         theme: theme,
                         icon: Icons.download_outlined,
-                        label: 'Downloads',
+                        label: AppLocalizations.of(context)!.profileSettingDownloads,
                         onTap: () => context.push('/profile/my-downloads'),
                       ),
                       const SizedBox(height: AppSpacing.stackSm),
                       _SettingsRow(
                         theme: theme,
                         icon: Icons.favorite,
-                        label: 'Favorites',
+                        label: AppLocalizations.of(context)!.profileSettingFavorites,
                         onTap: () => context.push('/favorites'),
                       ),
                       const SizedBox(height: AppSpacing.stackSm),
                       _SettingsRow(
                         theme: theme,
                         icon: Icons.leaderboard_outlined,
-                        label: 'Leaderboard',
+                        label: AppLocalizations.of(context)!.profileSettingLeaderboard,
                         onTap: () => context.push('/profile/leaderboard'),
                       ),
                       const SizedBox(height: AppSpacing.stackSm),
                       _SettingsRow(
                         theme: theme,
                         icon: Icons.info_outline,
-                        label: 'About CS Bouira',
+                        label: AppLocalizations.of(context)!.profileSettingAbout,
                         onTap: () => context.push('/about'),
                       ),
+                      const SizedBox(height: AppSpacing.stackSm),
+                      _LanguagePickerRow(theme: theme),
                       const SizedBox(height: AppSpacing.stackLg),
                       _LogOutButton(theme: theme, ref: ref),
                     ],
@@ -750,14 +823,14 @@ class _LogOutButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(AppRadius.lg),
             ),
             title: Text(
-              'Log Out',
+              AppLocalizations.of(context)!.profileLogoutTitle,
               style: theme.textTheme.headlineMedium?.copyWith(
                 color: theme.colorScheme.onSurface,
                 fontWeight: FontWeight.bold,
               ),
             ),
             content: Text(
-              'Are you sure you want to log out?',
+              AppLocalizations.of(context)!.profileLogoutMessage,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -766,7 +839,7 @@ class _LogOutButton extends StatelessWidget {
               TextButton(
                 onPressed: () => Navigator.of(ctx).pop(false),
                 child: Text(
-                  'Cancel',
+                  AppLocalizations.of(context)!.profileEditNameCancel,
                   style: theme.textTheme.labelMedium?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
@@ -775,7 +848,7 @@ class _LogOutButton extends StatelessWidget {
               TextButton(
                 onPressed: () => Navigator.of(ctx).pop(true),
                 child: Text(
-                  'Log Out',
+                  AppLocalizations.of(context)!.profileLogoutConfirm,
                   style: theme.textTheme.labelMedium?.copyWith(
                     color: theme.colorScheme.error,
                     fontWeight: FontWeight.bold,
@@ -816,7 +889,7 @@ class _LogOutButton extends StatelessWidget {
             ),
             const SizedBox(width: AppSpacing.stackSm),
             Text(
-              'Log Out',
+              AppLocalizations.of(context)!.profileLogoutConfirm,
               style: theme.textTheme.headlineMedium?.copyWith(
                 color: theme.colorScheme.error,
                 fontWeight: FontWeight.bold,

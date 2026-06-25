@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:csbouira_app/l10n/app_localizations.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../data/providers/drive_providers.dart';
@@ -169,7 +170,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                   child: Column(
                     children: [
                       Text(
-                        'CS Bouira',
+                        AppLocalizations.of(context)!.appTitle,
                         style: TextStyle(
                           fontFamily: 'Manrope',
                           fontSize: 48,
@@ -179,18 +180,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                           color: Colors.white,
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'THE RESOURCE HUB',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          height: 16 / 12,
-                          letterSpacing: 4.8,
-                          color: AppColorsDark.onSurfaceVariant,
-                        ),
-                      ),
+
                     ],
                   ),
                 ),
@@ -220,7 +210,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                           animation: _progressAnimation,
                           builder: (context, _) {
                             return FractionallySizedBox(
-                              alignment: Alignment.centerLeft,
+                              alignment: AlignmentDirectional.centerStart,
                               widthFactor: _progressAnimation.value,
                               child: Container(
                                 decoration: BoxDecoration(
@@ -255,7 +245,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
               child: Opacity(
                 opacity: 0.4,
                 child: Text(
-                  'Department of Computer Science',
+                  AppLocalizations.of(context)!.splashFooter,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontFamily: 'Inter',

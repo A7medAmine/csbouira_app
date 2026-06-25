@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:csbouira_app/l10n/app_localizations.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../data/navigation_data.dart';
 import '../../data/providers/drive_providers.dart';
@@ -21,6 +22,7 @@ class FolderScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final moduleNodeAsync = ref.watch(
       driveNodeProvider(drivePathKey([year, semester, module])),
     );
@@ -111,7 +113,7 @@ class FolderScreen extends ConsumerWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '$year / $semester',
+                                  l10n.moduleBreadcrumb(year, semester),
                                   style: theme.textTheme.labelMedium?.copyWith(
                                     color: theme.colorScheme.onSurfaceVariant,
                                   ),
@@ -147,30 +149,6 @@ class FolderScreen extends ConsumerWidget {
                           24,
                         ),
                         children: [
-                          // Badge pill
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.primary.withAlpha(26),
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                color: theme.colorScheme.primary.withAlpha(51),
-                              ),
-                            ),
-                            child: Text(
-                              'Course Module',
-                              style: theme.textTheme.labelMedium?.copyWith(
-                                color: theme.colorScheme.primary,
-                                letterSpacing: 1.5,
-                              ),
-                            ),
-                          ),
-
-                          const SizedBox(height: AppSpacing.stackLg),
-
                           // Folder grid
                           _buildFolderGrid(context, theme, folderFileCounts),
                         ],
@@ -313,6 +291,7 @@ class _FolderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return GestureDetector(
       onTap: onTap,
@@ -328,12 +307,12 @@ class _FolderCard extends StatelessWidget {
                     : theme.colorScheme.outlineVariant.withAlpha(77),
           ),
         ),
-        child: isHorizontal ? _horizontalLayout(theme) : _verticalLayout(theme),
+        child: isHorizontal ? _horizontalLayout(context, theme, l10n) : _verticalLayout(context, theme, l10n),
       ),
     );
   }
 
-  Widget _verticalLayout(ThemeData theme) {
+  Widget _verticalLayout(BuildContext context, ThemeData theme, AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -355,7 +334,7 @@ class _FolderCard extends StatelessWidget {
         ),
         const SizedBox(height: 2),
         Text(
-          isEmpty ? 'Empty' : '$fileCount Files',
+          isEmpty ? l10n.folderEmpty : l10n.folderFileCount(fileCount),
           style: theme.textTheme.labelMedium?.copyWith(
             color:
                 isEmpty
@@ -367,7 +346,7 @@ class _FolderCard extends StatelessWidget {
     );
   }
 
-  Widget _horizontalLayout(ThemeData theme) {
+  Widget _horizontalLayout(BuildContext context, ThemeData theme, AppLocalizations l10n) {
     return Row(
       children: [
         Container(
@@ -395,7 +374,7 @@ class _FolderCard extends StatelessWidget {
               ),
               const SizedBox(height: 2),
               Text(
-                isEmpty ? 'Empty' : '$fileCount Files',
+                isEmpty ? l10n.folderEmpty : l10n.folderFileCount(fileCount),
                 style: theme.textTheme.labelMedium?.copyWith(
                   color:
                       isEmpty
@@ -407,7 +386,12 @@ class _FolderCard extends StatelessWidget {
           ),
         ),
         if (!isEmpty)
-          Icon(Icons.chevron_right, color: theme.colorScheme.outline),
+          Icon(
+            Directionality.of(context) == TextDirection.rtl
+                ? Icons.chevron_left
+                : Icons.chevron_right,
+            color: theme.colorScheme.outline,
+          ),
       ],
     );
   }

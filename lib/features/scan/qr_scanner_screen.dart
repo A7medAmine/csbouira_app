@@ -7,6 +7,7 @@ import '../../core/theme/app_colors.dart';
 import '../../data/providers/drive_providers.dart';
 import '../../data/services/qr_share_service.dart';
 import '../preview/preview_args.dart';
+import 'package:csbouira_app/l10n/app_localizations.dart';
 
 enum _ScanState { checkingPermission, permissionDenied, scanning, resolving, success, fileNotFound }
 
@@ -77,7 +78,7 @@ class _QrScannerScreenState extends ConsumerState<QrScannerScreen>
     final data = parseFileShareData(barcode.rawValue!);
     if (data == null) {
       setState(() {
-        _feedbackMessage = "This isn't a CS Bouira QR code";
+        _feedbackMessage = AppLocalizations.of(context)!.qrScannerError;
       });
       return;
     }
@@ -163,15 +164,15 @@ class _QrScannerScreenState extends ConsumerState<QrScannerScreen>
           if (_state == _ScanState.success)
             Container(
               color: Colors.black.withAlpha(200),
-              child: const Center(
+              child: Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.check_circle, color: Colors.green, size: 64),
-                    SizedBox(height: 16),
+                    const Icon(Icons.check_circle, color: Colors.green, size: 64),
+                    const SizedBox(height: 16),
                     Text(
-                      'File found!',
-                      style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
+                      AppLocalizations.of(context)!.qrScannerSuccess,
+                      style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),
@@ -203,7 +204,7 @@ class _QrScannerScreenState extends ConsumerState<QrScannerScreen>
                       const SizedBox(height: 24),
                       FilledButton(
                         onPressed: () => context.pop(),
-                        child: const Text('Back to Home'),
+                        child: Text(AppLocalizations.of(context)!.browseHome),
                       ),
                     ],
                   ),

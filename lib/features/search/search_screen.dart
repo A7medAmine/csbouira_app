@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:csbouira_app/l10n/app_localizations.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../data/models/drive_node.dart';
 import '../../data/providers/drive_providers.dart';
@@ -86,6 +87,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: const Color(0xFF0D0D14),
@@ -113,7 +115,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   selectedType: _filterType,
                   onYearTap: () =>
                       _showFilterOptions<String>(
-                        title: 'Year',
+                        title: l10n.searchFilterYear,
                         optionsBuilder: (root) =>
                             root.years.keys.toList()..sort(),
                         selected: _filterYear,
@@ -123,7 +125,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   onSemesterTap: () {
                     if (_filterYear == null) return;
                     _showFilterOptions<String>(
-                      title: 'Semester',
+                      title: l10n.searchFilterSemester,
                       optionsBuilder: (root) {
                         final yearNode = root.years[_filterYear!];
                         if (yearNode == null) return [];
@@ -137,7 +139,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   onModuleTap: () {
                     if (_filterYear == null || _filterSemester == null) return;
                     _showFilterOptions<String>(
-                      title: 'Module',
+                      title: l10n.searchFilterModule,
                       optionsBuilder: (root) {
                         final yearNode = root.years[_filterYear!];
                         final semNode =
@@ -150,19 +152,21 @@ class _SearchScreenState extends State<SearchScreen> {
                       formatLabel: (v) => v,
                     );
                   },
-                  onTypeTap: () =>
-                      _showFilterOptions<SearchResultType>(
-                        title: 'Type',
-                        optionsBuilder: (_) =>
-                            SearchResultType.values,
-                        selected: _filterType,
-                        onSelect: _setFilterType,
-                        formatLabel: (v) => switch (v) {
-                          SearchResultType.module => 'Module',
-                          SearchResultType.folder => 'Folder',
-                          SearchResultType.file => 'File',
-                        },
-                      ),
+                  onTypeTap: () {
+                    final typeL10n = AppLocalizations.of(context)!;
+                    _showFilterOptions<SearchResultType>(
+                      title: l10n.searchFilterType,
+                      optionsBuilder: (_) =>
+                          SearchResultType.values,
+                      selected: _filterType,
+                      onSelect: _setFilterType,
+                      formatLabel: (v) => switch (v) {
+                        SearchResultType.module => typeL10n.searchResultModule,
+                        SearchResultType.folder => typeL10n.searchResultFolder,
+                        SearchResultType.file => typeL10n.searchResultFile,
+                      },
+                    );
+                  },
                   onClearFilters: _filterYear != null ||
                           _filterSemester != null ||
                           _filterModule != null ||
@@ -206,7 +210,9 @@ class _SearchScreenState extends State<SearchScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (ctx) {
-        return Consumer(
+        return Directionality(
+          textDirection: TextDirection.ltr,
+          child: Consumer(
           builder: (ctx, ref, _) {
             final rootAsync = ref.watch(driveRootDataProvider);
             return rootAsync.when(
@@ -214,11 +220,11 @@ class _SearchScreenState extends State<SearchScreen> {
                 height: 100,
                 child: Center(child: CircularProgressIndicator()),
               ),
-              error: (_, __) => const Padding(
-                padding: EdgeInsets.all(16),
+              error: (_, __) => Padding(
+                padding: const EdgeInsets.all(16),
                 child: Text(
-                  'Could not load filters. Check your connection.',
-                  style: TextStyle(color: Colors.grey, fontSize: 13),
+                  AppLocalizations.of(ctx)!.couldNotLoadFilters,
+                  style: const TextStyle(color: Colors.grey, fontSize: 13),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -252,7 +258,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                   Navigator.pop(ctx);
                                 },
                                 child: Text(
-                                  'Clear',
+                                  AppLocalizations.of(ctx)!.searchFilterClear,
                                   style: Theme.of(ctx)
                                       .textTheme
                                       .labelMedium
@@ -270,7 +276,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             padding: const EdgeInsets.symmetric(vertical: 20),
                             child: Center(
                               child: Text(
-                                'No options available',
+                                AppLocalizations.of(ctx)!.noOptionsAvailable,
                                 style: Theme.of(ctx)
                                     .textTheme
                                     .bodyMedium
@@ -305,7 +311,8 @@ class _SearchScreenState extends State<SearchScreen> {
               },
             );
           },
-        );
+        ),
+      );
       },
     );
   }
@@ -402,7 +409,7 @@ class _SearchHeader extends StatelessWidget {
                               ),
                             )
                           : null,
-                      hintText: 'Search for modules, files...',
+                      hintText: AppLocalizations.of(context)!.searchHint,
                       hintStyle: theme.textTheme.bodyMedium?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant.withAlpha(128),
                       ),
@@ -449,6 +456,7 @@ class _FilterChips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.fromLTRB(
         AppSpacing.marginMobile,
@@ -469,21 +477,21 @@ class _FilterChips extends StatelessWidget {
         child: Row(
           children: [
             _FilterChip(
-              label: selectedYear ?? 'Year',
+              label: selectedYear ?? l10n.searchFilterYear,
               isActive: selectedYear != null,
               onTap: onYearTap,
               theme: theme,
             ),
             const SizedBox(width: 8),
             _FilterChip(
-              label: selectedSemester ?? 'Semester',
+              label: selectedSemester ?? l10n.searchFilterSemester,
               isActive: selectedSemester != null,
               onTap: onSemesterTap,
               theme: theme,
             ),
             const SizedBox(width: 8),
             _FilterChip(
-              label: selectedModule ?? 'Module',
+              label: selectedModule ?? l10n.searchFilterModule,
               isActive: selectedModule != null,
               onTap: onModuleTap,
               theme: theme,
@@ -492,11 +500,11 @@ class _FilterChips extends StatelessWidget {
             _FilterChip(
               label: selectedType != null
                   ? switch (selectedType!) {
-                      SearchResultType.module => 'Module',
-                      SearchResultType.folder => 'Folder',
-                      SearchResultType.file => 'File',
+                      SearchResultType.module => l10n.searchResultModule,
+                      SearchResultType.folder => l10n.searchResultFolder,
+                      SearchResultType.file => l10n.searchResultFile,
                     }
-                  : 'Type',
+                  : l10n.searchFilterType,
               isActive: selectedType != null,
               onTap: onTypeTap,
               theme: theme,
@@ -634,6 +642,7 @@ class _EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -653,7 +662,7 @@ class _EmptyState extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.stackLg),
           Text(
-            'Start Exploring',
+            l10n.startExploring,
             style: theme.textTheme.headlineMedium?.copyWith(
               fontWeight: FontWeight.w600,
               color: theme.colorScheme.onSurface,
@@ -661,7 +670,7 @@ class _EmptyState extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.stackSm),
           Text(
-            'Search for modules, files, or topics\nacross the entire CS Bouira library.',
+            l10n.searchEmptyMessage,
             textAlign: TextAlign.center,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
@@ -693,12 +702,13 @@ class _SearchResults extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final rootAsync = ref.watch(driveRootDataProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return rootAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (err, _) => FetchErrorWidget(
         error: err,
-        message: 'Failed to search.',
+        message: l10n.failedToSearch,
       ),
       data: (root) {
         final results = _performSearch(
@@ -708,6 +718,7 @@ class _SearchResults extends ConsumerWidget {
           filterSemester: filterSemester,
           filterModule: filterModule,
           filterType: filterType,
+          l10n: l10n,
         );
 
         if (results.isEmpty) {
@@ -722,7 +733,7 @@ class _SearchResults extends ConsumerWidget {
                 ),
                 const SizedBox(height: AppSpacing.stackMd),
                 Text(
-                  'No results for "$query"',
+                  l10n.noResultsForQuery(query),
                   style: theme.textTheme.bodyLarge?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
@@ -744,14 +755,14 @@ class _SearchResults extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Top Results',
+                  l10n.topResults,
                   style: theme.textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: theme.colorScheme.onSurface,
                   ),
                 ),
                 Text(
-                  '${results.length} Items Found',
+                  l10n.itemsFound(results.length),
                   style: theme.textTheme.labelMedium?.copyWith(
                     color: theme.colorScheme.primary,
                   ),
@@ -779,6 +790,7 @@ class _SearchResults extends ConsumerWidget {
     String? filterSemester,
     String? filterModule,
     SearchResultType? filterType,
+    required AppLocalizations l10n,
   }) {
     final q = query.toLowerCase();
     final results = <SearchResult>[];
@@ -817,7 +829,7 @@ class _SearchResults extends ConsumerWidget {
               results.add(SearchResult(
                 type: SearchResultType.folder,
                 name: folderName,
-                subtitle: '${folderNode.totalFiles} Files \u2022 $modName',
+                subtitle: '${l10n.fileCount(folderNode.totalFiles)} \u2022 $modName',
                 pathSegments: [yearName, semName, modName, folderName],
               ));
             }
@@ -886,21 +898,22 @@ class _ResultCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final (icon, color, label) = switch (result.type) {
       SearchResultType.module => (
         Icons.menu_book,
         theme.colorScheme.primary,
-        'Module',
+        l10n.searchResultModule,
       ),
       SearchResultType.folder => (
         Icons.folder,
         theme.colorScheme.secondary,
-        'Folder',
+        l10n.searchResultFolder,
       ),
       SearchResultType.file => (
         Icons.picture_as_pdf,
         Colors.red,
-        'File',
+        l10n.searchResultFile,
       ),
     };
 
@@ -993,7 +1006,7 @@ class _ResultCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Icon(
-                    Icons.chevron_right,
+                    Directionality.of(context) == TextDirection.rtl ? Icons.chevron_left : Icons.chevron_right,
                     size: 18,
                     color: theme.colorScheme.outline,
                   ),
