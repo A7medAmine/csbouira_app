@@ -12,7 +12,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get appTitle => 'CS Bouira';
 
   @override
-  String get appSubtitle => 'مركز الموارد';
+  String get appSubtitle => 'THE RESOURCE HUB';
 
   @override
   String get splashFooter => 'قسم علوم الحاسوب';
@@ -128,7 +128,7 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count ملفات',
+      other: '$count ملفًا',
       one: '$count ملف',
     );
     return '$_temp0';
@@ -138,7 +138,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get statsUsers => 'المستخدمون';
 
   @override
-  String get statsFiles => 'الملفات';
+  String get statsFiles => 'ملفا';
 
   @override
   String get statsSpecials => 'مميزات';
@@ -475,7 +475,7 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count ملفات محددة',
+      other: '$count  ملفا محددا',
       one: '$count ملف محدد',
     );
     return '$_temp0';
@@ -838,10 +838,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get aboutFeatureOffline => 'الوصول دون اتصال الى المواد التي تم تنزيلها';
 
   @override
-  String get aboutCreator => 'المبتكر';
+  String get aboutCreator => 'المطور';
 
   @override
-  String get aboutCreatorSalimZedDesc => 'المبتكر الاصلي لموقع CS Bouira وواجهة API';
+  String get aboutCreatorSalimZedDesc => 'المطور الأصلي لمنصة Cs Bouira و api';
 
   @override
   String get aboutCreatorAhmedAmineDesc => 'مطور تطبيق الاندرويد';

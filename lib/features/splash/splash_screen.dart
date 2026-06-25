@@ -180,18 +180,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                           color: Colors.white,
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        AppLocalizations.of(context)!.appSubtitle,
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          height: 16 / 12,
-                          letterSpacing: 4.8,
-                          color: AppColorsDark.onSurfaceVariant,
-                        ),
-                      ),
+
                     ],
                   ),
                 ),

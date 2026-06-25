@@ -1,67 +1,92 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
 import 'app_radius.dart';
 import 'app_spacing.dart';
 
 TextTheme _buildTextTheme(Locale locale) {
   final isArabic = locale.languageCode == 'ar';
+  final bodyF = isArabic ? 'Cairo' : 'Inter';
+  final displayF = isArabic ? 'Cairo' : 'Manrope';
+  final monoF = isArabic ? 'Cairo' : 'JetBrainsMono';
 
-  final baseTextTheme = GoogleFonts.interTextTheme(
-    const TextTheme(
-      displayLarge: TextStyle(
-        fontFamily: 'Manrope',
-        fontSize: 48,
-        fontWeight: FontWeight.w800,
-        height: 56 / 48,
-        letterSpacing: -0.02,
-      ),
-      headlineLarge: TextStyle(
-        fontFamily: 'Manrope',
-        fontSize: 28,
-        fontWeight: FontWeight.w700,
-        height: 36 / 28,
-        letterSpacing: -0.01,
-      ),
-      headlineMedium: TextStyle(
-        fontFamily: 'Manrope',
-        fontSize: 20,
-        fontWeight: FontWeight.w600,
-        height: 28 / 20,
-      ),
-      bodyLarge: TextStyle(
-        fontFamily: 'Inter',
-        fontSize: 16,
-        fontWeight: FontWeight.w400,
-        height: 24 / 16,
-      ),
-      bodyMedium: TextStyle(
-        fontFamily: 'Inter',
-        fontSize: 14,
-        fontWeight: FontWeight.w400,
-        height: 20 / 14,
-      ),
-      labelMedium: TextStyle(
-        fontFamily: 'Inter',
-        fontSize: 12,
-        fontWeight: FontWeight.w600,
-        height: 16 / 12,
-        letterSpacing: 0.05,
-      ),
-      labelSmall: TextStyle(
-        fontFamily: 'JetBrainsMono',
-        fontSize: 13,
-        fontWeight: FontWeight.w400,
-        height: 18 / 13,
-      ),
+  return TextTheme(
+    displayLarge: TextStyle(
+      fontFamily: displayF,
+      fontSize: 48,
+      fontWeight: FontWeight.w800,
+      height: 56 / 48,
+      letterSpacing: -0.02,
+      fontVariations: const [FontVariation('wght', 800)],
+    ),
+    headlineLarge: TextStyle(
+      fontFamily: displayF,
+      fontSize: 28,
+      fontWeight: FontWeight.w700,
+      height: 36 / 28,
+      letterSpacing: -0.01,
+      fontVariations: const [FontVariation('wght', 700)],
+    ),
+    headlineMedium: TextStyle(
+      fontFamily: displayF,
+      fontSize: 20,
+      fontWeight: FontWeight.w600,
+      height: 28 / 20,
+      fontVariations: const [FontVariation('wght', 600)],
+    ),
+    headlineSmall: TextStyle(
+      fontFamily: displayF,
+      fontVariations: const [FontVariation('wght', 500)],
+    ),
+    titleLarge: TextStyle(
+      fontFamily: bodyF,
+      fontVariations: const [FontVariation('wght', 400)],
+    ),
+    titleMedium: TextStyle(
+      fontFamily: bodyF,
+      fontVariations: const [FontVariation('wght', 500)],
+    ),
+    titleSmall: TextStyle(
+      fontFamily: bodyF,
+      fontVariations: const [FontVariation('wght', 500)],
+    ),
+    bodyLarge: TextStyle(
+      fontFamily: bodyF,
+      fontSize: 16,
+      fontWeight: FontWeight.w400,
+      height: 24 / 16,
+      fontVariations: const [FontVariation('wght', 400)],
+    ),
+    bodyMedium: TextStyle(
+      fontFamily: bodyF,
+      fontSize: 14,
+      fontWeight: FontWeight.w400,
+      height: 20 / 14,
+      fontVariations: const [FontVariation('wght', 400)],
+    ),
+    bodySmall: TextStyle(
+      fontFamily: bodyF,
+      fontVariations: const [FontVariation('wght', 400)],
+    ),
+    labelLarge: TextStyle(
+      fontFamily: bodyF,
+      fontVariations: const [FontVariation('wght', 500)],
+    ),
+    labelMedium: TextStyle(
+      fontFamily: bodyF,
+      fontSize: 12,
+      fontWeight: FontWeight.w600,
+      height: 16 / 12,
+      letterSpacing: 0.05,
+      fontVariations: const [FontVariation('wght', 600)],
+    ),
+    labelSmall: TextStyle(
+      fontFamily: monoF,
+      fontSize: 13,
+      fontWeight: FontWeight.w400,
+      height: 18 / 13,
+      fontVariations: const [FontVariation('wght', 400)],
     ),
   );
-
-  if (isArabic) {
-    return GoogleFonts.cairoTextTheme(baseTextTheme);
-  }
-
-  return GoogleFonts.manropeTextTheme(baseTextTheme);
 }
 
 ThemeData _buildDarkTheme(Locale locale) {

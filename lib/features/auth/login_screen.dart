@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:csbouira_app/l10n/app_localizations.dart';
@@ -286,7 +285,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     return Theme(
       data: theme.copyWith(
-        textTheme: GoogleFonts.cairoTextTheme(theme.textTheme),
+        textTheme: theme.textTheme.apply(fontFamily: 'Cairo'),
       ),
       child: Scaffold(
         backgroundColor: const Color(0xFF0D0D14),
