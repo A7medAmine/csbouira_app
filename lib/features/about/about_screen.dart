@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
+import 'package:csbouira_app/l10n/app_localizations.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
@@ -23,7 +24,7 @@ class AboutScreen extends StatelessWidget {
           onPressed: () => context.pop(),
         ),
         title: Text(
-          'About',
+          AppLocalizations.of(context)!.aboutTitle,
           style: theme.textTheme.headlineMedium?.copyWith(
             color: theme.colorScheme.primary,
             fontWeight: FontWeight.bold,
@@ -61,7 +62,7 @@ class AboutScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'v1.0.0',
+                        '${AppLocalizations.of(context)!.aboutVersion} 1.0.0',
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
@@ -74,7 +75,7 @@ class AboutScreen extends StatelessWidget {
                   theme: theme,
                   children: [
                     Text(
-                      'CS Bouira is the ultimate academic resource hub for Computer Science students at the University of Bouira. Access a comprehensive collection of course materials, lecture notes, exercises, exams, and study resources organized by year, semester, and module — all in one place.',
+                      AppLocalizations.of(context)!.aboutDescription,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: theme.colorScheme.onSurface.withAlpha(230),
                       ),
@@ -84,21 +85,21 @@ class AboutScreen extends StatelessWidget {
                 const SizedBox(height: AppSpacing.stackMd),
                 _SectionCard(
                   theme: theme,
-                  title: 'Features',
+                  title: AppLocalizations.of(context)!.aboutFeatures,
                   children: [
-                    _FeatureRow(theme: theme, text: 'Browse resources by year, semester, and module'),
-                    _FeatureRow(theme: theme, text: 'Search across all course materials'),
-                    _FeatureRow(theme: theme, text: 'Download and preview PDFs, documents, and images'),
-                    _FeatureRow(theme: theme, text: 'Upload and share academic resources'),
-                    _FeatureRow(theme: theme, text: 'Bookmark favorites for quick access'),
-                    _FeatureRow(theme: theme, text: 'QR code scanner for instant resource links'),
-                    _FeatureRow(theme: theme, text: 'Offline access to downloaded materials'),
+                    _FeatureRow(theme: theme, text: AppLocalizations.of(context)!.aboutFeatureBrowseResources),
+                    _FeatureRow(theme: theme, text: AppLocalizations.of(context)!.aboutFeatureSearch),
+                    _FeatureRow(theme: theme, text: AppLocalizations.of(context)!.aboutFeatureDownload),
+                    _FeatureRow(theme: theme, text: AppLocalizations.of(context)!.aboutFeatureUpload),
+                    _FeatureRow(theme: theme, text: AppLocalizations.of(context)!.aboutFeatureBookmarks),
+                    _FeatureRow(theme: theme, text: AppLocalizations.of(context)!.aboutFeatureQrCode),
+                    _FeatureRow(theme: theme, text: AppLocalizations.of(context)!.aboutFeatureOffline),
                   ],
                 ),
                 const SizedBox(height: AppSpacing.stackMd),
                 _SectionCard(
                   theme: theme,
-                  title: 'Creator',
+                  title: AppLocalizations.of(context)!.aboutCreator,
                   children: [
                     GestureDetector(
                       onTap: () => _launchUrl('https://github.com/zedsalim'),
@@ -139,7 +140,7 @@ class AboutScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
-                                  'Original creator of CS Bouira website & API',
+                                  AppLocalizations.of(context)!.aboutCreatorSalimZedDesc,
                                   style: theme.textTheme.bodySmall?.copyWith(
                                     color: theme.colorScheme.onSurfaceVariant,
                                   ),
@@ -191,7 +192,7 @@ class AboutScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
-                                  'Android app developer',
+                                  AppLocalizations.of(context)!.aboutCreatorAhmedAmineDesc,
                                   style: theme.textTheme.bodySmall?.copyWith(
                                     color: theme.colorScheme.onSurfaceVariant,
                                   ),
@@ -208,7 +209,7 @@ class AboutScreen extends StatelessWidget {
                 const SizedBox(height: AppSpacing.stackMd),
                 _SectionCard(
                   theme: theme,
-                  title: 'Source Code',
+                  title: AppLocalizations.of(context)!.aboutSourceCode,
                   children: [
                     GestureDetector(
                       onTap: () => _launchUrl('https://github.com/A7medAmine/csbouira_app'),
@@ -230,7 +231,7 @@ class AboutScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'GitHub Repository',
+                                  AppLocalizations.of(context)!.aboutSourceCodeGithub,
                                   style: theme.textTheme.bodyLarge?.copyWith(
                                     color: theme.colorScheme.onSurface,
                                     fontWeight: FontWeight.bold,
@@ -256,7 +257,7 @@ class AboutScreen extends StatelessWidget {
                       child: OutlinedButton.icon(
                         onPressed: () => _launchUrl('https://github.com/A7medAmine/csbouira_app/issues/new'),
                         icon: FaIcon(FontAwesomeIcons.bug, size: 16),
-                        label: const Text('Report an Issue'),
+                        label: Text(AppLocalizations.of(context)!.aboutSourceCodeReportIssue),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: theme.colorScheme.primary,
                           side: BorderSide(color: theme.colorScheme.primary.withAlpha(77)),
@@ -272,7 +273,7 @@ class AboutScreen extends StatelessWidget {
                 const SizedBox(height: AppSpacing.stackMd),
                 _SectionCard(
                   theme: theme,
-                  title: 'Contact',
+                  title: AppLocalizations.of(context)!.aboutContact,
                   children: [
                     GestureDetector(
                       onTap: () => _launchUrl('mailto:support@csbouira.dz'),
@@ -288,10 +289,10 @@ class AboutScreen extends StatelessWidget {
                 const SizedBox(height: AppSpacing.stackMd),
                 _SectionCard(
                   theme: theme,
-                  title: 'License',
+                  title: AppLocalizations.of(context)!.aboutLicense,
                   children: [
                     Text(
-                      'This application is released under the MIT License.\n\nCopyright © 2026 Ahmed Amine. All rights reserved.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files, to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software.',
+                      AppLocalizations.of(context)!.aboutLicenseText,
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurface.withAlpha(179),
                       ),

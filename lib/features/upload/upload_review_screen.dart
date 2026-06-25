@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import 'package:csbouira_app/l10n/app_localizations.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../data/models/selected_upload_file.dart';
@@ -87,6 +88,7 @@ class _UploadReviewSheetState extends State<_UploadReviewSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final maxHeight = MediaQuery.of(context).size.height * 0.75;
 
     return Padding(
@@ -105,8 +107,8 @@ class _UploadReviewSheetState extends State<_UploadReviewSheet> {
                 const SizedBox(width: 40),
                 Text(
                   widget.totalCount > 1
-                      ? '${widget.currentIndex} of ${widget.totalCount}'
-                      : 'Review File',
+                      ? l10n.reviewFileCounter(widget.currentIndex, widget.totalCount)
+                      : l10n.reviewTitle,
                   style: theme.textTheme.titleLarge?.copyWith(
                     color: theme.colorScheme.onSurface,
                     fontWeight: FontWeight.w600,
@@ -125,7 +127,7 @@ class _UploadReviewSheetState extends State<_UploadReviewSheet> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: SizedBox(
               height: maxHeight * 0.5,
-              child: _buildPreview(theme),
+              child: _buildPreview(theme, l10n),
             ),
           ),
           const SizedBox(height: 16),
@@ -147,7 +149,7 @@ class _UploadReviewSheetState extends State<_UploadReviewSheet> {
                       child: OutlinedButton.icon(
                         onPressed: widget.onRetake,
                         icon: const Icon(Icons.refresh, size: 18),
-                        label: const Text('Retake / Choose Again'),
+                        label: Text(l10n.reviewRetake),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: theme.colorScheme.onSurface,
                           side: BorderSide(color: theme.colorScheme.outlineVariant),
@@ -163,7 +165,7 @@ class _UploadReviewSheetState extends State<_UploadReviewSheet> {
                       child: FilledButton.icon(
                         onPressed: widget.onConfirm,
                         icon: const Icon(Icons.check, size: 18),
-                        label: const Text('Use This File'),
+                        label: Text(l10n.reviewUseThisFile),
                         style: FilledButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           shape: RoundedRectangleBorder(
@@ -181,7 +183,7 @@ class _UploadReviewSheetState extends State<_UploadReviewSheet> {
                     child: TextButton.icon(
                       onPressed: widget.onApproveAll,
                       icon: const Icon(Icons.done_all, size: 18),
-                      label: Text('Approve All (${widget.totalCount - widget.currentIndex + 1} remaining)'),
+                      label: Text(l10n.reviewApproveAll(widget.totalCount - widget.currentIndex + 1)),
                       style: TextButton.styleFrom(
                         foregroundColor: theme.colorScheme.primary,
                         padding: const EdgeInsets.symmetric(vertical: 14),
@@ -197,7 +199,7 @@ class _UploadReviewSheetState extends State<_UploadReviewSheet> {
     );
   }
 
-  Widget _buildPreview(ThemeData theme) {
+  Widget _buildPreview(ThemeData theme, AppLocalizations l10n) {
     if (_isPdf) {
       if (_isPdfLoading) {
         return const Center(child: CircularProgressIndicator());
@@ -216,15 +218,15 @@ class _UploadReviewSheetState extends State<_UploadReviewSheet> {
         child: Image.memory(
           widget.file.bytes,
           fit: BoxFit.contain,
-          errorBuilder: (_, __, ___) => _unsupportedPreview(theme),
+          errorBuilder: (_, __, ___) => _unsupportedPreview(theme, l10n),
         ),
       );
     }
 
-    return _unsupportedPreview(theme);
+    return _unsupportedPreview(theme, l10n);
   }
 
-  Widget _unsupportedPreview(ThemeData theme) {
+  Widget _unsupportedPreview(ThemeData theme, AppLocalizations l10n) {
     return Container(
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerLow,
@@ -237,7 +239,7 @@ class _UploadReviewSheetState extends State<_UploadReviewSheet> {
             Icon(Icons.description, size: 48, color: theme.colorScheme.onSurfaceVariant),
             const SizedBox(height: 8),
             Text(
-              'Preview not available',
+              l10n.reviewPreviewNotAvailable,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),

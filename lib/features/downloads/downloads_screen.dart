@@ -10,6 +10,7 @@ import '../../data/providers/downloads_providers.dart';
 import '../../data/services/download_service.dart';
 import '../../shared/widgets/fetch_error_widget.dart';
 import 'local_file_viewer.dart';
+import 'package:csbouira_app/l10n/app_localizations.dart';
 
 class DownloadsScreen extends ConsumerWidget {
   const DownloadsScreen({super.key});
@@ -37,7 +38,7 @@ class DownloadsScreen extends ConsumerWidget {
           },
         ),
         title: Text(
-          'Downloads',
+          AppLocalizations.of(context)!.downloadsTitle,
           style: theme.textTheme.headlineMedium?.copyWith(
             color: theme.colorScheme.primary,
             fontWeight: FontWeight.bold,
@@ -238,7 +239,7 @@ class _DownloadCardState extends ConsumerState<_DownloadCard> {
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(true),
             child: Text(
-              'Delete',
+              AppLocalizations.of(context)!.downloadsDeleteAction,
               style: theme.textTheme.labelMedium?.copyWith(
                 color: theme.colorScheme.error,
                 fontWeight: FontWeight.bold,
@@ -387,7 +388,7 @@ class _EmptyState extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.stackLg),
           Text(
-            'No downloads yet',
+            AppLocalizations.of(context)!.downloadsEmpty,
             style: theme.textTheme.headlineLarge?.copyWith(
               color: theme.colorScheme.onSurface,
             ),
@@ -396,7 +397,7 @@ class _EmptyState extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32),
             child: Text(
-              'Files you download will appear here\nfor offline access.',
+              AppLocalizations.of(context)!.downloadsEmptyHint,
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
@@ -422,7 +423,7 @@ class _EmptyState extends StatelessWidget {
                 ],
               ),
               child: Text(
-                'Browse Files',
+                AppLocalizations.of(context)!.downloadsBrowseFiles,
                 style: theme.textTheme.labelMedium?.copyWith(
                   color: theme.colorScheme.onPrimary,
                   fontWeight: FontWeight.bold,

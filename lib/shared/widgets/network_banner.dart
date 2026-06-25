@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:csbouira_app/l10n/app_localizations.dart';
 import '../../data/providers/connectivity_provider.dart';
 
 class NetworkBanner extends ConsumerStatefulWidget {
@@ -34,6 +35,8 @@ class _NetworkBannerState extends ConsumerState<NetworkBanner> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     ref.listen<AsyncValue<bool>>(connectivityProvider, (prev, next) {
       final wasConnected = prev?.value ?? true;
       final isConnected = next.value ?? true;
@@ -69,16 +72,16 @@ class _NetworkBannerState extends ConsumerState<NetworkBanner> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    _isGreen ? 'Back online' : 'No internet connection',
+                    _isGreen ? l10n.networkReconnected : l10n.networkOffline,
                     style: const TextStyle(color: Colors.white, fontSize: 14),
                   ),
                 ),
                 if (!_isGreen)
                   GestureDetector(
                     onTap: () => context.push('/downloads'),
-                    child: const Text(
-                      'Downloads',
-                      style: TextStyle(
+                    child: Text(
+                      l10n.downloadsTitle,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 14,
                         fontWeight: FontWeight.bold,

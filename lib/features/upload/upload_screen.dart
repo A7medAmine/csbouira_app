@@ -8,6 +8,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter_doc_scanner/flutter_doc_scanner.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mime/mime.dart' as mime_pkg;
+import 'package:csbouira_app/l10n/app_localizations.dart';
 import '../../core/constants.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
@@ -379,6 +380,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
 
 
   void _showFilePickerOptions() {
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
       backgroundColor: Theme.of(context).colorScheme.surfaceContainerHigh,
@@ -402,8 +404,8 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
               const SizedBox(height: 20),
               _PickerOption(
                 icon: Icons.folder_open,
-                title: 'Choose a file',
-                subtitle: 'Browse device storage',
+                title: l10n.uploadPickerOption,
+                subtitle: l10n.uploadPickerSubtitle,
                 onTap: () {
                   Navigator.pop(ctx);
                   _pickFile();
@@ -413,8 +415,8 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
                 const SizedBox(height: 8),
                 _PickerOption(
                   icon: Icons.document_scanner,
-                  title: 'Scan a file',
-                  subtitle: 'Use camera to scan documents',
+                  title: l10n.uploadScanOption,
+                  subtitle: l10n.uploadScanSubtitle,
                   onTap: () {
                     Navigator.pop(ctx);
                     _scanFile();
@@ -429,6 +431,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
   }
 
   Future<void> _pickFile() async {
+    final l10n = AppLocalizations.of(context)!;
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['pdf', 'docx', 'zip', 'doc', 'ppt', 'pptx'],
@@ -448,7 +451,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('${platformFile.name} exceeds $maxMB MB limit and was skipped.'),
+              content: Text(l10n.uploadFileTooLarge(platformFile.name, maxMB)),
               behavior: SnackBarBehavior.floating,
               backgroundColor: Theme.of(context).colorScheme.error,
             ),
@@ -501,6 +504,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
   }
 
   Future<void> _scanFile() async {
+      final l10n = AppLocalizations.of(context)!;
       try {
         final result = await FlutterDocScanner().getScannedDocumentAsPdf();
         if (result == null) return;
@@ -515,7 +519,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: const Text('Could not read scanned document.'),
+                content: Text(l10n.uploadScanError),
                 behavior: SnackBarBehavior.floating,
                 backgroundColor: Theme.of(context).colorScheme.error,
               ),
@@ -562,6 +566,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
   Future<void> _submit() async {
     if (!_isFormValid) return;
 
+    final l10n = AppLocalizations.of(context)!;
     final user = ref.read(currentUserProvider);
     String fullName;
     String email;
@@ -599,6 +604,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
 
     int successCount = 0;
     String? lastError;
+    UploadErrorType? lastErrorType;
 
     _uploadCancelled = false;
 
@@ -666,7 +672,8 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
           });
         }
       } else {
-        lastError = '$uploadFileName: ${result.message ?? "Upload failed"}';
+        lastError = '$uploadFileName: ${result.message ?? l10n.uploadErrorFailed}';
+        lastErrorType = result.errorType;
       }
     }
 
@@ -683,23 +690,23 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
         stateNotifier.setError(UploadResult(
           success: false,
           message: lastError,
-          errorType: UploadErrorType.serverError,
+          errorType: lastErrorType,
         ));
       }
     }
   }
 
-  Widget _buildSuccessScreen(ThemeData theme) {
+  Widget _buildSuccessScreen(ThemeData theme, AppLocalizations l10n) {
     final count = _selectedFiles.length;
     final label = count == 1
-        ? 'Your resource has been uploaded successfully.'
-        : 'All $count resources have been uploaded successfully.';
+        ? l10n.uploadSuccessSingle
+        : l10n.uploadSuccessMultiple(count);
 
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
-            _AppBar(theme: theme),
+            _AppBar(theme: theme, title: l10n.uploadTitle),
             Expanded(
               child: Center(
                 child: Padding(
@@ -722,7 +729,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
                       ),
                       const SizedBox(height: 20),
                       Text(
-                        'Thank you for contributing!',
+                        l10n.uploadSuccessTitle,
                         textAlign: TextAlign.center,
                         style: theme.textTheme.titleLarge?.copyWith(
                           color: theme.colorScheme.onSurface,
@@ -741,7 +748,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
                         width: double.infinity,
                         child: FilledButton(
                           onPressed: _resetForm,
-                          child: const Text('Upload more'),
+                          child: Text(l10n.uploadSuccessUploadMore),
                         ),
                       ),
                       const SizedBox(height: 12),
@@ -755,7 +762,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
                               initialLocation: true,
                             );
                           },
-                          child: const Text('Done'),
+                          child: Text(l10n.uploadSuccessDone),
                         ),
                       ),
                     ],
@@ -786,6 +793,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final user = ref.watch(currentUserProvider);
 
     String displayName;
@@ -828,13 +836,13 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
     final semesters = _semestersByGrade[_selectedGrade] ?? [];
     final uploadState = ref.watch(uploadStateProvider);
 
-    if (uploadState.uploadSuccess) return _buildSuccessScreen(theme);
+    if (uploadState.uploadSuccess) return _buildSuccessScreen(theme, l10n);
 
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
-            _AppBar(theme: theme),
+            _AppBar(theme: theme, title: l10n.uploadTitle),
             const NetworkBanner(),
             Expanded(
               child: ListView(
@@ -845,25 +853,25 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
                   32,
                 ),
                 children: [
-                  _buildHeader(theme),
+                  _buildHeader(theme, l10n),
                   const SizedBox(height: AppSpacing.stackLg),
-                  _buildUserInfo(theme, displayName, email),
+                  _buildUserInfo(theme, l10n, displayName, email),
                   const SizedBox(height: AppSpacing.stackLg),
-                  _buildGradeSemesterRow(theme, semesters),
+                  _buildGradeSemesterRow(theme, l10n, semesters),
                   const SizedBox(height: AppSpacing.stackLg),
-                  _buildCategorySelector(theme),
+                  _buildCategorySelector(theme, l10n),
                   const SizedBox(height: AppSpacing.stackLg),
-                  _buildModuleField(theme, suggestions),
+                  _buildModuleField(theme, l10n, suggestions),
                   const SizedBox(height: AppSpacing.stackLg),
-                  _buildFileDropzone(theme),
+                  _buildFileDropzone(theme, l10n),
                   if (uploadState.error != null) ...[
                     const SizedBox(height: AppSpacing.stackSm),
-                    _buildErrorBanner(theme, uploadState.error!),
+                    _buildErrorBanner(theme, l10n, uploadState.error!),
                   ],
                   const SizedBox(height: AppSpacing.stackLg),
-                  _buildSubmitButton(theme, uploadState),
+                  _buildSubmitButton(theme, l10n, uploadState),
                   const SizedBox(height: AppSpacing.stackSm),
-                  _buildDisclaimer(theme),
+                  _buildDisclaimer(theme, l10n),
                 ],
               ),
             ),
@@ -873,14 +881,14 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
     );
   }
 
-  Widget _buildErrorBanner(ThemeData theme, UploadResult error) {
+  Widget _buildErrorBanner(ThemeData theme, AppLocalizations l10n, UploadResult error) {
     final (icon, title) = switch (error.errorType) {
-      UploadErrorType.offline => (Icons.wifi_off, 'No internet connection'),
-      UploadErrorType.timeout => (Icons.timer_off, 'Request timed out'),
-      UploadErrorType.cancelled => (Icons.cancel_outlined, 'Upload cancelled'),
-      UploadErrorType.serverError => (Icons.error_outline, error.message ?? 'Upload failed.'),
-      UploadErrorType.unknown => (Icons.error_outline, error.message ?? 'Upload failed.'),
-      null => (Icons.error_outline, error.message ?? 'Upload failed.'),
+      UploadErrorType.offline => (Icons.wifi_off, l10n.uploadErrorNoInternet),
+      UploadErrorType.timeout => (Icons.timer_off, l10n.uploadErrorTimeout),
+      UploadErrorType.cancelled => (Icons.cancel_outlined, l10n.uploadErrorCancelled),
+      UploadErrorType.serverError => (Icons.error_outline, error.message ?? l10n.uploadErrorFailed),
+      UploadErrorType.unknown => (Icons.error_outline, error.message ?? l10n.uploadErrorFailed),
+      null => (Icons.error_outline, error.message ?? l10n.uploadErrorFailed),
     };
     return Container(
       padding: const EdgeInsets.all(AppSpacing.stackSm),
@@ -911,11 +919,11 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
           if (error.errorType != UploadErrorType.cancelled) ...[
             const SizedBox(height: AppSpacing.stackSm),
             Align(
-              alignment: Alignment.centerRight,
+              alignment: AlignmentDirectional.centerEnd,
               child: TextButton.icon(
                 onPressed: _submit,
                 icon: const Icon(Icons.refresh, size: 18),
-                label: const Text('Retry'),
+                label: Text(l10n.uploadRetry),
                 style: TextButton.styleFrom(
                   foregroundColor: theme.colorScheme.error,
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -931,19 +939,19 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
     );
   }
 
-  Widget _buildHeader(ThemeData theme) {
+  Widget _buildHeader(ThemeData theme, AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Contribute to Hub',
+          l10n.uploadHeader,
           style: theme.textTheme.headlineLarge?.copyWith(
             color: theme.colorScheme.onSurface,
           ),
         ),
         const SizedBox(height: 4),
         Text(
-          'Help your fellow students by uploading verified academic materials.',
+          l10n.uploadSubtitle,
           style: theme.textTheme.bodyMedium?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
           ),
@@ -952,7 +960,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
     );
   }
 
-  Widget _buildUserInfo(ThemeData theme, String name, String email) {
+  Widget _buildUserInfo(ThemeData theme, AppLocalizations l10n, String name, String email) {
     return LayoutBuilder(
       builder: (context, constraints) {
         final isWide = constraints.maxWidth > 400;
@@ -968,7 +976,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
                           child: _InfoField(
                             theme: theme,
                             icon: Icons.person_outline,
-                            label: 'FULL NAME',
+                            label: l10n.uploadFieldFullName,
                             value: name,
                           ),
                         ),
@@ -977,7 +985,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
                           child: _InfoField(
                             theme: theme,
                             icon: Icons.alternate_email,
-                            label: 'EMAIL ADDRESS',
+                            label: l10n.uploadFieldEmail,
                             value: email,
                           ),
                         ),
@@ -988,14 +996,14 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
                         _InfoField(
                           theme: theme,
                           icon: Icons.person_outline,
-                          label: 'FULL NAME',
+                          label: l10n.uploadFieldFullName,
                           value: name,
                         ),
                         const SizedBox(height: AppSpacing.stackSm),
                         _InfoField(
                           theme: theme,
                           icon: Icons.alternate_email,
-                          label: 'EMAIL ADDRESS',
+                          label: l10n.uploadFieldEmail,
                           value: email,
                         ),
                       ],
@@ -1044,14 +1052,14 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
     );
   }
 
-  Widget _buildCategorySelector(ThemeData theme) {
+  Widget _buildCategorySelector(ThemeData theme, AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 4, bottom: 8),
+          padding: const EdgeInsetsDirectional.only(start: 4, bottom: 8),
           child: Text(
-            'RESOURCE CATEGORY',
+            l10n.uploadCategorySection,
             style: theme.textTheme.labelMedium?.copyWith(
               color: theme.colorScheme.primary,
             ),
@@ -1107,13 +1115,14 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
     );
   }
 
-  Widget _buildModuleField(ThemeData theme, List<String> _) {
+  Widget _buildModuleField(ThemeData theme, AppLocalizations l10n, List<String> _) {
     final gradeMap = _selectedGrade != null ? _modulesByGradeSemester[_selectedGrade] : null;
     final modules = gradeMap != null && _selectedSemester != null ? gradeMap[_selectedSemester] ?? [] : <String>[];
     final moduleEnabled = _selectedGrade != null && _selectedSemester != null;
     return _buildDropdown(
       theme: theme,
-      label: 'MODULE',
+      l10n: l10n,
+      label: l10n.uploadModule,
       value: _selectedModule,
       items: modules,
       enabled: moduleEnabled,
@@ -1121,13 +1130,14 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
     );
   }
 
-  Widget _buildGradeSemesterRow(ThemeData theme, List<String> semesters) {
+  Widget _buildGradeSemesterRow(ThemeData theme, AppLocalizations l10n, List<String> semesters) {
     return Row(
       children: [
         Expanded(
           child: _buildDropdown(
             theme: theme,
-            label: 'GRADE',
+            l10n: l10n,
+            label: l10n.uploadGrade,
             value: _selectedGrade,
             items: _grades,
             onChanged: (v) {
@@ -1142,7 +1152,8 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
         Expanded(
           child: _buildDropdown(
             theme: theme,
-            label: 'SEMESTER',
+            l10n: l10n,
+            label: l10n.uploadSemester,
             value: _selectedSemester,
             items: semesters,
             enabled: _selectedGrade != null,
@@ -1155,17 +1166,20 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
 
   Widget _buildDropdown({
     required ThemeData theme,
+    required AppLocalizations l10n,
     required String label,
     required String? value,
     required List<String> items,
     required ValueChanged<String?> onChanged,
     bool enabled = true,
   }) {
-    return Column(
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 4, bottom: 8),
+          padding: const EdgeInsetsDirectional.only(start: 4, bottom: 8),
           child: Text(
             label,
             style: theme.textTheme.labelMedium?.copyWith(
@@ -1175,7 +1189,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
         ),
         GestureDetector(
           onTap: enabled
-              ? () => _showDropdownSheet(theme, label, value, items, onChanged)
+              ? () => _showDropdownSheet(theme, l10n, label, value, items, onChanged)
               : null,
           child: AnimatedOpacity(
             duration: const Duration(milliseconds: 200),
@@ -1201,7 +1215,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
                 children: [
                   Expanded(
                     child: Text(
-                      value ?? (enabled ? 'Select' : '—'),
+                      value ?? (enabled ? l10n.uploadDropdownPlaceholder : '\u2014'),
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: value != null
                             ? theme.colorScheme.onSurface
@@ -1220,11 +1234,13 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
           ),
         ),
       ],
+      ),
     );
   }
 
   void _showDropdownSheet(
     ThemeData theme,
+    AppLocalizations l10n,
     String label,
     String? currentValue,
     List<String> items,
@@ -1236,7 +1252,9 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (ctx) => SafeArea(
+      builder: (ctx) => Directionality(
+        textDirection: TextDirection.ltr,
+        child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
           child: Column(
@@ -1252,9 +1270,9 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
               ),
               const SizedBox(height: 16),
               Align(
-                alignment: Alignment.centerLeft,
+                alignment: AlignmentDirectional.centerStart,
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 4, bottom: 8),
+                  padding: const EdgeInsetsDirectional.only(start: 4, bottom: 8),
                   child: Text(
                     label,
                     style: theme.textTheme.titleMedium?.copyWith(
@@ -1320,32 +1338,34 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
             ],
           ),
         ),
+        ),
       ),
     );
   }
 
-  Widget _buildFileDropzone(ThemeData theme) {
+  Widget _buildFileDropzone(ThemeData theme, AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 4, bottom: 8),
+          padding: const EdgeInsetsDirectional.only(start: 4, bottom: 8),
           child: Text(
-            'FILE ATTACHMENT',
+            l10n.uploadFileSection,
             style: theme.textTheme.labelMedium?.copyWith(
               color: theme.colorScheme.primary,
             ),
           ),
         ),
         if (_selectedFiles.isNotEmpty)
-          _buildFilesSelected(theme)
+          _buildFilesSelected(theme, l10n)
         else
-          _buildFileEmpty(theme),
+          _buildFileEmpty(theme, l10n),
       ],
     );
   }
 
-  Widget _buildFileEmpty(ThemeData theme) {
+  Widget _buildFileEmpty(ThemeData theme, AppLocalizations l10n) {
+    final maxMB = UploadConstants.maxFileSizeBytes ~/ (1024 * 1024);
     return GestureDetector(
       onTap: _showFilePickerOptions,
       child: Container(
@@ -1378,14 +1398,14 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
               ),
               const SizedBox(height: AppSpacing.stackSm),
               Text(
-                'Choose or Scan a File',
+                l10n.uploadChooseOrScan,
                 style: theme.textTheme.titleMedium?.copyWith(
                   color: theme.colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 4),
               Text(
-                'PDF, DOCX, ZIP (Max ${UploadConstants.maxFileSizeBytes ~/ (1024 * 1024)}MB)',
+                l10n.uploadAcceptedFormats(maxMB),
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant.withAlpha(153),
                 ),
@@ -1397,7 +1417,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
     );
   }
 
-  Widget _buildFilesSelected(ThemeData theme) {
+  Widget _buildFilesSelected(ThemeData theme, AppLocalizations l10n) {
     return Column(
       children: [
         ...List.generate(_selectedFiles.length, (i) {
@@ -1485,7 +1505,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
                 Icon(Icons.add, size: 18, color: theme.colorScheme.primary),
                 const SizedBox(width: 6),
                 Text(
-                  'Add more files',
+                  l10n.uploadAddMoreFiles,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.primary,
                   ),
@@ -1497,7 +1517,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
         if (_selectedFiles.length > 1) ...[
           const SizedBox(height: 6),
           Text(
-            '${_selectedFiles.length} file${_selectedFiles.length == 1 ? '' : 's'} selected',
+            l10n.uploadFileSelected(_selectedFiles.length),
             style: theme.textTheme.labelSmall?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
@@ -1507,12 +1527,12 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
     );
   }
 
-  Widget _buildSubmitButton(ThemeData theme, UploadFormState uploadState) {
+  Widget _buildSubmitButton(ThemeData theme, AppLocalizations l10n, UploadFormState uploadState) {
     if (uploadState.isUploading) {
       final total = _selectedFiles.length;
       final fileLabel = total == 1
-          ? 'Uploading\u2026'
-          : 'Uploading ${_currentUploadIndex + 1} of $total\u2026';
+          ? l10n.uploading
+          : l10n.uploadingProgress(_currentUploadIndex + 1, total);
       return Column(
         children: [
           SizedBox(
@@ -1548,7 +1568,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
                 _cancelToken?.cancel();
               },
               icon: const Icon(Icons.close, size: 18),
-              label: const Text('Cancel upload'),
+              label: Text(l10n.cancelUpload),
               style: OutlinedButton.styleFrom(
                 foregroundColor: theme.colorScheme.error,
                 side: BorderSide(color: theme.colorScheme.error.withAlpha(77)),
@@ -1588,7 +1608,7 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
             Icon(Icons.cloud_upload, size: 20),
             const SizedBox(width: 8),
             Text(
-              'Upload Resource',
+              l10n.uploadButton,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -1599,11 +1619,11 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
     );
   }
 
-  Widget _buildDisclaimer(ThemeData theme) {
+  Widget _buildDisclaimer(ThemeData theme, AppLocalizations l10n) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.stackMd),
       child: Text(
-        'By uploading, you agree to the community guidelines and academic integrity policy of CS Bouira.',
+        l10n.uploadAgreement,
         textAlign: TextAlign.center,
         style: theme.textTheme.labelMedium?.copyWith(
           color: theme.colorScheme.onSurfaceVariant.withAlpha(128),
@@ -1615,8 +1635,9 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
 
 class _AppBar extends StatelessWidget {
   final ThemeData theme;
+  final String title;
 
-  const _AppBar({required this.theme});
+  const _AppBar({required this.theme, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -1658,7 +1679,7 @@ class _AppBar extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              'Share a Resource',
+              title,
               style: theme.textTheme.titleMedium?.copyWith(
                 color: theme.colorScheme.primary,
                 fontWeight: FontWeight.w700,
@@ -1691,7 +1712,7 @@ class _InfoField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 4, bottom: 8),
+          padding: const EdgeInsetsDirectional.only(start: 4, bottom: 8),
           child: Text(
             label,
             style: theme.textTheme.labelMedium?.copyWith(

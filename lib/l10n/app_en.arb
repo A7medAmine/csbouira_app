@@ -1,0 +1,1141 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "CS Bouira",
+  "@appTitle": {
+    "description": "Application title used in splash and branding"
+  },
+  "appSubtitle": "THE RESOURCE HUB",
+  "@appSubtitle": {
+    "description": "Subtitle shown on the splash screen"
+  },
+  "splashFooter": "Department of Computer Science",
+  "@splashFooter": {
+    "description": "Footer text on the splash screen"
+  },
+
+  "pressBackAgain": "Press back again to exit",
+  "@pressBackAgain": {
+    "description": "Snackbar message when pressing back to exit the app"
+  },
+  "failedToLoadData": "Failed to load data",
+  "@failedToLoadData": {
+    "description": "Generic fetch error title"
+  },
+  "failedToLoadDataHint": "Check your internet connection and try again.",
+  "@failedToLoadDataHint": {
+    "description": "Generic fetch error subtitle/hint"
+  },
+  "failedToLoadDataAction": "View Downloads",
+  "@failedToLoadDataAction": {
+    "description": "Action button shown on generic fetch error"
+  },
+  "failedToLoadModules": "Failed to load modules.",
+  "@failedToLoadModules": {
+    "description": "Error message when modules fail to load"
+  },
+  "failedToLoadFiles": "Failed to load files.",
+  "@failedToLoadFiles": {
+    "description": "Error message when files fail to load"
+  },
+  "failedToLoadFavorites": "Failed to load favorites.",
+  "@failedToLoadFavorites": {
+    "description": "Error message when favorites fail to load"
+  },
+  "failedToSearch": "Failed to search.",
+  "@failedToSearch": {
+    "description": "Error message when search fails"
+  },
+  "noModulesFound": "No modules found",
+  "@noModulesFound": {
+    "description": "Empty state when no modules exist"
+  },
+  "noModulesAvailable": "No modules available",
+  "@noModulesAvailable": {
+    "description": "Empty state when modules list is empty"
+  },
+  "noModulesMatchSearch": "No modules match your search",
+  "@noModulesMatchSearch": {
+    "description": "Empty state when search yields no modules"
+  },
+  "folderNotFound": "Folder not found",
+  "@folderNotFound": {
+    "description": "Error when a folder is not found"
+  },
+  "noMatchingFilesOrFolders": "No matching files or folders",
+  "@noMatchingFilesOrFolders": {
+    "description": "Empty state when file/folder search yields no results"
+  },
+  "noFilesAvailable": "No files available",
+  "@noFilesAvailable": {
+    "description": "Empty state when no files exist"
+  },
+  "searchFilesAndFolders": "Search files and folders...",
+  "@searchFilesAndFolders": {
+    "description": "Hint for file/folder search field"
+  },
+  "searchModules": "Search modules...",
+  "@searchModules": {
+    "description": "Hint for module search field"
+  },
+  "sortBy": "Sort by",
+  "@sortBy": {
+    "description": "Title of the sort/filter bottom sheet"
+  },
+  "sortByNameAZ": "Name (A-Z)",
+  "@sortByNameAZ": {
+    "description": "Sort option ascending alphabetically"
+  },
+  "sortByNameZA": "Name (Z-A)",
+  "@sortByNameZA": {
+    "description": "Sort option descending alphabetically"
+  },
+  "sortByType": "Type",
+  "@sortByType": {
+    "description": "Sort option by type"
+  },
+  "sortBySubfolders": "Subfolders",
+  "@sortBySubfolders": {
+    "description": "Filter option for subfolders"
+  },
+  "sortByFiles": "Files",
+  "@sortByFiles": {
+    "description": "Filter option for files"
+  },
+  "folderEmpty": "Empty",
+  "@folderEmpty": {
+    "description": "Empty state for a folder with no contents"
+  },
+  "itemsCount": "{count, plural, =1{{count} item} other{{count} items}}",
+  "@itemsCount": {
+    "description": "Count of items with pluralization",
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "pdfBadge": "PDF",
+  "@pdfBadge": {
+    "description": "Badge label for PDF file type"
+  },
+  "breadcrumbDrive": "Drive",
+  "@breadcrumbDrive": {
+    "description": "Root breadcrumb label for Drive"
+
+  },
+
+  "homeTitle": "CS BOUIRA",
+  "@homeTitle": {
+    "description": "Home screen title"
+  },
+  "homeWelcome": "Welcome, {name}",
+  "@homeWelcome": {
+    "description": "Welcome message on home screen with user name interpolation",
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "homeSubtitle": "Access all Computer Science resources from University of Bouira in one place.",
+  "@homeSubtitle": {
+    "description": "Subtitle text on the home screen"
+  },
+  "homeSearchHint": "Search courses, files, or exams...",
+  "@homeSearchHint": {
+    "description": "Search field hint on home screen"
+  },
+  "academicPath": "Academic Path",
+  "@academicPath": {
+    "description": "Label for academic path section on home screen"
+  },
+  "selectYear": "SELECT YEAR",
+  "@selectYear": {
+    "description": "Label prompting user to select a year on home screen"
+  },
+  "fileCountOnYear": "{count, plural, =1{{count} file} other{{count} files}}",
+  "@fileCountOnYear": {
+    "description": "File count shown on year cards with pluralization",
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "statsUsers": "Users",
+  "@statsUsers": {
+    "description": "Statistics label for user count"
+  },
+  "statsFiles": "Files",
+  "@statsFiles": {
+    "description": "Statistics label for file count"
+  },
+  "statsSpecials": "Specials",
+  "@statsSpecials": {
+    "description": "Statistics label for special items"
+  },
+  "newBadge": "NEW",
+  "@newBadge": {
+    "description": "Badge indicating new content"
+  },
+
+  "academicYear": "Academic Year 2025/2026",
+  "@academicYear": {
+    "description": "Current academic year displayed on semester screen"
+  },
+  "semesterSubtitle": "Select a semester to access courses, tutorials, and academic materials for your {year}.",
+  "@semesterSubtitle": {
+    "description": "Subtitle on semester screen with year interpolation",
+    "placeholders": {
+      "year": {}
+    }
+  },
+  "moduleCount": "{count, plural, =1{{count} Module} other{{count} Modules}}",
+  "@moduleCount": {
+    "description": "Module count with pluralization",
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "exploreResources": "Explore Resources",
+  "@exploreResources": {
+    "description": "Label for explore resources section"
+  },
+  "booksAndExercices": "Books & Exercices",
+  "@booksAndExercices": {
+    "description": "Label for books and exercises section"
+  },
+  "semesterEmpty": "Empty",
+  "@semesterEmpty": {
+    "description": "Empty state on semester screen"
+  },
+  "onlineResourcesSubtitle": "Access digital library and solved problem sets",
+  "@onlineResourcesSubtitle": {
+    "description": "Subtitle for online resources section"
+  },
+  "onlineResources": "ONLINE RESOURCES",
+  "@onlineResources": {
+    "description": "Section header for online resources"
+  },
+
+  "moduleBreadcrumb": "{year} / {semester}",
+  "@moduleBreadcrumb": {
+    "description": "Breadcrumb showing year and semester on module screen",
+    "placeholders": {
+      "year": {},
+      "semester": {}
+    }
+  },
+  "activeModules": "ACTIVE MODULES",
+  "@activeModules": {
+    "description": "Section header for active modules"
+  },
+  "allModules": "All Modules",
+  "@allModules": {
+    "description": "Label for all modules view"
+  },
+  "searchResults": "Search Results",
+  "@searchResults": {
+    "description": "Label heading search results"
+  },
+  "totalCount": "{count, plural, =1{{count} Total} other{{count} Total}}",
+  "@totalCount": {
+    "description": "Total count with pluralization",
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "folderFileBreakdown": "{folders, plural, =1{{folders} folder} other{{folders} folders}} \u00b7 {files, plural, =1{{files} file} other{{files} files}}",
+  "@folderFileBreakdown": {
+    "description": "Breakdown showing folder count and file count, both pluralized",
+    "placeholders": {
+      "folders": {},
+      "files": {}
+    }
+  },
+  "fileCount": "{files, plural, =1{{files} file} other{{files} files}}",
+  "@fileCount": {
+    "description": "File count with pluralization",
+    "placeholders": {
+      "files": {}
+    }
+  },
+  "totalModules": "Total Modules",
+  "@totalModules": {
+    "description": "Label for total modules stat"
+  },
+  "totalFiles": "Total Files",
+  "@totalFiles": {
+    "description": "Label for total files stat"
+  },
+
+  "courseModuleBadge": "Course Module",
+  "@courseModuleBadge": {
+    "description": "Badge label for course module type"
+  },
+  "folderFileCount": "{count, plural, =1{{count} File} other{{count} Files}}",
+  "@folderFileCount": {
+    "description": "File count on folder screen with pluralization",
+    "placeholders": {
+      "count": {}
+    }
+  },
+
+  "searchHint": "Search for modules, files...",
+  "@searchHint": {
+    "description": "Hint text for the search screen field"
+  },
+  "searchFilterYear": "Year",
+  "@searchFilterYear": {
+    "description": "Filter label for year"
+  },
+  "searchFilterSemester": "Semester",
+  "@searchFilterSemester": {
+    "description": "Filter label for semester"
+  },
+  "searchFilterModule": "Module",
+  "@searchFilterModule": {
+    "description": "Filter label for module"
+  },
+  "searchFilterType": "Type",
+  "@searchFilterType": {
+    "description": "Filter label for content type"
+  },
+  "searchFilterClear": "Clear",
+  "@searchFilterClear": {
+    "description": "Action to clear search filters"
+  },
+  "noOptionsAvailable": "No options available",
+  "@noOptionsAvailable": {
+    "description": "Empty state for filter options dropdown"
+  },
+  "couldNotLoadFilters": "Could not load filters. Check your connection.",
+  "@couldNotLoadFilters": {
+    "description": "Error message when filters fail to load"
+  },
+  "searchResultModule": "Module",
+  "@searchResultModule": {
+    "description": "Label for module type in search results"
+  },
+  "searchResultFolder": "Folder",
+  "@searchResultFolder": {
+    "description": "Label for folder type in search results"
+  },
+  "searchResultFile": "File",
+  "@searchResultFile": {
+    "description": "Label for file type in search results"
+  },
+  "startExploring": "Start Exploring",
+  "@startExploring": {
+    "description": "Empty state action on search screen"
+  },
+  "searchEmptyMessage": "Search for modules, files, or topics\nacross the entire CS Bouira library.",
+  "@searchEmptyMessage": {
+    "description": "Empty state message on search screen before any query"
+  },
+  "topResults": "Top Results",
+  "@topResults": {
+    "description": "Section header for top search results"
+  },
+  "itemsFound": "{count, plural, =1{{count} Item Found} other{{count} Items Found}}",
+  "@itemsFound": {
+    "description": "Search result count with pluralization",
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "noResultsForQuery": "No results for \"{query}\"",
+  "@noResultsForQuery": {
+    "description": "Empty state when search yields no results",
+    "placeholders": {
+      "query": {}
+    }
+  },
+
+  "favoritesTitle": "Favorites",
+  "@favoritesTitle": {
+    "description": "Screen title for favorites"
+  },
+  "favoritesSavedModules": "Saved Modules",
+  "@favoritesSavedModules": {
+    "description": "Tab label for saved modules in favorites"
+  },
+  "favoritesSavedFiles": "Saved Files",
+  "@favoritesSavedFiles": {
+    "description": "Tab label for saved files in favorites"
+  },
+  "favoritesOnlineResources": "Online Resources",
+  "@favoritesOnlineResources": {
+    "description": "Tab label for online resources in favorites"
+  },
+  "favoritesTotal": "{count, plural, =1{{count} Total} other{{count} Total}}",
+  "@favoritesTotal": {
+    "description": "Total count on favorites screen with pluralization",
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "favoritesTabModules": "Modules",
+  "@favoritesTabModules": {
+    "description": "Compact tab label for modules"
+  },
+  "favoritesTabFiles": "Files",
+  "@favoritesTabFiles": {
+    "description": "Compact tab label for files"
+  },
+  "favoritesTabResources": "Resources",
+  "@favoritesTabResources": {
+    "description": "Compact tab label for resources"
+  },
+  "removedFromFavorites": "Removed from favorites",
+  "@removedFromFavorites": {
+    "description": "Snackbar when an item is removed from favorites"
+  },
+  "noModulesSaved": "No modules saved",
+  "@noModulesSaved": {
+    "description": "Empty state for saved modules tab"
+  },
+  "noModulesSavedHint": "Star a module to save it here\nfor quick access.",
+  "@noModulesSavedHint": {
+    "description": "Hint text for empty saved modules"
+  },
+  "noFilesSaved": "No files saved",
+  "@noFilesSaved": {
+    "description": "Empty state for saved files tab"
+  },
+  "noFilesSavedHint": "Star a file to save it here\nfor quick access.",
+  "@noFilesSavedHint": {
+    "description": "Hint text for empty saved files"
+  },
+  "noResourcesSaved": "No resources saved",
+  "@noResourcesSaved": {
+    "description": "Empty state for saved resources tab"
+  },
+  "noResourcesSavedHint": "Star an online resource to save it here\nfor quick access.",
+  "@noResourcesSavedHint": {
+    "description": "Hint text for empty saved resources"
+  },
+  "browseHome": "Browse Home",
+  "@browseHome": {
+    "description": "Action button on favorites empty state to browse home"
+  },
+  "favoritesFileCount": "{count, plural, =1{{count} file} other{{count} files}}",
+  "@favoritesFileCount": {
+    "description": "File count on favorites cards with pluralization",
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "favoritesFolderCount": "{count, plural, =1{{count} folder} other{{count} folders}}",
+  "@favoritesFolderCount": {
+    "description": "Folder count on favorites cards with pluralization",
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "viewModule": "View Module",
+  "@viewModule": {
+    "description": "Action to view a module from favorites"
+  },
+
+  "downloadingSnackbar": "Downloading...",
+  "@downloadingSnackbar": {
+    "description": "Snackbar message when a download starts"
+  },
+  "downloadComplete": "\"{name}\" downloaded",
+  "@downloadComplete": {
+    "description": "Snackbar message when a download completes with file name",
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "viewAction": "View",
+  "@viewAction": {
+    "description": "Snackbar action button to view the downloaded file"
+  },
+  "downloadFailed": "Download failed: {error}",
+  "@downloadFailed": {
+    "description": "Snackbar message when download fails with error details",
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "couldNotOpenLink": "Could not open link",
+  "@couldNotOpenLink": {
+    "description": "Error message when a link cannot be opened"
+  },
+  "previewMenuDownload": "Download",
+  "@previewMenuDownload": {
+    "description": "Popup menu option to download a file"
+  },
+  "previewMenuShareQr": "Share QR",
+  "@previewMenuShareQr": {
+    "description": "Popup menu option to share via QR code"
+  },
+  "previewMenuOpenDrive": "Open in Google Drive",
+  "@previewMenuOpenDrive": {
+    "description": "Popup menu option to open in Google Drive"
+  },
+  "tapToExitFullscreen": "Tap to exit full screen",
+  "@tapToExitFullscreen": {
+    "description": "Hint to tap to exit full screen mode"
+  },
+  "fileTypeLabel": "File",
+  "@fileTypeLabel": {
+    "description": "Fallback label for file type"
+  },
+
+  "uploadTitle": "Share a Resource",
+  "@uploadTitle": {
+    "description": "App bar title for upload screen"
+  },
+  "uploadHeader": "Contribute to Hub",
+  "@uploadHeader": {
+    "description": "Header text on upload screen"
+  },
+  "uploadSubtitle": "Help your fellow students by uploading verified academic materials.",
+  "@uploadSubtitle": {
+    "description": "Subtitle text on upload screen"
+  },
+  "uploadFieldFullName": "FULL NAME",
+  "@uploadFieldFullName": {
+    "description": "Label for full name field on upload form"
+  },
+  "uploadFieldEmail": "EMAIL ADDRESS",
+  "@uploadFieldEmail": {
+    "description": "Label for email address field on upload form"
+  },
+  "uploadCategorySection": "RESOURCE CATEGORY",
+  "@uploadCategorySection": {
+    "description": "Section header for resource category fields"
+  },
+  "uploadGrade": "GRADE",
+  "@uploadGrade": {
+    "description": "Dropdown label for grade/year"
+  },
+  "uploadSemester": "SEMESTER",
+  "@uploadSemester": {
+    "description": "Dropdown label for semester"
+  },
+  "uploadModule": "MODULE",
+  "@uploadModule": {
+    "description": "Dropdown label for module"
+  },
+  "uploadDropdownPlaceholder": "Select",
+  "@uploadDropdownPlaceholder": {
+    "description": "Placeholder text for dropdown fields"
+  },
+  "uploadFileSection": "FILE ATTACHMENT",
+  "@uploadFileSection": {
+    "description": "Section header for file attachment"
+  },
+  "uploadChooseOrScan": "Choose or Scan a File",
+  "@uploadChooseOrScan": {
+    "description": "Label for file picker trigger"
+  },
+  "uploadAcceptedFormats": "PDF, DOCX, ZIP (Max {maxSize}MB)",
+  "@uploadAcceptedFormats": {
+    "description": "Accepted file formats and max size",
+    "placeholders": {
+      "maxSize": {}
+    }
+  },
+  "uploadAddMoreFiles": "Add more files",
+  "@uploadAddMoreFiles": {
+    "description": "Button to add more files to the upload"
+  },
+  "uploadFileSelected": "{count, plural, =1{{count} file selected} other{{count} files selected}}",
+  "@uploadFileSelected": {
+    "description": "File count selected for upload with pluralization",
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "uploadButton": "Upload Resource",
+  "@uploadButton": {
+    "description": "Primary upload button label"
+  },
+  "uploading": "Uploading\u2026",
+  "@uploading": {
+    "description": "Upload in progress state"
+  },
+  "uploadingProgress": "Uploading {current} of {total}\u2026",
+  "@uploadingProgress": {
+    "description": "Upload progress with current and total counts",
+    "placeholders": {
+      "current": {},
+      "total": {}
+    }
+  },
+  "cancelUpload": "Cancel upload",
+  "@cancelUpload": {
+    "description": "Button to cancel an ongoing upload"
+  },
+  "uploadAgreement": "By uploading, you agree to the community guidelines and academic integrity policy of CS Bouira.",
+  "@uploadAgreement": {
+    "description": "Legal agreement text for uploads"
+  },
+  "uploadPickerOption": "Choose a file",
+  "@uploadPickerOption": {
+    "description": "Option to pick a file from device storage"
+  },
+  "uploadPickerSubtitle": "Browse device storage",
+  "@uploadPickerSubtitle": {
+    "description": "Subtitle for file picker option"
+  },
+  "uploadScanOption": "Scan a file",
+  "@uploadScanOption": {
+    "description": "Option to scan a file via camera"
+  },
+  "uploadScanSubtitle": "Use camera to scan documents",
+  "@uploadScanSubtitle": {
+    "description": "Subtitle for scan option"
+  },
+  "uploadErrorNoInternet": "No internet connection",
+  "@uploadErrorNoInternet": {
+    "description": "Error when no internet connection during upload"
+  },
+  "uploadErrorTimeout": "Request timed out",
+  "@uploadErrorTimeout": {
+    "description": "Error when upload request times out"
+  },
+  "uploadErrorCancelled": "Upload cancelled",
+  "@uploadErrorCancelled": {
+    "description": "Error when upload is cancelled"
+  },
+  "uploadErrorFailed": "Upload failed.",
+  "@uploadErrorFailed": {
+    "description": "Generic upload failure message"
+  },
+  "uploadRetry": "Retry",
+  "@uploadRetry": {
+    "description": "Action to retry upload after failure"
+  },
+  "uploadSuccessSingle": "Your resource has been uploaded successfully.",
+  "@uploadSuccessSingle": {
+    "description": "Success message after single file upload"
+  },
+  "uploadSuccessMultiple": "All {count} resources have been uploaded successfully.",
+  "@uploadSuccessMultiple": {
+    "description": "Success message after multiple file upload",
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "uploadSuccessTitle": "Thank you for contributing!",
+  "@uploadSuccessTitle": {
+    "description": "Success dialog title after upload"
+  },
+  "uploadSuccessUploadMore": "Upload more",
+  "@uploadSuccessUploadMore": {
+    "description": "Button to upload more files after success"
+  },
+  "uploadSuccessDone": "Done",
+  "@uploadSuccessDone": {
+    "description": "Button to dismiss success dialog"
+  },
+  "uploadFileTooLarge": "{fileName} exceeds {maxMB} MB limit and was skipped.",
+  "@uploadFileTooLarge": {
+    "description": "Warning when a file exceeds size limit",
+    "placeholders": {
+      "fileName": {},
+      "maxMB": {}
+    }
+  },
+  "uploadScanError": "Could not read scanned document.",
+  "@uploadScanError": {
+    "description": "Error when scanned document cannot be read"
+  },
+
+  "reviewTitle": "Review File",
+  "@reviewTitle": {
+    "description": "Title for the upload review screen"
+  },
+  "reviewFileCounter": "{current} of {total}",
+  "@reviewFileCounter": {
+    "description": "File counter showing current file index and total",
+    "placeholders": {
+      "current": {},
+      "total": {}
+    }
+  },
+  "reviewRetake": "Retake / Choose Again",
+  "@reviewRetake": {
+    "description": "Button to retake or choose a different file"
+  },
+  "reviewUseThisFile": "Use This File",
+  "@reviewUseThisFile": {
+    "description": "Button to confirm using the reviewed file"
+  },
+  "reviewApproveAll": "Approve All ({remaining} remaining)",
+  "@reviewApproveAll": {
+    "description": "Button to approve all remaining files",
+    "placeholders": {
+      "remaining": {}
+    }
+  },
+  "reviewPreviewNotAvailable": "Preview not available",
+  "@reviewPreviewNotAvailable": {
+    "description": "Message when file preview is unavailable"
+  },
+
+  "authTagline": "The Academic Resource Hub for Computer Science",
+  "@authTagline": {
+    "description": "Tagline displayed on the auth screen"
+  },
+  "authLoginToggle": "Log In",
+  "@authLoginToggle": {
+    "description": "Toggle to switch to login form"
+  },
+  "authSignUpToggle": "Sign Up",
+  "@authSignUpToggle": {
+    "description": "Toggle to switch to sign up form"
+  },
+  "authFieldFullName": "Full Name",
+  "@authFieldFullName": {
+    "description": "Label for full name field on auth form"
+  },
+  "authFieldEmail": "Email Address",
+  "@authFieldEmail": {
+    "description": "Label for email field on auth form"
+  },
+  "authFieldPassword": "Password",
+  "@authFieldPassword": {
+    "description": "Label for password field on auth form"
+  },
+  "authFieldConfirmPassword": "Confirm Password",
+  "@authFieldConfirmPassword": {
+    "description": "Label for confirm password field on auth form"
+  },
+  "authForgotPassword": "Forgot password?",
+  "@authForgotPassword": {
+    "description": "Link to navigate to forgot password screen"
+  },
+  "authSignUpButton": "Sign Up",
+  "@authSignUpButton": {
+    "description": "Sign up submit button"
+  },
+  "authLoginButton": "Log In",
+  "@authLoginButton": {
+    "description": "Log in submit button"
+  },
+  "authOrDivider": "OR",
+  "@authOrDivider": {
+    "description": "Divider text between email login and social login"
+  },
+  "authGoogleButton": "Continue with Google",
+  "@authGoogleButton": {
+    "description": "Button to sign in with Google"
+  },
+  "authAgreement": "By continuing you agree to our Terms of Service and Privacy Policy.",
+  "@authAgreement": {
+    "description": "Legal agreement text on auth screen"
+  },
+  "authValidationEmailRequired": "Email is required",
+  "@authValidationEmailRequired": {
+    "description": "Validation error when email is empty"
+  },
+  "authValidationEmailInvalid": "Enter a valid email address",
+  "@authValidationEmailInvalid": {
+    "description": "Validation error when email is invalid"
+  },
+  "authValidationPasswordRequired": "Password is required",
+  "@authValidationPasswordRequired": {
+    "description": "Validation error when password is empty"
+  },
+  "authValidationPasswordLength": "Password must be at least 8 characters",
+  "@authValidationPasswordLength": {
+    "description": "Validation error when password is too short"
+  },
+  "authValidationPasswordsDoNotMatch": "Passwords do not match",
+  "@authValidationPasswordsDoNotMatch": {
+    "description": "Validation error when password confirmation does not match"
+  },
+  "authValidationNameRequired": "Full name is required",
+  "@authValidationNameRequired": {
+    "description": "Validation error when name is empty"
+  },
+  "authSignupFailed": "Signup failed. Please try again.",
+  "@authSignupFailed": {
+    "description": "Error message when sign up fails"
+  },
+  "authMergeDialogTitle": "Merge Favorites",
+  "@authMergeDialogTitle": {
+    "description": "Title for merge favorites dialog on login"
+  },
+  "authMergeDialogMessage": "{count, plural, =1{We found {count} item saved in your local favorites. Would you like to add them to your account?} other{We found {count} items saved in your local favorites. Would you like to add them to your account?}}",
+  "@authMergeDialogMessage": {
+    "description": "Message asking user to merge local favorites with account",
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "authMergeDialogSkip": "Skip",
+  "@authMergeDialogSkip": {
+    "description": "Button to skip merging favorites"
+  },
+  "authMergeDialogMerge": "Merge",
+  "@authMergeDialogMerge": {
+    "description": "Button to merge favorites"
+  },
+
+  "forgotPasswordTitle": "Reset Password",
+  "@forgotPasswordTitle": {
+    "description": "Screen title for forgot password"
+  },
+  "forgotPasswordSubtitle": "Enter your email address and we'll send you a reset link.",
+  "@forgotPasswordSubtitle": {
+    "description": "Subtitle on forgot password screen"
+  },
+  "forgotPasswordFieldEmail": "Email Address",
+  "@forgotPasswordFieldEmail": {
+    "description": "Label for email field on forgot password form"
+  },
+  "forgotPasswordButton": "Send Reset Link",
+  "@forgotPasswordButton": {
+    "description": "Submit button on forgot password screen"
+  },
+  "forgotPasswordBackToLogin": "Back to Login",
+  "@forgotPasswordBackToLogin": {
+    "description": "Link to go back to login screen"
+  },
+  "forgotPasswordValidationEmailRequired": "Email is required",
+  "@forgotPasswordValidationEmailRequired": {
+    "description": "Validation error when email is empty on forgot password"
+  },
+  "forgotPasswordValidationEmailInvalid": "Enter a valid email address",
+  "@forgotPasswordValidationEmailInvalid": {
+    "description": "Validation error when email is invalid on forgot password"
+  },
+  "forgotPasswordSuccess": "Check your email for the password reset link.",
+  "@forgotPasswordSuccess": {
+    "description": "Success message after sending reset link"
+  },
+  "forgotPasswordError": "Failed to send reset email. Please try again.",
+  "@forgotPasswordError": {
+    "description": "Error message when reset email fails to send"
+  },
+
+  "profileTitle": "Profile",
+  "@profileTitle": {
+    "description": "Screen title for profile"
+  },
+  "profileGuestName": "Guest",
+  "@profileGuestName": {
+    "description": "Display name for guest users"
+  },
+  "profileGuestBadge": "GUEST",
+  "@profileGuestBadge": {
+    "description": "Badge label for guest status"
+  },
+  "profileEmailPlaceholder": "Add your email",
+  "@profileEmailPlaceholder": {
+    "description": "Placeholder shown when no email is set"
+  },
+  "profileStatUploads": "UPLOADS",
+  "@profileStatUploads": {
+    "description": "Stat label for uploads count"
+  },
+  "profileStatFavorites": "FAVORITES",
+  "@profileStatFavorites": {
+    "description": "Stat label for favorites count"
+  },
+  "profileSettingMyUploads": "My Uploads",
+  "@profileSettingMyUploads": {
+    "description": "Settings row for my uploads"
+  },
+  "profileSettingDownloads": "Downloads",
+  "@profileSettingDownloads": {
+    "description": "Settings row for downloads"
+  },
+  "profileSettingFavorites": "Favorites",
+  "@profileSettingFavorites": {
+    "description": "Settings row for favorites"
+  },
+  "profileSettingLeaderboard": "Leaderboard",
+  "@profileSettingLeaderboard": {
+    "description": "Settings row for leaderboard"
+  },
+  "profileSettingAbout": "About CS Bouira",
+  "@profileSettingAbout": {
+    "description": "Settings row for about screen"
+  },
+  "profileGuestButton": "Log In or Sign Up",
+  "@profileGuestButton": {
+    "description": "Button for guest users to log in or sign up"
+  },
+  "profileEditNameTitle": "Edit Name",
+  "@profileEditNameTitle": {
+    "description": "Dialog title for editing display name"
+  },
+  "profileEditNameHint": "Enter your name",
+  "@profileEditNameHint": {
+    "description": "Hint for edit name dialog field"
+  },
+  "profileEditNameCancel": "Cancel",
+  "@profileEditNameCancel": {
+    "description": "Cancel button on edit name dialog"
+  },
+  "profileEditNameSave": "Save",
+  "@profileEditNameSave": {
+    "description": "Save button on edit name dialog"
+  },
+  "profileEditEmailTitle": "Edit Email",
+  "@profileEditEmailTitle": {
+    "description": "Dialog title for editing email"
+  },
+  "profileEditEmailHint": "Enter your email",
+  "@profileEditEmailHint": {
+    "description": "Hint for edit email dialog field"
+  },
+  "profileLogoutTitle": "Log Out",
+  "@profileLogoutTitle": {
+    "description": "Dialog title for logout confirmation"
+  },
+  "profileLogoutMessage": "Are you sure you want to log out?",
+  "@profileLogoutMessage": {
+    "description": "Confirmation message for logout dialog"
+  },
+  "profileLogoutConfirm": "Log Out",
+  "@profileLogoutConfirm": {
+    "description": "Confirm button on logout dialog"
+  },
+  "profileLanguage": "Language",
+  "@profileLanguage": {
+    "description": "Settings row for language selection"
+  },
+  "profileLanguageEnglish": "English",
+  "@profileLanguageEnglish": {
+    "description": "Language option for English"
+  },
+  "profileLanguageArabic": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629",
+  "@profileLanguageArabic": {
+    "description": "Language option for Arabic"
+  },
+
+  "myUploadsTitle": "My Uploads",
+  "@myUploadsTitle": {
+    "description": "Screen title for my uploads"
+  },
+  "myUploadsEmpty": "No uploads yet",
+  "@myUploadsEmpty": {
+    "description": "Empty state for my uploads"
+  },
+  "myUploadsEmptyHint": "Your uploaded resources will appear here.",
+  "@myUploadsEmptyHint": {
+    "description": "Empty state hint for my uploads"
+  },
+
+  "downloadsTitle": "Downloads",
+  "@downloadsTitle": {
+    "description": "Screen title for downloads"
+  },
+  "downloadsEmpty": "No downloads yet",
+  "@downloadsEmpty": {
+    "description": "Empty state for downloads"
+  },
+  "downloadsEmptyHint": "Downloaded files will appear here.",
+  "@downloadsEmptyHint": {
+    "description": "Empty state hint for downloads"
+  },
+  "downloadsOpenAction": "Open",
+  "@downloadsOpenAction": {
+    "description": "Action to open a downloaded file"
+  },
+  "downloadsDeleteAction": "Delete",
+  "@downloadsDeleteAction": {
+    "description": "Action to delete a downloaded file"
+  },
+
+  "leaderboardTitle": "Leaderboard",
+  "@leaderboardTitle": {
+    "description": "Screen title for leaderboard"
+  },
+  "leaderboardHeader": "Top Contributors",
+  "@leaderboardHeader": {
+    "description": "Header for top contributors section"
+  },
+  "leaderboardYourRank": "Your Rank",
+  "@leaderboardYourRank": {
+    "description": "Label showing current user's rank"
+  },
+  "leaderboardNotRanked": "Not ranked yet",
+  "@leaderboardNotRanked": {
+    "description": "Text when user is not ranked"
+  },
+  "leaderboardEmpty": "No contributors yet",
+  "@leaderboardEmpty": {
+    "description": "Empty state for leaderboard"
+  },
+  "leaderboardUploadCount": "{count, plural, =1{{count} upload} other{{count} uploads}}",
+  "@leaderboardUploadCount": {
+    "description": "Upload count on leaderboard with pluralization",
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "leaderboardPoints": "points",
+  "@leaderboardPoints": {
+    "description": "Label for points value"
+  },
+
+  "aboutTitle": "About CS Bouira",
+  "@aboutTitle": {
+    "description": "Screen title for about"
+  },
+  "aboutVersion": "Version",
+  "@aboutVersion": {
+    "description": "Label for app version"
+  },
+  "aboutDescription": "CS Bouira is an academic resource sharing platform for Computer Science students at the University of Bouira.",
+  "@aboutDescription": {
+    "description": "Description of the app on about screen"
+  },
+  "aboutFeatures": "Features",
+  "@aboutFeatures": {
+    "description": "Section title for features on about screen"
+  },
+  "aboutFeatureBrowseResources": "Browse resources by year, semester, and module",
+  "@aboutFeatureBrowseResources": {
+    "description": "Feature: browse resources by academic structure"
+  },
+  "aboutFeatureSearch": "Search across all course materials",
+  "@aboutFeatureSearch": {
+    "description": "Feature: search course materials"
+  },
+  "aboutFeatureDownload": "Download and preview PDFs, documents, and images",
+  "@aboutFeatureDownload": {
+    "description": "Feature: download and preview files"
+  },
+  "aboutFeatureUpload": "Upload and share academic resources",
+  "@aboutFeatureUpload": {
+    "description": "Feature: upload and share resources"
+  },
+  "aboutFeatureBookmarks": "Bookmark favorites for quick access",
+  "@aboutFeatureBookmarks": {
+    "description": "Feature: bookmark favorites"
+  },
+  "aboutFeatureQrCode": "QR code scanner for instant resource links",
+  "@aboutFeatureQrCode": {
+    "description": "Feature: QR code scanner"
+  },
+  "aboutFeatureOffline": "Offline access to downloaded materials",
+  "@aboutFeatureOffline": {
+    "description": "Feature: offline access"
+  },
+  "aboutCreator": "Creator",
+  "@aboutCreator": {
+    "description": "Section title for creator on about screen"
+  },
+  "aboutCreatorSalimZedDesc": "Original creator of CS Bouira website & API",
+  "@aboutCreatorSalimZedDesc": {
+    "description": "Description of Salim Zed's role"
+  },
+  "aboutCreatorAhmedAmineDesc": "Android app developer",
+  "@aboutCreatorAhmedAmineDesc": {
+    "description": "Description of Ahmed Amine's role"
+  },
+  "aboutSourceCode": "Source Code",
+  "@aboutSourceCode": {
+    "description": "Section title for source code on about screen"
+  },
+  "aboutSourceCodeGithub": "GitHub Repository",
+  "@aboutSourceCodeGithub": {
+    "description": "Label for GitHub repository link"
+  },
+  "aboutSourceCodeReportIssue": "Report an Issue",
+  "@aboutSourceCodeReportIssue": {
+    "description": "Button to report an issue on GitHub"
+  },
+  "aboutContact": "Contact",
+  "@aboutContact": {
+    "description": "Section title for contact on about screen"
+  },
+  "aboutLicense": "License",
+  "@aboutLicense": {
+    "description": "Section title for license on about screen"
+  },
+  "aboutLicenseText": "This application is released under the MIT License.\n\nCopyright \u00a9 2026 Ahmed Amine. All rights reserved.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files, to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software.",
+  "@aboutLicenseText": {
+    "description": "Full MIT License text"
+  },
+
+  "qrScannerTitle": "Scan QR Code",
+  "@qrScannerTitle": {
+    "description": "Screen title for QR scanner"
+  },
+  "qrScannerInstruction": "Point your camera at a QR code",
+  "@qrScannerInstruction": {
+    "description": "Instruction text on QR scanner"
+  },
+  "qrScannerSuccess": "QR code scanned!",
+  "@qrScannerSuccess": {
+    "description": "Success message when QR code is scanned"
+  },
+  "qrScannerError": "Could not read QR code",
+  "@qrScannerError": {
+    "description": "Error when QR code cannot be read"
+  },
+
+  "bottomNavHome": "Home",
+  "@bottomNavHome": {
+    "description": "Bottom navigation tab for home"
+  },
+  "bottomNavSearch": "Search",
+  "@bottomNavSearch": {
+    "description": "Bottom navigation tab for search"
+  },
+  "bottomNavFavs": "Favs",
+  "@bottomNavFavs": {
+    "description": "Bottom navigation tab for favorites"
+  },
+  "bottomNavUpload": "Upload",
+  "@bottomNavUpload": {
+    "description": "Bottom navigation tab for upload"
+  },
+  "bottomNavProfile": "Profile",
+  "@bottomNavProfile": {
+    "description": "Bottom navigation tab for profile"
+  },
+
+  "networkReconnected": "You're back online",
+  "@networkReconnected": {
+    "description": "Banner message when internet reconnects"
+  },
+  "networkOffline": "No internet connection",
+  "@networkOffline": {
+    "description": "Banner message when internet disconnects"
+  },
+
+  "deleteConfirm": "Delete",
+  "@deleteConfirm": {
+    "description": "Confirm action for delete dialogs"
+  },
+  "deleteCancel": "Cancel",
+  "@deleteCancel": {
+    "description": "Dismiss action for delete dialogs"
+  },
+
+  "fetchErrorFailedToLoad": "Failed to load data",
+  "@fetchErrorFailedToLoad": {
+    "description": "Generic error message when data fails to load"
+  },
+  "fetchErrorCheckConnection": "Check your internet connection and try again.",
+  "@fetchErrorCheckConnection": {
+    "description": "Suggestion to check internet connection on error"
+  },
+  "fetchErrorViewDownloads": "View Downloads",
+  "@fetchErrorViewDownloads": {
+    "description": "Button text to navigate to downloads page"
+  },
+
+  "gradeLicence1": "Licence 1",
+  "gradeLicence2": "Licence 2",
+  "gradeLicence3Si": "Licence 3 SI",
+  "gradeMaster1Gsi": "Master 1 GSI",
+  "gradeMaster1Isil": "Master 1 ISIL",
+  "gradeMaster1Ia": "Master 1 IA",
+  "gradeMaster2Gsi": "Master 2 GSI",
+  "gradeMaster2Isil": "Master 2 ISIL",
+  "gradeMaster2Ia": "Master 2 IA",
+  "levelBachelor": "Bachelor",
+  "levelBachelorFinalYear": "Bachelor Final Year",
+  "levelMaster": "Master",
+
+  "downloadsBrowseFiles": "Browse Files"
+}

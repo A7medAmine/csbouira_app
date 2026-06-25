@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:csbouira_app/l10n/app_localizations.dart';
 import '../../app.dart';
 import '../../core/theme/app_colors.dart';
 import '../../data/models/drive_node.dart';
@@ -115,21 +116,22 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
   Future<void> _downloadFile() async {
     final service = ref.read(downloadServiceProvider);
     final messenger = ScaffoldMessenger.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     messenger.showSnackBar(
-      const SnackBar(
+      SnackBar(
         content: Row(
           children: [
-            SizedBox(
+            const SizedBox(
               width: 18,
               height: 18,
               child: CircularProgressIndicator(strokeWidth: 2),
             ),
-            SizedBox(width: 12),
-            Text('Downloading...'),
+            const SizedBox(width: 12),
+            Text(l10n.downloadingSnackbar),
           ],
         ),
-        duration: Duration(seconds: 30),
+        duration: const Duration(seconds: 30),
       ),
     );
 
@@ -141,10 +143,10 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
       if (!mounted) return;
       messenger.showSnackBar(
         SnackBar(
-          content: Text('"${downloaded.fileName}" downloaded'),
+          content: Text(l10n.downloadComplete(downloaded.fileName)),
           duration: const Duration(seconds: 4),
           action: SnackBarAction(
-            label: 'View',
+            label: l10n.viewAction,
             onPressed: () => context.push('/profile/my-downloads'),
           ),
         ),
@@ -153,7 +155,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
       messenger.hideCurrentSnackBar();
       if (!mounted) return;
       messenger.showSnackBar(
-        SnackBar(content: Text('Download failed: $e')),
+        SnackBar(content: Text(l10n.downloadFailed(e.toString()))),
       );
     }
   }
@@ -165,7 +167,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
     } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Could not open link')),
+          SnackBar(content: Text(AppLocalizations.of(context)!.couldNotOpenLink)),
         );
       }
     }
@@ -213,10 +215,12 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
     }
 
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return ValueListenableBuilder<bool>(
       valueListenable: fullScreenNotifier,
       builder: (context, isFullScreen, _) {
+        final isRtl = Directionality.of(context) == TextDirection.rtl;
         return Scaffold(
           backgroundColor: const Color(0xFF111221),
           appBar: isFullScreen
@@ -247,7 +251,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        _fileTypeLabel,
+                        _fileTypeLabel(context),
                         style: theme.textTheme.labelSmall?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
@@ -308,7 +312,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
                               children: [
                                 const Icon(Icons.download, size: 20),
                                 const SizedBox(width: 12),
-                                const Text('Download'),
+                                Text(l10n.previewMenuDownload),
                               ],
                             ),
                           ),
@@ -321,7 +325,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
                               children: [
                                 const Icon(Icons.qr_code, size: 20),
                                 const SizedBox(width: 12),
-                                const Text('Share QR'),
+                                Text(l10n.previewMenuShareQr),
                               ],
                             ),
                           ),
@@ -334,7 +338,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
                               children: [
                                 const Icon(Icons.open_in_new, size: 20),
                                 const SizedBox(width: 12),
-                                const Text('Open in Google Drive'),
+                                Text(l10n.previewMenuOpenDrive),
                               ],
                             ),
                           ),
@@ -354,30 +358,29 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
                   child: _buildViewer(),
                 ),
 
-                // Left arrow
-                if (!isFullScreen && _hasPrevious)
+                // Navigation arrows (RTL-aware)
+                if (!isFullScreen && (isRtl ? _hasNext : _hasPrevious))
                   Positioned(
                     left: 8,
                     top: 0,
                     bottom: 0,
                     child: Center(
                       child: _NavArrow(
-                        icon: Icons.chevron_left,
-                        onTap: _goToPrevious,
+                        icon: isRtl ? Icons.chevron_right : Icons.chevron_left,
+                        onTap: isRtl ? _goToNext : _goToPrevious,
                       ),
                     ),
                   ),
 
-                // Right arrow
-                if (!isFullScreen && _hasNext)
+                if (!isFullScreen && (isRtl ? _hasPrevious : _hasNext))
                   Positioned(
                     right: 8,
                     top: 0,
                     bottom: 0,
                     child: Center(
                       child: _NavArrow(
-                        icon: Icons.chevron_right,
-                        onTap: _goToNext,
+                        icon: isRtl ? Icons.chevron_left : Icons.chevron_right,
+                        onTap: isRtl ? _goToPrevious : _goToNext,
                       ),
                     ),
                   ),
@@ -440,7 +443,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
                               ),
                               const SizedBox(width: 4),
                               Text(
-                                'Tap to exit full screen',
+                                l10n.tapToExitFullscreen,
                                 style: TextStyle(
                                   color: Colors.white.withAlpha(180),
                                   fontSize: 12,
@@ -460,11 +463,11 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
     );
   }
 
-  String get _fileTypeLabel {
+  String _fileTypeLabel(BuildContext context) {
     if (_isPdf) return 'PDF';
     if (_isImage) return _extension.toUpperCase();
     if (_isOffice) return _extension.toUpperCase();
-    return _extension.isNotEmpty ? _extension.toUpperCase() : 'File';
+    return _extension.isNotEmpty ? _extension.toUpperCase() : AppLocalizations.of(context)!.fileTypeLabel;
   }
 
   Widget _buildViewer() {

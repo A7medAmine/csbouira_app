@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:csbouira_app/l10n/app_localizations.dart';
 
 class AppBottomNav extends ConsumerWidget {
   final StatefulNavigationShell navigationShell;
@@ -10,6 +11,7 @@ class AppBottomNav extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     Widget navItem(IconData icon, String label, int index) {
       final isActive = navigationShell.currentIndex == index;
@@ -54,9 +56,9 @@ class AppBottomNav extends ConsumerWidget {
     }
 
     return Container(
-      padding: const EdgeInsets.only(
-        left: 8,
-        right: 8,
+      padding: EdgeInsetsDirectional.only(
+        start: 8,
+        end: 8,
         top: 12,
         bottom: 16,
       ),
@@ -71,11 +73,11 @@ class AppBottomNav extends ConsumerWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          navItem(Icons.home, 'Home', 0),
-          navItem(Icons.search, 'Search', 1),
-          navItem(Icons.favorite, 'Favs', 2),
-          navItem(Icons.cloud_upload, 'Upload', 3),
-          navItem(Icons.person, 'Profile', 4),
+          navItem(Icons.home, l10n.bottomNavHome, 0),
+          navItem(Icons.search, l10n.bottomNavSearch, 1),
+          navItem(Icons.favorite, l10n.bottomNavFavs, 2),
+          navItem(Icons.cloud_upload, l10n.bottomNavUpload, 3),
+          navItem(Icons.person, l10n.bottomNavProfile, 4),
         ],
       ),
     );

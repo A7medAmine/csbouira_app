@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:csbouira_app/l10n/app_localizations.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../data/navigation_data.dart';
 import '../../data/models/drive_node.dart';
@@ -145,7 +146,7 @@ class SemesterScreen extends ConsumerWidget {
                                   ),
                                 ),
                                 child: Text(
-                                  'Academic Year 2025/2026',
+                                  AppLocalizations.of(context)!.academicYear,
                                   style: theme.textTheme.labelMedium?.copyWith(
                                     color: theme.colorScheme.primary,
                                   ),
@@ -155,7 +156,7 @@ class SemesterScreen extends ConsumerWidget {
                           ),
                           const SizedBox(height: AppSpacing.stackMd),
                           Text(
-                            'Select a semester to access courses, tutorials, and academic materials for your $year.',
+                            AppLocalizations.of(context)!.semesterSubtitle(year),
                             style: theme.textTheme.bodyMedium?.copyWith(
                               color: theme.colorScheme.onSurfaceVariant,
                             ),
@@ -325,7 +326,7 @@ class _SemesterCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      '$moduleCount Modules',
+                      AppLocalizations.of(context)!.moduleCount(moduleCount),
                       style: theme.textTheme.labelMedium?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
@@ -337,7 +338,7 @@ class _SemesterCard extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      'Explore Resources',
+                      AppLocalizations.of(context)!.exploreResources,
                       style: theme.textTheme.labelMedium?.copyWith(
                         color: theme.colorScheme.primary,
                       ),
@@ -392,7 +393,7 @@ class _BooksExercisesCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Books & Exercices',
+                    AppLocalizations.of(context)!.booksAndExercices,
                     style: theme.textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurface,
@@ -400,7 +401,7 @@ class _BooksExercisesCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Empty',
+                    AppLocalizations.of(context)!.semesterEmpty,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
@@ -431,8 +432,8 @@ class _BooksExercisesCard extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
                 gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+                  begin: AlignmentDirectional.topStart,
+                  end: AlignmentDirectional.bottomEnd,
                   colors: [
                     theme.colorScheme.primary.withAlpha(51),
                     theme.colorScheme.surfaceContainerHighest,
@@ -451,7 +452,7 @@ class _BooksExercisesCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Books & Exercices',
+                    AppLocalizations.of(context)!.booksAndExercices,
                     style: theme.textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurface,
@@ -459,7 +460,7 @@ class _BooksExercisesCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Access digital library and solved problem sets',
+                    AppLocalizations.of(context)!.onlineResourcesSubtitle,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
@@ -511,7 +512,7 @@ class _OnlineResourcesSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'ONLINE RESOURCES',
+          AppLocalizations.of(context)!.onlineResources,
           style: theme.textTheme.labelMedium?.copyWith(
             letterSpacing: 1.5,
             color: theme.colorScheme.outline,
@@ -525,8 +526,8 @@ class _OnlineResourcesSection extends StatelessWidget {
             children:
                 items.map((item) {
                   return Padding(
-                    padding: EdgeInsets.only(
-                      right: items.last == item ? 0 : AppSpacing.stackMd,
+                    padding: EdgeInsetsDirectional.only(
+                      end: items.last == item ? 0 : AppSpacing.stackMd,
                     ),
                     child: _OnlineResourceCard(
                       subject: item.subject,
@@ -571,7 +572,7 @@ class _OnlineResourceCard extends ConsumerWidget {
       },
       child: Container(
         width: 240,
-        padding: const EdgeInsets.all(AppSpacing.stackMd),
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
         decoration: BoxDecoration(
           color: const Color(0xFF15151F).withAlpha(204),
           borderRadius: BorderRadius.circular(16),
@@ -580,6 +581,7 @@ class _OnlineResourceCard extends ConsumerWidget {
           ),
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Thumbnail or fallback icon
@@ -587,7 +589,7 @@ class _OnlineResourceCard extends ConsumerWidget {
               borderRadius: BorderRadius.circular(12),
               child: SizedBox(
                 width: double.infinity,
-                height: 100,
+                height: 94,
                 child:
                     thumbAsync.asData?.value != null
                         ? CachedNetworkImage(
@@ -660,12 +662,12 @@ class _OnlineResourceCard extends ConsumerWidget {
 Widget _thumbnailFallback(ThemeData theme, IconData icon) {
   return Container(
     width: double.infinity,
-    height: 100,
+    height: 94,
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(12),
       gradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
+        begin: AlignmentDirectional.topStart,
+        end: AlignmentDirectional.bottomEnd,
         colors: [
           theme.colorScheme.primary.withAlpha(26),
           theme.colorScheme.surfaceContainerHigh,

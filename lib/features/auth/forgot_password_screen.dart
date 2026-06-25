@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:csbouira_app/l10n/app_localizations.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../data/providers/auth_providers.dart';
@@ -62,12 +63,12 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
   Future<void> _sendOtp() async {
     final email = _emailController.text.trim();
     if (email.isEmpty) {
-      setState(() => _error = 'Enter your email address');
+      setState(() => _error = AppLocalizations.of(context)!.forgotPasswordValidationEmailRequired);
       return;
     }
     if (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
         .hasMatch(email)) {
-      setState(() => _error = 'Enter a valid email address');
+      setState(() => _error = AppLocalizations.of(context)!.forgotPasswordValidationEmailInvalid);
       return;
     }
 
@@ -184,7 +185,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
   Future<void> _updatePassword() async {
     final password = _passwordController.text;
     if (!_hasMinChars) {
-      setState(() => _error = 'Password must be at least 8 characters');
+      setState(() => _error = AppLocalizations.of(context)!.authValidationPasswordLength);
       return;
     }
     if (!_hasNumber) {
@@ -192,7 +193,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
       return;
     }
     if (password != _confirmPasswordController.text) {
-      setState(() => _error = 'Passwords do not match');
+      setState(() => _error = AppLocalizations.of(context)!.authValidationPasswordsDoNotMatch);
       return;
     }
 
@@ -215,7 +216,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
   String _appBarTitle() {
     switch (_step) {
       case _ResetStep.email:
-        return 'Reset Password';
+        return AppLocalizations.of(context)!.forgotPasswordTitle;
       case _ResetStep.otp:
         return 'Verification';
       case _ResetStep.newPassword:
@@ -401,8 +402,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(6, (index) {
             return Padding(
-              padding: EdgeInsets.only(
-                right: index < 5 ? 8 : 0,
+              padding: EdgeInsetsDirectional.only(
+                end: index < 5 ? 8 : 0,
               ),
               child: SizedBox(
                 width: 48,
@@ -592,7 +593,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4),
               child: Text(
-                'Email Address',
+                AppLocalizations.of(context)!.forgotPasswordFieldEmail,
                 style: theme.textTheme.labelMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -665,7 +666,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
                     ),
                   )
                 : Text(
-                    'Send Code',
+                    AppLocalizations.of(context)!.forgotPasswordButton,
                     style: theme.textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -681,7 +682,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
       children: [
         // Headline
         Align(
-          alignment: Alignment.centerLeft,
+          alignment: AlignmentDirectional.centerStart,
           child: Text(
             'Create New Password',
             style: theme.textTheme.headlineLarge?.copyWith(
@@ -692,7 +693,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
         ),
         const SizedBox(height: 8),
         Align(
-          alignment: Alignment.centerLeft,
+          alignment: AlignmentDirectional.centerStart,
           child: Text(
             'Your new password must be different from previous used passwords.',
             style: theme.textTheme.bodyMedium?.copyWith(
@@ -710,7 +711,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 4),
+                    padding: const EdgeInsetsDirectional.only(start: 4),
                     child: Text(
                       'New Password',
                       style: theme.textTheme.labelMedium?.copyWith(
@@ -781,7 +782,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 4),
+                    padding: const EdgeInsetsDirectional.only(start: 4),
                     child: Text(
                       'Confirm New Password',
                       style: theme.textTheme.labelMedium?.copyWith(
@@ -1049,7 +1050,7 @@ class _StepHeader extends StatelessWidget {
         const SizedBox(height: 16),
         Text(
           step == _ResetStep.email
-              ? 'Forgot Password?'
+              ? AppLocalizations.of(context)!.forgotPasswordTitle
               : 'New Password',
           style: theme.textTheme.headlineMedium?.copyWith(
             color: theme.colorScheme.primary,
@@ -1059,7 +1060,7 @@ class _StepHeader extends StatelessWidget {
         const SizedBox(height: 6),
         Text(
           step == _ResetStep.email
-              ? 'Enter your email and we\'ll send you a 6-digit code.'
+              ? AppLocalizations.of(context)!.forgotPasswordSubtitle
               : 'Choose a new password for your account.',
           textAlign: TextAlign.center,
           style: theme.textTheme.bodyMedium?.copyWith(

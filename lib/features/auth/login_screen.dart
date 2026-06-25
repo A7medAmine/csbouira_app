@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:csbouira_app/l10n/app_localizations.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../data/providers/auth_providers.dart';
@@ -68,7 +70,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         );
 
         if (response.user == null) {
-          setState(() => _generalError = 'Signup failed. Please try again.');
+          setState(() => _generalError = AppLocalizations.of(context)!.authSignupFailed);
           return;
         }
 
@@ -218,7 +220,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               Icon(Icons.favorite, color: theme.colorScheme.primary, size: 24),
               const SizedBox(width: 8),
               Text(
-                'Merge Favorites',
+                AppLocalizations.of(ctx)!.authMergeDialogTitle,
                 style: theme.textTheme.headlineMedium?.copyWith(
                   color: theme.colorScheme.onSurface,
                   fontWeight: FontWeight.bold,
@@ -227,7 +229,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ],
           ),
           content: Text(
-            'We found ${localFavorites.length} item${localFavorites.length == 1 ? '' : 's'} saved in your local favorites. Would you like to add them to your account?',
+            AppLocalizations.of(ctx)!.authMergeDialogMessage(localFavorites.length),
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
@@ -236,7 +238,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             TextButton(
               onPressed: () => Navigator.of(ctx).pop(false),
               child: Text(
-                'Skip',
+                AppLocalizations.of(ctx)!.authMergeDialogSkip,
                 style: theme.textTheme.labelMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -245,7 +247,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             TextButton(
               onPressed: () => Navigator.of(ctx).pop(true),
               child: Text(
-                'Merge',
+                AppLocalizations.of(ctx)!.authMergeDialogMerge,
                 style: theme.textTheme.labelMedium?.copyWith(
                   color: theme.colorScheme.primary,
                   fontWeight: FontWeight.bold,
@@ -261,20 +263,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   String? _validateEmail(String? value) {
-    if (value == null || value.trim().isEmpty) return 'Email is required';
+    if (value == null || value.trim().isEmpty) return AppLocalizations.of(context)!.authValidationEmailRequired;
     final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
-    if (!emailRegex.hasMatch(value.trim())) return 'Enter a valid email address';
+    if (!emailRegex.hasMatch(value.trim())) return AppLocalizations.of(context)!.authValidationEmailInvalid;
     return null;
   }
 
   String? _validatePassword(String? value) {
-    if (value == null || value.isEmpty) return 'Password is required';
-    if (value.length < 8) return 'Password must be at least 8 characters';
+    if (value == null || value.isEmpty) return AppLocalizations.of(context)!.authValidationPasswordRequired;
+    if (value.length < 8) return AppLocalizations.of(context)!.authValidationPasswordLength;
     return null;
   }
 
   String? _validateConfirmPassword(String? value) {
-    if (_passwordController.text != value) return 'Passwords do not match';
+    if (_passwordController.text != value) return AppLocalizations.of(context)!.authValidationPasswordsDoNotMatch;
     return null;
   }
 
@@ -282,8 +284,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Scaffold(
-      backgroundColor: const Color(0xFF0D0D14),
+    return Theme(
+      data: theme.copyWith(
+        textTheme: GoogleFonts.cairoTextTheme(theme.textTheme),
+      ),
+      child: Scaffold(
+        backgroundColor: const Color(0xFF0D0D14),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -305,6 +311,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       _confirmError = null;
                       _nameError = null;
                       _generalError = null;
+                      _formKey.currentState?.reset();
                     }),
                     formKey: _formKey,
                     fullNameController: _fullNameController,
@@ -338,6 +345,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ),
         ),
       ),
+      ),
     );
   }
 }
@@ -369,7 +377,7 @@ class _Header extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          'The Academic Resource Hub for Computer Science',
+          AppLocalizations.of(context)!.authTagline,
           style: theme.textTheme.bodyMedium?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
           ),
@@ -485,18 +493,18 @@ class _AuthCard extends StatelessWidget {
             if (isSignup) ...[
               _InputField(
                 theme: theme,
-                label: 'Full Name',
+                label: AppLocalizations.of(context)!.authFieldFullName,
                 icon: Icons.person_outline,
                 controller: fullNameController,
                 errorText: nameError,
                 validator: (v) =>
-                    v == null || v.trim().isEmpty ? 'Full name is required' : null,
+                    v == null || v.trim().isEmpty ? AppLocalizations.of(context)!.authValidationNameRequired : null,
               ),
               const SizedBox(height: AppSpacing.stackMd),
             ],
             _InputField(
               theme: theme,
-              label: 'Email Address',
+              label: AppLocalizations.of(context)!.authFieldEmail,
               icon: Icons.mail_outline,
               controller: emailController,
               errorText: emailError,
@@ -508,7 +516,7 @@ class _AuthCard extends StatelessWidget {
             const SizedBox(height: AppSpacing.stackMd),
             _InputField(
               theme: theme,
-              label: 'Password',
+              label: AppLocalizations.of(context)!.authFieldPassword,
               icon: Icons.lock_outline,
               controller: passwordController,
               errorText: passwordError,
@@ -525,11 +533,11 @@ class _AuthCard extends StatelessWidget {
                 final err = validatePassword(v);
                 return err;
               } : (v) =>
-                  v == null || v.isEmpty ? 'Password is required' : null,
+                  v == null || v.isEmpty ? AppLocalizations.of(context)!.authValidationPasswordRequired : null,
             ),
             if (!isSignup)
               Align(
-                alignment: Alignment.centerRight,
+                alignment: AlignmentDirectional.centerEnd,
                 child: TextButton(
                   onPressed: () => context.push('/forgot-password'),
                   style: TextButton.styleFrom(
@@ -539,7 +547,7 @@ class _AuthCard extends StatelessWidget {
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
                   child: Text(
-                    'Forgot password?',
+                    AppLocalizations.of(context)!.authForgotPassword,
                     style: theme.textTheme.labelMedium?.copyWith(
                       color: theme.colorScheme.primary,
                     ),
@@ -550,7 +558,7 @@ class _AuthCard extends StatelessWidget {
               const SizedBox(height: AppSpacing.stackMd),
               _InputField(
                 theme: theme,
-                label: 'Confirm Password',
+                label: AppLocalizations.of(context)!.authFieldConfirmPassword,
                 icon: Icons.lock_outline,
                 controller: confirmPasswordController,
                 errorText: confirmError,
@@ -590,7 +598,7 @@ class _AuthCard extends StatelessWidget {
                         ),
                       )
                     : Text(
-                        isSignup ? 'Sign Up' : 'Log In',
+                        isSignup ? AppLocalizations.of(context)!.authSignUpButton : AppLocalizations.of(context)!.authLoginButton,
                         style: theme.textTheme.headlineMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -606,7 +614,7 @@ class _AuthCard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: Text(
-                    'OR',
+                    AppLocalizations.of(context)!.authOrDivider,
                     style: theme.textTheme.labelMedium?.copyWith(
                       color: theme.colorScheme.outline.withAlpha(153),
                     ),
@@ -633,7 +641,7 @@ class _AuthCard extends StatelessWidget {
                       )
                     : Image.asset('images/Google.png', width: 20, height: 20),
                 label: Text(
-                  'Continue with Google',
+                  AppLocalizations.of(context)!.authGoogleButton,
                   style: theme.textTheme.bodyLarge?.copyWith(
                     color: Colors.black87,
                     fontWeight: FontWeight.w600,
@@ -691,7 +699,7 @@ class _SegmentedToggle extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppRadius.md - 2),
                 ),
                 child: Text(
-                  'Log In',
+                  AppLocalizations.of(context)!.authLoginToggle,
                   textAlign: TextAlign.center,
                   style: theme.textTheme.labelMedium?.copyWith(
                     color: !isSignup
@@ -715,7 +723,7 @@ class _SegmentedToggle extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppRadius.md - 2),
                 ),
                 child: Text(
-                  'Sign Up',
+                  AppLocalizations.of(context)!.authSignUpToggle,
                   textAlign: TextAlign.center,
                   style: theme.textTheme.labelMedium?.copyWith(
                     color: isSignup
@@ -830,7 +838,7 @@ class _Footer extends StatelessWidget {
     return Column(
       children: [
         Text(
-          'By continuing you agree to our Terms of Service and Privacy Policy.',
+          AppLocalizations.of(context)!.authAgreement,
           textAlign: TextAlign.center,
           style: theme.textTheme.labelMedium?.copyWith(
             color: theme.colorScheme.onSurfaceVariant.withAlpha(153),

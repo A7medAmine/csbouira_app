@@ -4,72 +4,67 @@ import 'app_colors.dart';
 import 'app_radius.dart';
 import 'app_spacing.dart';
 
-// ---------------------------------------------------------------------------
-// CS Bouira Design System — ThemeData
-// Source: design_reference/cs_bouira_core/DESIGN.md
-//
-// Dark  → Full M3 ColorScheme from the YAML export
-// Light → See note below: only bg #F7F8FA, surface #FFFFFF, primary #1A6FFF
-//         are from the Brand prose; the rest are seeded from #1A6FFF.
-// ---------------------------------------------------------------------------
+TextTheme _buildTextTheme(Locale locale) {
+  final isArabic = locale.languageCode == 'ar';
 
-TextTheme _buildTextTheme() {
-  return GoogleFonts.manropeTextTheme(
-    GoogleFonts.interTextTheme(
-      const TextTheme(
-        displayLarge: TextStyle(
-          fontFamily: 'Manrope',
-          fontSize: 48,
-          fontWeight: FontWeight.w800,
-          height: 56 / 48,
-          letterSpacing: -0.02,
-        ),
-        headlineLarge: TextStyle(
-          fontFamily: 'Manrope',
-          fontSize: 28,
-          fontWeight: FontWeight.w700,
-          height: 36 / 28,
-          letterSpacing: -0.01,
-        ),
-        headlineMedium: TextStyle(
-          fontFamily: 'Manrope',
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-          height: 28 / 20,
-        ),
-        bodyLarge: TextStyle(
-          fontFamily: 'Inter',
-          fontSize: 16,
-          fontWeight: FontWeight.w400,
-          height: 24 / 16,
-        ),
-        bodyMedium: TextStyle(
-          fontFamily: 'Inter',
-          fontSize: 14,
-          fontWeight: FontWeight.w400,
-          height: 20 / 14,
-        ),
-        labelMedium: TextStyle(
-          fontFamily: 'Inter',
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-          height: 16 / 12,
-          letterSpacing: 0.05,
-        ),
-        labelSmall: TextStyle(
-          fontFamily: 'JetBrainsMono',
-          fontSize: 13,
-          fontWeight: FontWeight.w400,
-          height: 18 / 13,
-        ),
+  final baseTextTheme = GoogleFonts.interTextTheme(
+    const TextTheme(
+      displayLarge: TextStyle(
+        fontFamily: 'Manrope',
+        fontSize: 48,
+        fontWeight: FontWeight.w800,
+        height: 56 / 48,
+        letterSpacing: -0.02,
+      ),
+      headlineLarge: TextStyle(
+        fontFamily: 'Manrope',
+        fontSize: 28,
+        fontWeight: FontWeight.w700,
+        height: 36 / 28,
+        letterSpacing: -0.01,
+      ),
+      headlineMedium: TextStyle(
+        fontFamily: 'Manrope',
+        fontSize: 20,
+        fontWeight: FontWeight.w600,
+        height: 28 / 20,
+      ),
+      bodyLarge: TextStyle(
+        fontFamily: 'Inter',
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
+        height: 24 / 16,
+      ),
+      bodyMedium: TextStyle(
+        fontFamily: 'Inter',
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+        height: 20 / 14,
+      ),
+      labelMedium: TextStyle(
+        fontFamily: 'Inter',
+        fontSize: 12,
+        fontWeight: FontWeight.w600,
+        height: 16 / 12,
+        letterSpacing: 0.05,
+      ),
+      labelSmall: TextStyle(
+        fontFamily: 'JetBrainsMono',
+        fontSize: 13,
+        fontWeight: FontWeight.w400,
+        height: 18 / 13,
       ),
     ),
   );
+
+  if (isArabic) {
+    return GoogleFonts.cairoTextTheme(baseTextTheme);
+  }
+
+  return GoogleFonts.manropeTextTheme(baseTextTheme);
 }
 
-// ── Dark Theme ────────────────────────────────────────────────────────────
-
-ThemeData _buildDarkTheme() {
+ThemeData _buildDarkTheme(Locale locale) {
   final colorScheme = ColorScheme.dark(
     surface: AppColorsDark.background,
     onSurface: AppColorsDark.onBackground,
@@ -101,7 +96,7 @@ ThemeData _buildDarkTheme() {
   return ThemeData(
     useMaterial3: true,
     colorScheme: colorScheme,
-    textTheme: _buildTextTheme().apply(
+    textTheme: _buildTextTheme(locale).apply(
       bodyColor: AppColorsDark.onSurface,
       displayColor: AppColorsDark.onSurface,
     ),
@@ -162,7 +157,7 @@ ThemeData _buildDarkTheme() {
       foregroundColor: AppColorsDark.onSurface,
       elevation: 0,
       centerTitle: false,
-      titleTextStyle: _buildTextTheme().headlineMedium?.copyWith(
+      titleTextStyle: _buildTextTheme(locale).headlineMedium?.copyWith(
         color: AppColorsDark.onSurface,
       ),
     ),
@@ -183,14 +178,7 @@ ThemeData _buildDarkTheme() {
   );
 }
 
-// ── Light Theme ───────────────────────────────────────────────────────────
-// NOTE: The YAML export only contains dark-palette values. The light palette
-// is derived using ColorScheme.fromSeed with the Brand prose's
-// primary accent #1A6FFF, bg #F7F8FA, and surface #FFFFFF. These three
-// values are from the Brand section; all other roles are seeded and may
-// differ from the final design.
-
-ThemeData _buildLightTheme() {
+ThemeData _buildLightTheme(Locale locale) {
   final colorScheme = ColorScheme.fromSeed(
     seedColor: AppColorsLight.primary,
     brightness: Brightness.light,
@@ -200,7 +188,7 @@ ThemeData _buildLightTheme() {
   return ThemeData(
     useMaterial3: true,
     colorScheme: colorScheme,
-    textTheme: _buildTextTheme().apply(
+    textTheme: _buildTextTheme(locale).apply(
       bodyColor: colorScheme.onSurface,
       displayColor: colorScheme.onSurface,
     ),
@@ -279,11 +267,9 @@ ThemeData _buildLightTheme() {
   );
 }
 
-// ── App Theme ─────────────────────────────────────────────────────────────
-
 class AppTheme {
   AppTheme._();
 
-  static ThemeData get light => _buildLightTheme();
-  static ThemeData get dark => _buildDarkTheme();
+  static ThemeData light(Locale locale) => _buildLightTheme(locale);
+  static ThemeData dark(Locale locale) => _buildDarkTheme(locale);
 }

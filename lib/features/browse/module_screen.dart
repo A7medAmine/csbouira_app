@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:csbouira_app/l10n/app_localizations.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../data/providers/drive_providers.dart';
 import '../../shared/widgets/favorite_star.dart';
@@ -42,6 +43,7 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
     final nodeAsync = ref.watch(
       driveNodeProvider(drivePathKey([widget.year, widget.semester])),
     );
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: const Color(0xFF111221),
@@ -119,7 +121,7 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              '${widget.year} / ${widget.semester}',
+                              l10n.moduleBreadcrumb(widget.year, widget.semester),
                               style: theme.textTheme.headlineMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: theme.colorScheme.primary,
@@ -140,11 +142,11 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
                             ),
                         error:
                             (err, _) =>
-                                FetchErrorWidget(error: err, message: 'Failed to load modules.'),
+                                FetchErrorWidget(error: err, message: l10n.failedToLoadModules),
                         data: (node) {
                           if (node == null)
-                            return const Center(
-                              child: Text('No modules found'),
+                            return Center(
+                              child: Text(l10n.noModulesFound),
                             );
                           final allModules =
                               node.subfolders.entries.where((e) {
@@ -161,8 +163,8 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
                                       )
                                       .toList();
                           if (allModules.isEmpty) {
-                            return const Center(
-                              child: Text('No modules available'),
+                            return Center(
+                              child: Text(l10n.noModulesAvailable),
                             );
                           }
 
@@ -215,7 +217,7 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
                                                   ),
                                               style: theme.textTheme.bodyMedium,
                                               decoration: InputDecoration(
-                                                hintText: 'Search modules...',
+                                                hintText: l10n.searchModules,
                                                 hintStyle: theme
                                                     .textTheme
                                                     .bodyMedium
@@ -271,7 +273,7 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'ACTIVE MODULES',
+                                        l10n.activeModules,
                                         style: theme.textTheme.labelMedium
                                             ?.copyWith(
                                               letterSpacing: 1.5,
@@ -281,15 +283,15 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
                                       const SizedBox(height: 2),
                                       Text(
                                         _query.isEmpty
-                                            ? 'All Modules'
-                                            : 'Search Results',
+                                            ? l10n.allModules
+                                            : l10n.searchResults,
                                         style: theme.textTheme.headlineMedium
                                             ?.copyWith(color: Colors.white),
                                       ),
                                     ],
                                   ),
                                   Text(
-                                    '${_query.isEmpty ? allModules.length : filtered.length} Total',
+                                    l10n.totalCount(_query.isEmpty ? allModules.length : filtered.length),
                                     style: theme.textTheme.labelMedium
                                         ?.copyWith(
                                           color:
@@ -311,7 +313,7 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
                                   ),
                                   child: Center(
                                     child: Text(
-                                      'No modules match your search',
+                                      l10n.noModulesMatchSearch,
                                       style: theme.textTheme.bodyMedium
                                           ?.copyWith(
                                             color:
@@ -424,8 +426,8 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
                                                       const SizedBox(width: 4),
                                                       Text(
                                                         folCount > 0
-                                                            ? '$folCount folders · $fc files'
-                                                            : '$fc files',
+                                                            ? l10n.folderFileBreakdown(folCount, fc)
+                                                            : l10n.fileCount(fc),
                                                         style: theme
                                                             .textTheme
                                                             .labelMedium
@@ -449,7 +451,9 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
                                             ),
                                             const SizedBox(width: 4),
                                             Icon(
-                                              Icons.chevron_right,
+                                              Directionality.of(context) == TextDirection.rtl
+                                                  ? Icons.chevron_left
+                                                  : Icons.chevron_right,
                                               color: theme.colorScheme.outline,
                                             ),
                                           ],
@@ -490,7 +494,7 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
                                           ),
                                           const SizedBox(height: 8),
                                           Text(
-                                            'Total Modules',
+                                            l10n.totalModules,
                                             style: theme.textTheme.labelMedium
                                                 ?.copyWith(
                                                   color:
@@ -540,7 +544,7 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
                                           ),
                                           const SizedBox(height: 8),
                                           Text(
-                                            'Total Files',
+                                            l10n.totalFiles,
                                             style: theme.textTheme.labelMedium
                                                 ?.copyWith(
                                                   color:
