@@ -752,6 +752,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get profileLanguageArabic => 'العربية';
 
   @override
+  String get profileLanguageFrench => 'الفرنسية';
+
+  @override
   String get myUploadsTitle => 'رفوعاتي';
 
   @override

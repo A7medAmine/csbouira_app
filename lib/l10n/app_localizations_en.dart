@@ -752,6 +752,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileLanguageArabic => 'العربية';
 
   @override
+  String get profileLanguageFrench => 'Français';
+
+  @override
   String get myUploadsTitle => 'My Uploads';
 
   @override

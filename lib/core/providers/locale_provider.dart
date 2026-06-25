@@ -22,6 +22,8 @@ class LocaleNotifier extends StateNotifier<Locale> {
     final systemLocale = WidgetsBinding.instance.platformDispatcher.locale;
     if (systemLocale.languageCode == 'ar') {
       state = const Locale('ar');
+    } else if (systemLocale.languageCode == 'fr') {
+      state = const Locale('fr');
     } else {
       state = const Locale('en');
     }

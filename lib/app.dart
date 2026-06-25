@@ -427,6 +427,7 @@ class _CSBouiraAppState extends ConsumerState<CSBouiraApp> {
       supportedLocales: const [
         Locale('en'),
         Locale('ar'),
+        Locale('fr'),
       ],
       builder: (context, child) {
         return MediaQuery(

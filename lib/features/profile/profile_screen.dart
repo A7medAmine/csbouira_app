@@ -218,6 +218,16 @@ Future<void> _showLanguagePicker(BuildContext context, WidgetRef ref) async {
               Navigator.of(ctx).pop();
             },
           ),
+          ListTile(
+            title: Text(AppLocalizations.of(ctx)!.profileLanguageFrench),
+            trailing: locale.languageCode == 'fr'
+                ? const Icon(Icons.check)
+                : null,
+            onTap: () {
+              ref.read(localeProvider.notifier).setLocale('fr');
+              Navigator.of(ctx).pop();
+            },
+          ),
         ],
       ),
     ),
