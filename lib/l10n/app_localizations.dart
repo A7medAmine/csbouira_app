@@ -100,7 +100,7 @@ abstract class AppLocalizations {
   /// Application title used in splash and branding
   ///
   /// In en, this message translates to:
-  /// **'CS Bouira updated'**
+  /// **'CS Bouira'**
   String get appTitle;
 
   /// Subtitle shown on the splash screen
@@ -340,7 +340,7 @@ abstract class AppLocalizations {
   /// Current academic year displayed on semester screen
   ///
   /// In en, this message translates to:
-  /// **'Academic Year {year}/{year+1}'**
+  /// **'Academic Year 2025/2026'**
   String get academicYear;
 
   /// Subtitle on semester screen with year interpolation

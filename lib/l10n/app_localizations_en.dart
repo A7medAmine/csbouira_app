@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'CS Bouira updated';
+  String get appTitle => 'CS Bouira';
 
   @override
   String get appSubtitle => 'THE RESOURCE HUB';
@@ -147,7 +147,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get newBadge => 'NEW';
 
   @override
-  String get academicYear => 'Academic Year ${DateTime.now().year}/${DateTime.now().year + 1}';
+  String get academicYear => 'Academic Year 2025/2026';
 
   @override
   String semesterSubtitle(Object year) {
