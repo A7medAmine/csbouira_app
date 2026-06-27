@@ -340,7 +340,7 @@ abstract class AppLocalizations {
   /// Current academic year displayed on semester screen
   ///
   /// In en, this message translates to:
-  /// **'Academic Year 2025/2026'**
+  /// **'Academic Year {year}/{year+1}'**
   String get academicYear;
 
   /// Subtitle on semester screen with year interpolation

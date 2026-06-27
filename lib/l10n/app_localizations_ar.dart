@@ -147,7 +147,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get newBadge => 'جديد';
 
   @override
-  String get academicYear => 'السنة الجامعية 2025/2026';
+  String get academicYear => 'السنة الجامعية ${DateTime.now().year}/${DateTime.now().year + 1}';
 
   @override
   String semesterSubtitle(Object year) {
