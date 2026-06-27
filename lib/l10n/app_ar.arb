@@ -291,5 +291,17 @@
   "levelBachelorFinalYear": "السنة النهائية للسلك الأول",
   "levelMaster": "ماستـر",
 
-  "downloadsBrowseFiles": "تصفح الملفات"
+  "downloadsBrowseFiles": "تصفح الملفات",
+
+  "updateDialogTitle": "تحديث متوفر",
+  "updateDialogBody": "الإصدار {version} جاهز للتثبيت.",
+  "@updateDialogBody": {
+    "placeholders": {
+      "version": {}
+    }
+  },
+  "updateDialogUpdate": "تحديث",
+  "updateDialogLater": "لاحقاً",
+  "updateDialogDownloading": "جاري تحميل التحديث...",
+  "updateDialogError": "فشل تحميل التحديث."
 }

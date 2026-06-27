@@ -1705,37 +1705,37 @@ abstract class AppLocalizations {
   /// **'Browse Files'**
   String get downloadsBrowseFiles;
 
-  /// Title for the update-available dialog
+  /// Title for the update available dialog
   ///
   /// In en, this message translates to:
   /// **'Update Available'**
   String get updateDialogTitle;
 
-  /// Body of the update dialog indicating which version is ready
+  /// Body text for the update dialog showing the new version
   ///
   /// In en, this message translates to:
   /// **'Version {version} is ready to install.'**
   String updateDialogBody(Object version);
 
-  /// Label for the "Update" button in the update dialog
+  /// Button to start the update
   ///
   /// In en, this message translates to:
   /// **'Update'**
   String get updateDialogUpdate;
 
-  /// Label for the "Later" button in the update dialog
+  /// Button to dismiss the update dialog
   ///
   /// In en, this message translates to:
   /// **'Later'**
   String get updateDialogLater;
 
-  /// Text shown during APK download
+  /// Text shown while the update is downloading
   ///
   /// In en, this message translates to:
   /// **'Downloading update...'**
   String get updateDialogDownloading;
 
-  /// Error message when the update download fails
+  /// Error message when update download fails
   ///
   /// In en, this message translates to:
   /// **'Failed to download update.'**

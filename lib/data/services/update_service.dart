@@ -37,6 +37,11 @@ class UpdateService {
 
       final latestVersion = latestTag.replaceFirst(RegExp(r'^v'), '');
 
+      // Save throttle timestamp right after successful API call,
+      // not just when an update is found. This prevents hitting
+      // the API on every launch when there's no update.
+      await _saveLastCheck();
+
       final assets = json['assets'] as List?;
       if (assets == null || assets.isEmpty) return null;
 
@@ -56,8 +61,6 @@ class UpdateService {
       if (!_isNewer(latestVersion, currentVersion)) return null;
 
       final releaseNotes = json['body'] as String?;
-
-      await _saveLastCheck();
 
       return UpdateInfo(
         latestVersion: latestVersion,

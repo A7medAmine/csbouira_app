@@ -1141,5 +1141,17 @@
   "levelBachelorFinalYear": "Licence (dernière année)",
   "levelMaster": "Master",
 
-  "downloadsBrowseFiles": "Parcourir les fichiers"
+  "downloadsBrowseFiles": "Parcourir les fichiers",
+
+  "updateDialogTitle": "Mise à jour disponible",
+  "updateDialogBody": "La version {version} est prête à être installée.",
+  "@updateDialogBody": {
+    "placeholders": {
+      "version": {}
+    }
+  },
+  "updateDialogUpdate": "Mettre à jour",
+  "updateDialogLater": "Plus tard",
+  "updateDialogDownloading": "Téléchargement...",
+  "updateDialogError": "Échec du téléchargement."
 }

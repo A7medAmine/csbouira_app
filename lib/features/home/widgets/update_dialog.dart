@@ -47,12 +47,16 @@ class _UpdateDialogContentState extends State<_UpdateDialogContent> {
               children: [
                 Text(l10n.updateDialogDownloading),
                 const SizedBox(height: 16),
-                LinearProgressIndicator(value: _progress),
-                const SizedBox(height: 8),
-                Text(
-                  '${(_progress * 100).toStringAsFixed(0)}%',
-                  style: theme.textTheme.bodySmall,
+                // Show indeterminate progress when content length is unknown
+                LinearProgressIndicator(
+                  value: _progress > 0 ? _progress : null,
                 ),
+                const SizedBox(height: 8),
+                if (_progress > 0)
+                  Text(
+                    '${(_progress * 100).toStringAsFixed(0)}%',
+                    style: theme.textTheme.bodySmall,
+                  ),
               ],
             )
           : Column(
@@ -95,7 +99,15 @@ class _UpdateDialogContentState extends State<_UpdateDialogContent> {
     try {
       final client = http.Client();
       final request = http.Request('GET', Uri.parse(widget.info.downloadUrl));
+      // GitHub's browser_download_url redirects (302) to a CDN.
+      // Explicitly enable redirect-following so the download succeeds.
+      request.followRedirects = true;
+      request.maxRedirects = 5;
       final response = await client.send(request);
+
+      if (response.statusCode != 200) {
+        throw Exception('Download failed with status ${response.statusCode}');
+      }
 
       final totalBytes = response.contentLength ?? -1;
       final dir = await getTemporaryDirectory();
@@ -108,12 +120,13 @@ class _UpdateDialogContentState extends State<_UpdateDialogContent> {
       await for (final chunk in response.stream) {
         sink.add(chunk);
         received += chunk.length;
-        if (totalBytes > 0) {
+        if (totalBytes > 0 && mounted) {
           setState(() {
             _progress = received / totalBytes;
           });
         }
       }
+      await sink.flush();
       await sink.close();
       client.close();
 

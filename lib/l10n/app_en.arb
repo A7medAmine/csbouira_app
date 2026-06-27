@@ -1141,5 +1141,33 @@
   "levelBachelorFinalYear": "Bachelor Final Year",
   "levelMaster": "Master",
 
-  "downloadsBrowseFiles": "Browse Files"
+  "downloadsBrowseFiles": "Browse Files",
+
+  "updateDialogTitle": "Update Available",
+  "@updateDialogTitle": {
+    "description": "Title for the update available dialog"
+  },
+  "updateDialogBody": "Version {version} is ready to install.",
+  "@updateDialogBody": {
+    "description": "Body text for the update dialog showing the new version",
+    "placeholders": {
+      "version": {}
+    }
+  },
+  "updateDialogUpdate": "Update",
+  "@updateDialogUpdate": {
+    "description": "Button to start the update"
+  },
+  "updateDialogLater": "Later",
+  "@updateDialogLater": {
+    "description": "Button to dismiss the update dialog"
+  },
+  "updateDialogDownloading": "Downloading update...",
+  "@updateDialogDownloading": {
+    "description": "Text shown while the update is downloading"
+  },
+  "updateDialogError": "Failed to download update.",
+  "@updateDialogError": {
+    "description": "Error message when update download fails"
+  }
 }

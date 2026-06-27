@@ -12,13 +12,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get appTitle => 'CS Bouira';
 
   @override
-  String get appSubtitle => 'LE CENTRE DE RESSOURCES';
+  String get appSubtitle => 'LE PORTAIL DES RESSOURCES';
 
   @override
   String get splashFooter => 'Département d\'Informatique';
 
   @override
-  String get pressBackAgain => 'Appuyez à nouveau pour quitter';
+  String get pressBackAgain => 'Appuyez à nouveau sur retour pour quitter';
 
   @override
   String get failedToLoadData => 'Échec du chargement des données';
@@ -60,10 +60,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get noFilesAvailable => 'Aucun fichier disponible';
 
   @override
-  String get searchFilesAndFolders => 'Rechercher fichiers et dossiers...';
+  String get searchFilesAndFolders => 'Rechercher des fichiers et dossiers...';
 
   @override
-  String get searchModules => 'Rechercher modules...';
+  String get searchModules => 'Rechercher des modules...';
 
   @override
   String get sortBy => 'Trier par';
@@ -87,7 +87,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get folderEmpty => 'Vide';
 
   @override
-  String itemsCount(num count) => '$count ${count == 1 ? 'élément' : 'éléments'}';
+  String itemsCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count éléments',
+      one: '$count élément',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get pdfBadge => 'PDF';
@@ -99,22 +107,32 @@ class AppLocalizationsFr extends AppLocalizations {
   String get homeTitle => 'CS BOUIRA';
 
   @override
-  String homeWelcome(Object name) => 'Bienvenue, $name';
+  String homeWelcome(Object name) {
+    return 'Bienvenue, $name';
+  }
 
   @override
-  String get homeSubtitle => 'Accédez à toutes les ressources informatiques de l\'Université de Bouira en un seul endroit.';
+  String get homeSubtitle => 'Accédez à toutes les ressources d\'Informatique de l\'Université de Bouira en un seul endroit.';
 
   @override
-  String get homeSearchHint => 'Rechercher cours, fichiers ou examens...';
+  String get homeSearchHint => 'Rechercher des cours, fichiers ou examens...';
 
   @override
-  String get academicPath => 'Parcours Académique';
+  String get academicPath => 'Parcours académique';
 
   @override
-  String get selectYear => 'SÉLECTIONNER';
+  String get selectYear => 'SÉLECTIONNER L\'ANNÉE';
 
   @override
-  String fileCountOnYear(num count) => '$count ${count == 1 ? 'fichier' : 'fichiers'}';
+  String fileCountOnYear(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count fichiers',
+      one: '$count fichier',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get statsUsers => 'Utilisateurs';
@@ -129,68 +147,114 @@ class AppLocalizationsFr extends AppLocalizations {
   String get newBadge => 'NOUVEAU';
 
   @override
-  String get academicYear => 'Année Académique 2025/2026';
+  String get academicYear => 'Année universitaire 2025/2026';
 
   @override
-  String semesterSubtitle(Object year) => 'Sélectionnez un semestre pour accéder aux cours, travaux dirigés et matériels académiques pour votre $year.';
+  String semesterSubtitle(Object year) {
+    return 'Sélectionnez un semestre pour accéder aux cours, travaux dirigés et supports pédagogiques de votre $year.';
+  }
 
   @override
-  String moduleCount(num count) => '$count ${count == 1 ? 'Module' : 'Modules'}';
+  String moduleCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Modules',
+      one: '$count Module',
+    );
+    return '$_temp0';
+  }
 
   @override
-  String get exploreResources => 'Explorer les Ressources';
+  String get exploreResources => 'Explorer les ressources';
 
   @override
-  String get booksAndExercices => 'Livres & Exercices';
+  String get booksAndExercices => 'Livres et exercices';
 
   @override
   String get semesterEmpty => 'Vide';
 
   @override
-  String get onlineResourcesSubtitle => 'Accédez à la bibliothèque numérique et aux séries d\'exercices corrigés';
+  String get onlineResourcesSubtitle => 'Accédez à la bibliothèque numérique et aux séries d\'exercices corrigées';
 
   @override
   String get onlineResources => 'RESSOURCES EN LIGNE';
 
   @override
-  String moduleBreadcrumb(Object year, Object semester) => '$year / $semester';
+  String moduleBreadcrumb(Object year, Object semester) {
+    return '$year / $semester';
+  }
 
   @override
   String get activeModules => 'MODULES ACTIFS';
 
   @override
-  String get allModules => 'Tous les Modules';
+  String get allModules => 'Tous les modules';
 
   @override
   String get searchResults => 'Résultats de recherche';
 
   @override
-  String totalCount(num count) => '$count Total';
-
-  @override
-  String folderFileBreakdown(num folders, num files) {
-    final f = '$folders ${folders == 1 ? 'dossier' : 'dossiers'}';
-    final fi = '$files ${files == 1 ? 'fichier' : 'fichiers'}';
-    return '$f · $fi';
+  String totalCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Total',
+      one: '$count Total',
+    );
+    return '$_temp0';
   }
 
   @override
-  String fileCount(num files) => '$files ${files == 1 ? 'fichier' : 'fichiers'}';
+  String folderFileBreakdown(num folders, num files) {
+    String _temp0 = intl.Intl.pluralLogic(
+      folders,
+      locale: localeName,
+      other: '$folders dossiers',
+      one: '$folders dossier',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      files,
+      locale: localeName,
+      other: '$files fichiers',
+      one: '$files fichier',
+    );
+    return '$_temp0 · $_temp1';
+  }
 
   @override
-  String get totalModules => 'Total Modules';
+  String fileCount(num files) {
+    String _temp0 = intl.Intl.pluralLogic(
+      files,
+      locale: localeName,
+      other: '$files fichiers',
+      one: '$files fichier',
+    );
+    return '$_temp0';
+  }
 
   @override
-  String get totalFiles => 'Total Fichiers';
+  String get totalModules => 'Total des modules';
 
   @override
-  String get courseModuleBadge => 'Module de Cours';
+  String get totalFiles => 'Total des fichiers';
 
   @override
-  String folderFileCount(num count) => '$count ${count == 1 ? 'Fichier' : 'Fichiers'}';
+  String get courseModuleBadge => 'Module de cours';
 
   @override
-  String get searchHint => 'Rechercher modules, fichiers...';
+  String folderFileCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Fichiers',
+      one: '$count Fichier',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get searchHint => 'Rechercher des modules, fichiers...';
 
   @override
   String get searchFilterYear => 'Année';
@@ -223,7 +287,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get searchResultFile => 'Fichier';
 
   @override
-  String get startExploring => 'Commencer l\'exploration';
+  String get startExploring => 'Commencer à explorer';
 
   @override
   String get searchEmptyMessage => 'Recherchez des modules, fichiers ou sujets\ndans toute la bibliothèque CS Bouira.';
@@ -232,25 +296,43 @@ class AppLocalizationsFr extends AppLocalizations {
   String get topResults => 'Meilleurs résultats';
 
   @override
-  String itemsFound(num count) => '$count ${count == 1 ? 'élément trouvé' : 'éléments trouvés'}';
+  String itemsFound(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Éléments trouvés',
+      one: '$count Élément trouvé',
+    );
+    return '$_temp0';
+  }
 
   @override
-  String noResultsForQuery(Object query) => 'Aucun résultat pour "$query"';
+  String noResultsForQuery(Object query) {
+    return 'Aucun résultat pour « $query »';
+  }
 
   @override
   String get favoritesTitle => 'Favoris';
 
   @override
-  String get favoritesSavedModules => 'Modules sauvegardés';
+  String get favoritesSavedModules => 'Modules enregistrés';
 
   @override
-  String get favoritesSavedFiles => 'Fichiers sauvegardés';
+  String get favoritesSavedFiles => 'Fichiers enregistrés';
 
   @override
   String get favoritesOnlineResources => 'Ressources en ligne';
 
   @override
-  String favoritesTotal(num count) => '$count Total';
+  String favoritesTotal(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Total',
+      one: '$count Total',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get favoritesTabModules => 'Modules';
@@ -265,31 +347,47 @@ class AppLocalizationsFr extends AppLocalizations {
   String get removedFromFavorites => 'Retiré des favoris';
 
   @override
-  String get noModulesSaved => 'Aucun module sauvegardé';
+  String get noModulesSaved => 'Aucun module enregistré';
 
   @override
-  String get noModulesSavedHint => 'Marquez un module d\'une étoile pour le sauvegarder\npour un accès rapide.';
+  String get noModulesSavedHint => 'Ajoutez un module à vos favoris pour le retrouver\nrapidement ici.';
 
   @override
-  String get noFilesSaved => 'Aucun fichier sauvegardé';
+  String get noFilesSaved => 'Aucun fichier enregistré';
 
   @override
-  String get noFilesSavedHint => 'Marquez un fichier d\'une étoile pour le sauvegarder\npour un accès rapide.';
+  String get noFilesSavedHint => 'Ajoutez un fichier à vos favoris pour le retrouver\nrapidement ici.';
 
   @override
-  String get noResourcesSaved => 'Aucune ressource sauvegardée';
+  String get noResourcesSaved => 'Aucune ressource enregistrée';
 
   @override
-  String get noResourcesSavedHint => 'Marquez une ressource en ligne d\'une étoile\npour la sauvegarder pour un accès rapide.';
+  String get noResourcesSavedHint => 'Ajoutez une ressource en ligne à vos favoris pour la retrouver\nrapidement ici.';
 
   @override
   String get browseHome => 'Parcourir l\'accueil';
 
   @override
-  String favoritesFileCount(num count) => '$count ${count == 1 ? 'fichier' : 'fichiers'}';
+  String favoritesFileCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count fichiers',
+      one: '$count fichier',
+    );
+    return '$_temp0';
+  }
 
   @override
-  String favoritesFolderCount(num count) => '$count ${count == 1 ? 'dossier' : 'dossiers'}';
+  String favoritesFolderCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dossiers',
+      one: '$count dossier',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get viewModule => 'Voir le module';
@@ -298,13 +396,17 @@ class AppLocalizationsFr extends AppLocalizations {
   String get downloadingSnackbar => 'Téléchargement...';
 
   @override
-  String downloadComplete(Object name) => '"$name" téléchargé';
+  String downloadComplete(Object name) {
+    return '« $name » téléchargé';
+  }
 
   @override
   String get viewAction => 'Voir';
 
   @override
-  String downloadFailed(Object error) => 'Échec du téléchargement : $error';
+  String downloadFailed(Object error) {
+    return 'Échec du téléchargement : $error';
+  }
 
   @override
   String get couldNotOpenLink => 'Impossible d\'ouvrir le lien';
@@ -313,7 +415,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get previewMenuDownload => 'Télécharger';
 
   @override
-  String get previewMenuShareQr => 'Partager QR';
+  String get previewMenuShareQr => 'Partager via QR';
 
   @override
   String get previewMenuOpenDrive => 'Ouvrir dans Google Drive';
@@ -328,19 +430,19 @@ class AppLocalizationsFr extends AppLocalizations {
   String get uploadTitle => 'Partager une ressource';
 
   @override
-  String get uploadHeader => 'Contribuer au Hub';
+  String get uploadHeader => 'Contribuer au portail';
 
   @override
-  String get uploadSubtitle => 'Aidez vos camarades en téléchargeant des ressources académiques vérifiées.';
+  String get uploadSubtitle => 'Aidez vos camarades en partageant des supports académiques vérifiés.';
 
   @override
   String get uploadFieldFullName => 'NOM COMPLET';
 
   @override
-  String get uploadFieldEmail => 'ADRESSE EMAIL';
+  String get uploadFieldEmail => 'ADRESSE E-MAIL';
 
   @override
-  String get uploadCategorySection => 'CATÉGORIE DE RESSOURCE';
+  String get uploadCategorySection => 'CATÉGORIE DE LA RESSOURCE';
 
   @override
   String get uploadGrade => 'NIVEAU';
@@ -358,31 +460,43 @@ class AppLocalizationsFr extends AppLocalizations {
   String get uploadFileSection => 'PIÈCE JOINTE';
 
   @override
-  String get uploadChooseOrScan => 'Choisir ou numériser un fichier';
+  String get uploadChooseOrScan => 'Choisir ou scanner un fichier';
 
   @override
-  String uploadAcceptedFormats(Object maxSize) => 'PDF, DOCX, ZIP (Max $maxSize Mo)';
+  String uploadAcceptedFormats(Object maxSize) {
+    return 'PDF, DOCX, ZIP (Max $maxSize Mo)';
+  }
 
   @override
   String get uploadAddMoreFiles => 'Ajouter d\'autres fichiers';
 
   @override
-  String uploadFileSelected(num count) => '$count ${count == 1 ? 'fichier sélectionné' : 'fichiers sélectionnés'}';
+  String uploadFileSelected(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count fichiers sélectionnés',
+      one: '$count fichier sélectionné',
+    );
+    return '$_temp0';
+  }
 
   @override
-  String get uploadButton => 'Télécharger la ressource';
+  String get uploadButton => 'Envoyer la ressource';
 
   @override
-  String get uploading => 'Téléchargement…';
+  String get uploading => 'Envoi en cours…';
 
   @override
-  String uploadingProgress(Object current, Object total) => 'Téléchargement $current sur $total…';
+  String uploadingProgress(Object current, Object total) {
+    return 'Envoi de $current sur $total…';
+  }
 
   @override
-  String get cancelUpload => 'Annuler le téléchargement';
+  String get cancelUpload => 'Annuler l\'envoi';
 
   @override
-  String get uploadAgreement => 'En téléchargeant, vous acceptez les directives communautaires et la politique d\'intégrité académique de CS Bouira.';
+  String get uploadAgreement => 'En envoyant ce fichier, vous acceptez les règles de la communauté et la politique d\'intégrité académique de CS Bouira.';
 
   @override
   String get uploadPickerOption => 'Choisir un fichier';
@@ -391,52 +505,58 @@ class AppLocalizationsFr extends AppLocalizations {
   String get uploadPickerSubtitle => 'Parcourir le stockage de l\'appareil';
 
   @override
-  String get uploadScanOption => 'Numériser un fichier';
+  String get uploadScanOption => 'Scanner un fichier';
 
   @override
-  String get uploadScanSubtitle => 'Utiliser la caméra pour numériser des documents';
+  String get uploadScanSubtitle => 'Utiliser l\'appareil photo pour scanner des documents';
 
   @override
-  String get uploadErrorNoInternet => 'Pas de connexion internet';
+  String get uploadErrorNoInternet => 'Aucune connexion internet';
 
   @override
-  String get uploadErrorTimeout => 'La demande a expiré';
+  String get uploadErrorTimeout => 'La requête a expiré';
 
   @override
-  String get uploadErrorCancelled => 'Téléchargement annulé';
+  String get uploadErrorCancelled => 'Envoi annulé';
 
   @override
-  String get uploadErrorFailed => 'Échec du téléchargement.';
+  String get uploadErrorFailed => 'L\'envoi a échoué.';
 
   @override
   String get uploadRetry => 'Réessayer';
 
   @override
-  String get uploadSuccessSingle => 'Votre ressource a été téléchargée avec succès.';
+  String get uploadSuccessSingle => 'Votre ressource a été envoyée avec succès.';
 
   @override
-  String uploadSuccessMultiple(Object count) => 'Les $count ressources ont été téléchargées avec succès.';
+  String uploadSuccessMultiple(Object count) {
+    return 'Les $count ressources ont été envoyées avec succès.';
+  }
 
   @override
   String get uploadSuccessTitle => 'Merci pour votre contribution !';
 
   @override
-  String get uploadSuccessUploadMore => 'Télécharger plus';
+  String get uploadSuccessUploadMore => 'Envoyer d\'autres fichiers';
 
   @override
   String get uploadSuccessDone => 'Terminé';
 
   @override
-  String uploadFileTooLarge(Object fileName, Object maxMB) => '$fileName dépasse la limite de $maxMB Mo et a été ignoré.';
+  String uploadFileTooLarge(Object fileName, Object maxMB) {
+    return '$fileName dépasse la limite de $maxMB Mo et a été ignoré.';
+  }
 
   @override
-  String get uploadScanError => 'Impossible de lire le document numérisé.';
+  String get uploadScanError => 'Impossible de lire le document scanné.';
 
   @override
   String get reviewTitle => 'Vérifier le fichier';
 
   @override
-  String reviewFileCounter(Object current, Object total) => '$current sur $total';
+  String reviewFileCounter(Object current, Object total) {
+    return '$current sur $total';
+  }
 
   @override
   String get reviewRetake => 'Reprendre / Choisir à nouveau';
@@ -445,13 +565,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get reviewUseThisFile => 'Utiliser ce fichier';
 
   @override
-  String reviewApproveAll(Object remaining) => 'Tout approuver ($remaining restant)';
+  String reviewApproveAll(Object remaining) {
+    return 'Tout approuver ($remaining restants)';
+  }
 
   @override
   String get reviewPreviewNotAvailable => 'Aperçu non disponible';
 
   @override
-  String get authTagline => 'Le centre de ressources académiques pour l\'Informatique';
+  String get authTagline => 'Le portail des ressources académiques pour l\'Informatique';
 
   @override
   String get authLoginToggle => 'Connexion';
@@ -463,7 +585,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get authFieldFullName => 'Nom complet';
 
   @override
-  String get authFieldEmail => 'Adresse email';
+  String get authFieldEmail => 'Adresse e-mail';
 
   @override
   String get authFieldPassword => 'Mot de passe';
@@ -475,10 +597,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get authForgotPassword => 'Mot de passe oublié ?';
 
   @override
-  String get authSignUpButton => 'Inscription';
+  String get authSignUpButton => 'S\'inscrire';
 
   @override
-  String get authLoginButton => 'Connexion';
+  String get authLoginButton => 'Se connecter';
 
   @override
   String get authOrDivider => 'OU';
@@ -490,10 +612,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get authAgreement => 'En continuant, vous acceptez nos Conditions d\'utilisation et notre Politique de confidentialité.';
 
   @override
-  String get authValidationEmailRequired => 'L\'email est requis';
+  String get authValidationEmailRequired => 'L\'e-mail est requis';
 
   @override
-  String get authValidationEmailInvalid => 'Entrez une adresse email valide';
+  String get authValidationEmailInvalid => 'Saisissez une adresse e-mail valide';
 
   @override
   String get authValidationPasswordRequired => 'Le mot de passe est requis';
@@ -508,17 +630,20 @@ class AppLocalizationsFr extends AppLocalizations {
   String get authValidationNameRequired => 'Le nom complet est requis';
 
   @override
-  String get authSignupFailed => 'Échec de l\'inscription. Veuillez réessayer.';
+  String get authSignupFailed => 'L\'inscription a échoué. Veuillez réessayer.';
 
   @override
   String get authMergeDialogTitle => 'Fusionner les favoris';
 
   @override
   String authMergeDialogMessage(num count) {
-    if (count == 1) {
-      return 'Nous avons trouvé $count élément dans vos favoris locaux. Souhaitez-vous l\'ajouter à votre compte ?';
-    }
-    return 'Nous avons trouvé $count éléments dans vos favoris locaux. Souhaitez-vous les ajouter à votre compte ?';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Nous avons trouvé $count éléments enregistrés dans vos favoris locaux. Souhaitez-vous les ajouter à votre compte ?',
+      one: 'Nous avons trouvé $count élément enregistré dans vos favoris locaux. Souhaitez-vous l\'ajouter à votre compte ?',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -531,28 +656,28 @@ class AppLocalizationsFr extends AppLocalizations {
   String get forgotPasswordTitle => 'Réinitialiser le mot de passe';
 
   @override
-  String get forgotPasswordSubtitle => 'Entrez votre adresse email et nous vous enverrons un lien de réinitialisation.';
+  String get forgotPasswordSubtitle => 'Saisissez votre adresse e-mail et nous vous enverrons un lien de réinitialisation.';
 
   @override
-  String get forgotPasswordFieldEmail => 'Adresse email';
+  String get forgotPasswordFieldEmail => 'Adresse e-mail';
 
   @override
-  String get forgotPasswordButton => 'Envoyer le lien';
+  String get forgotPasswordButton => 'Envoyer le lien de réinitialisation';
 
   @override
   String get forgotPasswordBackToLogin => 'Retour à la connexion';
 
   @override
-  String get forgotPasswordValidationEmailRequired => 'L\'email est requis';
+  String get forgotPasswordValidationEmailRequired => 'L\'e-mail est requis';
 
   @override
-  String get forgotPasswordValidationEmailInvalid => 'Entrez une adresse email valide';
+  String get forgotPasswordValidationEmailInvalid => 'Saisissez une adresse e-mail valide';
 
   @override
-  String get forgotPasswordSuccess => 'Vérifiez votre email pour le lien de réinitialisation.';
+  String get forgotPasswordSuccess => 'Consultez votre e-mail pour le lien de réinitialisation du mot de passe.';
 
   @override
-  String get forgotPasswordError => 'Échec de l\'envoi de l\'email. Veuillez réessayer.';
+  String get forgotPasswordError => 'Échec de l\'envoi de l\'e-mail de réinitialisation. Veuillez réessayer.';
 
   @override
   String get profileTitle => 'Profil';
@@ -564,16 +689,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get profileGuestBadge => 'INVITÉ';
 
   @override
-  String get profileEmailPlaceholder => 'Ajouter votre email';
+  String get profileEmailPlaceholder => 'Ajoutez votre e-mail';
 
   @override
-  String get profileStatUploads => 'TÉLÉCHARGEMENTS';
+  String get profileStatUploads => 'ENVOIS';
 
   @override
   String get profileStatFavorites => 'FAVORIS';
 
   @override
-  String get profileSettingMyUploads => 'Mes téléchargements';
+  String get profileSettingMyUploads => 'Mes envois';
 
   @override
   String get profileSettingDownloads => 'Téléchargements';
@@ -588,13 +713,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get profileSettingAbout => 'À propos de CS Bouira';
 
   @override
-  String get profileGuestButton => 'Connexion ou inscription';
+  String get profileGuestButton => 'Se connecter ou s\'inscrire';
 
   @override
   String get profileEditNameTitle => 'Modifier le nom';
 
   @override
-  String get profileEditNameHint => 'Entrez votre nom';
+  String get profileEditNameHint => 'Saisissez votre nom';
 
   @override
   String get profileEditNameCancel => 'Annuler';
@@ -603,10 +728,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get profileEditNameSave => 'Enregistrer';
 
   @override
-  String get profileEditEmailTitle => 'Modifier l\'email';
+  String get profileEditEmailTitle => 'Modifier l\'e-mail';
 
   @override
-  String get profileEditEmailHint => 'Entrez votre email';
+  String get profileEditEmailHint => 'Saisissez votre e-mail';
 
   @override
   String get profileLogoutTitle => 'Déconnexion';
@@ -615,13 +740,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get profileLogoutMessage => 'Êtes-vous sûr de vouloir vous déconnecter ?';
 
   @override
-  String get profileLogoutConfirm => 'Déconnexion';
+  String get profileLogoutConfirm => 'Se déconnecter';
 
   @override
   String get profileLanguage => 'Langue';
 
   @override
-  String get profileLanguageEnglish => 'English';
+  String get profileLanguageEnglish => 'Anglais';
 
   @override
   String get profileLanguageArabic => 'العربية';
@@ -630,19 +755,19 @@ class AppLocalizationsFr extends AppLocalizations {
   String get profileLanguageFrench => 'Français';
 
   @override
-  String get myUploadsTitle => 'Mes téléchargements';
+  String get myUploadsTitle => 'Mes envois';
 
   @override
-  String get myUploadsEmpty => 'Aucun téléchargement pour l\'instant';
+  String get myUploadsEmpty => 'Aucun envoi pour le moment';
 
   @override
-  String get myUploadsEmptyHint => 'Vos ressources téléchargées apparaîtront ici.';
+  String get myUploadsEmptyHint => 'Vos ressources envoyées apparaîtront ici.';
 
   @override
   String get downloadsTitle => 'Téléchargements';
 
   @override
-  String get downloadsEmpty => 'Aucun téléchargement pour l\'instant';
+  String get downloadsEmpty => 'Aucun téléchargement pour le moment';
 
   @override
   String get downloadsEmptyHint => 'Les fichiers téléchargés apparaîtront ici.';
@@ -666,10 +791,18 @@ class AppLocalizationsFr extends AppLocalizations {
   String get leaderboardNotRanked => 'Pas encore classé';
 
   @override
-  String get leaderboardEmpty => 'Aucun contributeur pour l\'instant';
+  String get leaderboardEmpty => 'Aucun contributeur pour le moment';
 
   @override
-  String leaderboardUploadCount(num count) => '$count ${count == 1 ? 'téléchargement' : 'téléchargements'}';
+  String leaderboardUploadCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count envois',
+      one: '$count envoi',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get leaderboardPoints => 'points';
@@ -690,22 +823,22 @@ class AppLocalizationsFr extends AppLocalizations {
   String get aboutFeatureBrowseResources => 'Parcourir les ressources par année, semestre et module';
 
   @override
-  String get aboutFeatureSearch => 'Rechercher dans tous les supports de cours';
+  String get aboutFeatureSearch => 'Rechercher dans l\'ensemble des supports de cours';
 
   @override
   String get aboutFeatureDownload => 'Télécharger et prévisualiser des PDF, documents et images';
 
   @override
-  String get aboutFeatureUpload => 'Télécharger et partager des ressources académiques';
+  String get aboutFeatureUpload => 'Envoyer et partager des ressources académiques';
 
   @override
-  String get aboutFeatureBookmarks => 'Marquer les favoris pour un accès rapide';
+  String get aboutFeatureBookmarks => 'Mettre des favoris en signet pour un accès rapide';
 
   @override
-  String get aboutFeatureQrCode => 'Scanner de code QR pour des liens instantanés';
+  String get aboutFeatureQrCode => 'Scanner de QR code pour des liens instantanés vers les ressources';
 
   @override
-  String get aboutFeatureOffline => 'Accès hors ligne aux documents téléchargés';
+  String get aboutFeatureOffline => 'Accès hors ligne aux supports téléchargés';
 
   @override
   String get aboutCreator => 'Créateur';
@@ -732,19 +865,19 @@ class AppLocalizationsFr extends AppLocalizations {
   String get aboutLicense => 'Licence';
 
   @override
-  String get aboutLicenseText => 'Cette application est publiée sous licence MIT.\n\nCopyright © 2026 Ahmed Amine. Tous droits réservés.\n\nPermission est accordée, gratuitement, à toute personne obtenant une copie de ce logiciel et des fichiers de documentation associés, de traiter le logiciel sans restriction.';
+  String get aboutLicenseText => 'Cette application est publiée sous licence MIT.\n\nCopyright © 2026 Ahmed Amine. Tous droits réservés.\n\nLa permission est accordée, à titre gratuit, à toute personne obtenant une copie de ce logiciel et des fichiers de documentation associés, d\'utiliser, copier, modifier, fusionner, publier, distribuer, sous-licencier et/ou vendre des copies du logiciel.';
 
   @override
-  String get qrScannerTitle => 'Scanner le code QR';
+  String get qrScannerTitle => 'Scanner un QR code';
 
   @override
-  String get qrScannerInstruction => 'Pointez votre appareil photo vers un code QR';
+  String get qrScannerInstruction => 'Pointez votre appareil photo vers un QR code';
 
   @override
-  String get qrScannerSuccess => 'Code QR scanné !';
+  String get qrScannerSuccess => 'QR code scanné !';
 
   @override
-  String get qrScannerError => 'Impossible de lire le code QR';
+  String get qrScannerError => 'Impossible de lire le QR code';
 
   @override
   String get bottomNavHome => 'Accueil';
@@ -756,7 +889,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get bottomNavFavs => 'Favoris';
 
   @override
-  String get bottomNavUpload => 'Upload';
+  String get bottomNavUpload => 'Envoyer';
 
   @override
   String get bottomNavProfile => 'Profil';
@@ -765,7 +898,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get networkReconnected => 'Vous êtes de nouveau en ligne';
 
   @override
-  String get networkOffline => 'Pas de connexion internet';
+  String get networkOffline => 'Aucune connexion internet';
 
   @override
   String get deleteConfirm => 'Supprimer';
@@ -825,7 +958,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get updateDialogTitle => 'Mise à jour disponible';
 
   @override
-  String updateDialogBody(Object version) => 'La version $version est prête à être installée.';
+  String updateDialogBody(Object version) {
+    return 'La version $version est prête à être installée.';
+  }
 
   @override
   String get updateDialogUpdate => 'Mettre à jour';
