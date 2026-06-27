@@ -12,6 +12,7 @@ class AppBottomNav extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
+    final bottomInset = MediaQuery.of(context).padding.bottom;
 
     Widget navItem(IconData icon, String label, int index) {
       final isActive = navigationShell.currentIndex == index;
@@ -60,7 +61,7 @@ class AppBottomNav extends ConsumerWidget {
         start: 8,
         end: 8,
         top: 12,
-        bottom: 16,
+        bottom: 16 + bottomInset,
       ),
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainer,
