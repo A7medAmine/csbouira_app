@@ -146,7 +146,9 @@ class SemesterScreen extends ConsumerWidget {
                                   ),
                                 ),
                                 child: Text(
-                                  AppLocalizations.of(context)!.academicYear,
+                                  AppLocalizations.of(context)!.academicYear(
+                                    '${DateTime.now().year}/${DateTime.now().year + 1}',
+                                  ),
                                   style: theme.textTheme.labelMedium?.copyWith(
                                     color: theme.colorScheme.primary,
                                   ),

@@ -147,7 +147,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get newBadge => 'NOUVEAU';
 
   @override
-  String get academicYear => 'Année universitaire 2025/2026';
+  String academicYear(Object range) {
+    return 'Année universitaire $range';
+  }
 
   @override
   String semesterSubtitle(Object year) {

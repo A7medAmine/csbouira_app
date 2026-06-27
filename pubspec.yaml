@@ -1,6 +1,6 @@
 name: csbouira_app
 description: "CS Bouira – Academic resource sharing app for CS students at Université de Bouira."
-publish_to: 'none'
+publish_to: "none"
 version: 1.0.0+1
 environment:
   sdk: ^3.7.2

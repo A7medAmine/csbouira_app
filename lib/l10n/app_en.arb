@@ -174,9 +174,12 @@
     "description": "Badge indicating new content"
   },
 
-  "academicYear": "Academic Year 2025/2026",
+  "academicYear": "Academic Year {range}",
   "@academicYear": {
-    "description": "Current academic year displayed on semester screen"
+    "description": "Current academic year displayed on semester screen",
+    "placeholders": {
+      "range": {}
+    }
   },
   "semesterSubtitle": "Select a semester to access courses, tutorials, and academic materials for your {year}.",
   "@semesterSubtitle": {

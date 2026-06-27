@@ -174,9 +174,12 @@
     "description": "Badge indicating new content"
   },
 
-  "academicYear": "Année universitaire 2025/2026",
+  "academicYear": "Année universitaire {range}",
   "@academicYear": {
-    "description": "Current academic year displayed on semester screen"
+    "description": "Current academic year displayed on semester screen",
+    "placeholders": {
+      "range": {}
+    }
   },
   "semesterSubtitle": "Sélectionnez un semestre pour accéder aux cours, travaux dirigés et supports pédagogiques de votre {year}.",
   "@semesterSubtitle": {

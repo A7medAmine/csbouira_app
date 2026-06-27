@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' show AuthException, Supabase;
 import 'package:csbouira_app/l10n/app_localizations.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
@@ -79,13 +79,10 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
 
     try {
       final supabase = Supabase.instance.client;
-      final profile = await supabase
-          .from('profiles')
-          .select('email')
-          .eq('email', email)
-          .maybeSingle();
+      final emailExists = await supabase
+          .rpc('check_email_exists', params: {'target_email': email});
 
-      if (profile == null) {
+      if (emailExists == false) {
         if (mounted) {
           setState(() => _error = 'This email is not registered.');
         }

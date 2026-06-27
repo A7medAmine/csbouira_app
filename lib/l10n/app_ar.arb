@@ -43,7 +43,13 @@
   "statsSpecials": "مميزات",
   "newBadge": "جديد",
 
-  "academicYear": "السنة الجامعية 2025/2026",
+  "academicYear": "السنة الجامعية {range}",
+  "@academicYear": {
+    "description": "Current academic year displayed on semester screen",
+    "placeholders": {
+      "range": {}
+    }
+  },
   "semesterSubtitle": "اختر فصلا دراسيا للوصول الى الدروس والاعمال التطبيقية والمواد الدراسية لـ {year}.",
   "moduleCount": "{count, plural, =1{{count} مقياس} other{{count} مقاييس}}",
   "exploreResources": "استكشف الموارد",
