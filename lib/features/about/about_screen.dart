@@ -6,10 +6,51 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../data/services/update_service.dart';
+import '../home/widgets/update_dialog.dart';
 import 'package:csbouira_app/l10n/app_localizations.dart';
 
-class AboutScreen extends StatelessWidget {
+class AboutScreen extends ConsumerStatefulWidget {
   const AboutScreen({super.key});
+
+  @override
+  ConsumerState<AboutScreen> createState() => _AboutScreenState();
+}
+
+class _AboutScreenState extends ConsumerState<AboutScreen> {
+  bool _checking = false;
+
+  Future<void> _checkUpdate() async {
+    setState(() => _checking = true);
+    try {
+      final service = UpdateService();
+      // Manual checks bypass throttle
+      final info = await service.checkForUpdate();
+      if (!mounted) return;
+      if (info != null) {
+        showUpdateDialog(context, info);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.aboutNoUpdate),
+          ),
+        );
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.updateDialogError),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _checking = false);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +115,44 @@ class AboutScreen extends StatelessWidget {
                           );
                         },
                       ),
+                      const SizedBox(height: 8),
+                      _checking
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width: 16,
+                                  height: 16,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2.0,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      theme.colorScheme.primary,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  AppLocalizations.of(context)!.aboutCheckingUpdate,
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    color: theme.colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                              ],
+                            )
+                          : TextButton.icon(
+                              onPressed: _checkUpdate,
+                              icon: const Icon(Icons.refresh, size: 18),
+                              label: Text(
+                                AppLocalizations.of(context)!.aboutCheckUpdate,
+                              ),
+                              style: TextButton.styleFrom(
+                                foregroundColor: theme.colorScheme.primary,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 8,
+                                ),
+                              ),
+                            ),
                     ],
                   ),
                 ),

@@ -984,4 +984,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get updateBannerError => 'Download failed. Tap to retry.';
+
+  @override
+  String get aboutCheckUpdate => 'Check for updates';
+
+  @override
+  String get aboutCheckingUpdate => 'Checking for updates...';
+
+  @override
+  String get aboutNoUpdate => 'Your app is up to date.';
 }

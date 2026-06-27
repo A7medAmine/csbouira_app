@@ -1,7 +1,7 @@
 {
   "@@locale": "en",
 
-  "appTitle": "CS Bouira updated",
+  "appTitle": "CS Bouira",
   "@appTitle": {
     "description": "Application title used in splash and branding"
   },
@@ -1184,5 +1184,17 @@
   "updateBannerError": "Download failed. Tap to retry.",
   "@updateBannerError": {
     "description": "Background update banner error message"
+  },
+  "aboutCheckUpdate": "Check for updates",
+  "@aboutCheckUpdate": {
+    "description": "Button to manually check for updates"
+  },
+  "aboutCheckingUpdate": "Checking for updates...",
+  "@aboutCheckingUpdate": {
+    "description": "Loading text when checking for updates"
+  },
+  "aboutNoUpdate": "Your app is up to date.",
+  "@aboutNoUpdate": {
+    "description": "Message shown when no update is available"
   }
 }

@@ -10,6 +10,7 @@ import '../../data/navigation_data.dart';
 import '../../data/providers/auth_providers.dart';
 import '../../data/providers/drive_providers.dart';
 import '../../data/services/update_service.dart';
+import '../../data/providers/update_download_provider.dart';
 import '../../shared/widgets/avatar_widget.dart';
 import '../../shared/widgets/network_banner.dart';
 import '../../shared/widgets/user_avatar.dart';
@@ -27,6 +28,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Future<void> _checkUpdate() async {
     if (!Platform.isAndroid || !mounted) return;
+
+    // Check if there is already a downloaded update file available locally
+    await ref.read(updateDownloadProvider.notifier).checkUninstalledUpdate();
+    if (!mounted) return;
+    if (ref.read(updateDownloadProvider).status == UpdateDownloadStatus.completed) {
+      return; // Already completed background banner is shown, skip API check
+    }
+
     final service = UpdateService();
     if (await service.isThrottled()) return;
     final info = await service.checkForUpdate();

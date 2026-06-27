@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:pub_semver/pub_semver.dart';
 
 enum UpdateDownloadStatus {
   idle,
@@ -42,7 +45,47 @@ class UpdateDownloadState {
 class UpdateDownloadNotifier extends StateNotifier<UpdateDownloadState> {
   UpdateDownloadNotifier() : super(const UpdateDownloadState());
 
-  Future<void> startDownload(String downloadUrl) async {
+  static const _downloadedVersionKey = 'downloaded_update_version';
+
+  /// Check if there is an update downloaded in the background that hasn't been installed yet.
+  Future<void> checkUninstalledUpdate() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final downloadedVersion = prefs.getString(_downloadedVersionKey);
+      if (downloadedVersion == null) return;
+
+      final packageInfo = await PackageInfo.fromPlatform();
+      final currentVersion = packageInfo.version;
+
+      final latestVer = Version.parse(downloadedVersion);
+      final currentVer = Version.parse(currentVersion);
+
+      if (latestVer > currentVer) {
+        final dir = await getTemporaryDirectory();
+        final filePath = '${dir.path}/csbouira_update.apk';
+        final file = File(filePath);
+        if (await file.exists()) {
+          state = UpdateDownloadState(
+            status: UpdateDownloadStatus.completed,
+            filePath: filePath,
+            progress: 1.0,
+          );
+        } else {
+          await prefs.remove(_downloadedVersionKey);
+        }
+      } else {
+        // App is already updated to the downloaded version (or newer), clean up
+        await prefs.remove(_downloadedVersionKey);
+        final dir = await getTemporaryDirectory();
+        final file = File('${dir.path}/csbouira_update.apk');
+        if (await file.exists()) {
+          await file.delete();
+        }
+      }
+    } catch (_) {}
+  }
+
+  Future<void> startDownload(String downloadUrl, String latestVersion) async {
     if (state.status == UpdateDownloadStatus.downloading) return;
 
     state = const UpdateDownloadState(status: UpdateDownloadStatus.downloading);
@@ -77,6 +120,10 @@ class UpdateDownloadNotifier extends StateNotifier<UpdateDownloadState> {
       await sink.close();
       client.close();
 
+      // Save downloaded version info to shared preferences
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_downloadedVersionKey, latestVersion);
+
       state = state.copyWith(
         status: UpdateDownloadStatus.completed,
         filePath: filePath,
@@ -99,7 +146,17 @@ class UpdateDownloadNotifier extends StateNotifier<UpdateDownloadState> {
     }
   }
 
-  void reset() {
+  Future<void> reset() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(_downloadedVersionKey);
+      if (state.filePath != null) {
+        final file = File(state.filePath!);
+        if (await file.exists()) {
+          await file.delete();
+        }
+      }
+    } catch (_) {}
     state = const UpdateDownloadState();
   }
 }

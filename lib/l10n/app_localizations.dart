@@ -1758,6 +1758,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Download failed. Tap to retry.'**
   String get updateBannerError;
+
+  /// Button to manually check for updates
+  ///
+  /// In en, this message translates to:
+  /// **'Check for updates'**
+  String get aboutCheckUpdate;
+
+  /// Loading text when checking for updates
+  ///
+  /// In en, this message translates to:
+  /// **'Checking for updates...'**
+  String get aboutCheckingUpdate;
+
+  /// Message shown when no update is available
+  ///
+  /// In en, this message translates to:
+  /// **'Your app is up to date.'**
+  String get aboutNoUpdate;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

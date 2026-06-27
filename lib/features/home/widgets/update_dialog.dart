@@ -53,7 +53,7 @@ class _UpdateDialogContent extends ConsumerWidget {
         ),
         TextButton(
           onPressed: () {
-            ref.read(updateDownloadProvider.notifier).startDownload(info.downloadUrl);
+            ref.read(updateDownloadProvider.notifier).startDownload(info.downloadUrl, info.latestVersion);
             Navigator.of(context).pop();
           },
           child: Text(l10n.updateDialogUpdate),

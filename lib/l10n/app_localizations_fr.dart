@@ -9,7 +9,7 @@ class AppLocalizationsFr extends AppLocalizations {
   AppLocalizationsFr([String locale = 'fr']) : super(locale);
 
   @override
-  String get appTitle => 'CS Bouira updated';
+  String get appTitle => 'CS Bouira';
 
   @override
   String get appSubtitle => 'LE PORTAIL DES RESSOURCES';
@@ -984,4 +984,13 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get updateBannerError => 'Échec du téléchargement. Appuyez pour réessayer.';
+
+  @override
+  String get aboutCheckUpdate => 'Rechercher des mises à jour';
+
+  @override
+  String get aboutCheckingUpdate => 'Recherche de mises à jour...';
+
+  @override
+  String get aboutNoUpdate => 'Votre application est à jour.';
 }

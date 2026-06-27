@@ -1,7 +1,7 @@
 {
   "@@locale": "ar",
 
-  "appTitle": "CS Bouira updated",
+  "appTitle": "CS Bouira",
   "splashFooter": "قسم علوم الحاسوب",
 
   "pressBackAgain": "اضغط على زر الرجوع مرة اخرى للخروج",
@@ -311,5 +311,8 @@
     }
   },
   "updateBannerReady": "تم تحميل التحديث. انقر للتثبيت.",
-  "updateBannerError": "فشل التحميل. انقر لإعادة المحاولة."
+  "updateBannerError": "فشل التحميل. انقر لإعادة المحاولة.",
+  "aboutCheckUpdate": "التحقق من وجود تحديثات",
+  "aboutCheckingUpdate": "جاري التحقق من وجود تحديثات...",
+  "aboutNoUpdate": "تطبيقك محدث إلى آخر إصدار."
 }
