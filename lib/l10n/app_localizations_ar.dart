@@ -12,13 +12,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get appTitle => 'CS Bouira';
 
   @override
-  String get appSubtitle => 'THE RESOURCE HUB';
+  String get appSubtitle => 'مركز الموارد';
 
   @override
   String get splashFooter => 'قسم علوم الحاسوب';
 
   @override
-  String get pressBackAgain => 'اضغط على زر الرجوع مرة اخرى للخروج';
+  String get pressBackAgain => 'اضغط مرة أخرى للخروج';
 
   @override
   String get failedToLoadData => 'فشل تحميل البيانات';
@@ -30,7 +30,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get failedToLoadDataAction => 'عرض التنزيلات';
 
   @override
-  String get failedToLoadModules => 'فشل تحميل المقاييس.';
+  String get failedToLoadModules => 'فشل تحميل الوحدات.';
 
   @override
   String get failedToLoadFiles => 'فشل تحميل الملفات.';
@@ -42,28 +42,28 @@ class AppLocalizationsAr extends AppLocalizations {
   String get failedToSearch => 'فشل البحث.';
 
   @override
-  String get noModulesFound => 'لم يتم العثور على مقاييس';
+  String get noModulesFound => 'لا توجد وحدات';
 
   @override
-  String get noModulesAvailable => 'لا توجد مقاييس متاحة';
+  String get noModulesAvailable => 'لا توجد وحدات متاحة';
 
   @override
-  String get noModulesMatchSearch => 'لا توجد مقاييس تطابق بحثك';
+  String get noModulesMatchSearch => 'لا توجد وحدات تطابق بحثك';
 
   @override
   String get folderNotFound => 'المجلد غير موجود';
 
   @override
-  String get noMatchingFilesOrFolders => 'لا توجد ملفات او مجلدات مطابقة';
+  String get noMatchingFilesOrFolders => 'لا توجد ملفات أو مجلدات مطابقة';
 
   @override
   String get noFilesAvailable => 'لا توجد ملفات متاحة';
 
   @override
-  String get searchFilesAndFolders => 'البحث في الملفات والمجلدات...';
+  String get searchFilesAndFolders => 'ابحث في الملفات والمجلدات...';
 
   @override
-  String get searchModules => 'البحث في المقاييس...';
+  String get searchModules => 'ابحث في الوحدات...';
 
   @override
   String get sortBy => 'ترتيب حسب';
@@ -87,15 +87,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get folderEmpty => 'فارغ';
 
   @override
-  String itemsCount(num count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count عناصر',
-      one: '$count عنصر',
-    );
-    return '$_temp0';
-  }
+  String itemsCount(num count) => '$count ${count == 1 ? 'عنصر' : 'عناصر'}';
 
   @override
   String get pdfBadge => 'PDF';
@@ -107,41 +99,31 @@ class AppLocalizationsAr extends AppLocalizations {
   String get homeTitle => 'CS BOUIRA';
 
   @override
-  String homeWelcome(Object name) {
-    return 'مرحبا، $name';
-  }
+  String homeWelcome(Object name) => 'مرحباً، $name';
 
   @override
-  String get homeSubtitle => ' يمكنك التصفح والوصول لمختلف أنواع الموارد والمصادر الدراسية المقدمة من جامعة البويرة';
+  String get homeSubtitle => 'الوصول إلى جميع موارد علوم الحاسوب من جامعة البويرة في مكان واحد.';
 
   @override
-  String get homeSearchHint => 'البحث عن دروس، ملفات، او امتحانات...';
+  String get homeSearchHint => 'ابحث عن المقررات أو الملفات أو الامتحانات...';
 
   @override
-  String get academicPath => 'المسار الدراسي';
+  String get academicPath => 'المسار الأكاديمي';
 
   @override
   String get selectYear => 'اختر السنة';
 
   @override
-  String fileCountOnYear(num count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count ملفًا',
-      one: '$count ملف',
-    );
-    return '$_temp0';
-  }
+  String fileCountOnYear(num count) => '$count ${count == 1 ? 'ملف' : 'ملفات'}';
 
   @override
   String get statsUsers => 'المستخدمون';
 
   @override
-  String get statsFiles => 'ملفا';
+  String get statsFiles => 'الملفات';
 
   @override
-  String get statsSpecials => 'مميزات';
+  String get statsSpecials => 'خاص';
 
   @override
   String get newBadge => 'جديد';
@@ -150,23 +132,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get academicYear => 'السنة الجامعية 2025/2026';
 
   @override
-  String semesterSubtitle(Object year) {
-    return 'اختر فصلا دراسيا للوصول الى الدروس والاعمال التطبيقية والمواد الدراسية لـ $year.';
-  }
+  String semesterSubtitle(Object year) => 'اختر فصلاً دراسياً للوصول إلى المقررات والأعمال الموجهة والمواد الأكاديمية لسنة $year.';
 
   @override
-  String moduleCount(num count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count مقاييس',
-      one: '$count مقياس',
-    );
-    return '$_temp0';
-  }
+  String moduleCount(num count) => '$count ${count == 1 ? 'وحدة' : 'وحدات'}';
 
   @override
-  String get exploreResources => 'استكشف الموارد';
+  String get exploreResources => 'استكشاف الموارد';
 
   @override
   String get booksAndExercices => 'الكتب والتمارين';
@@ -175,95 +147,59 @@ class AppLocalizationsAr extends AppLocalizations {
   String get semesterEmpty => 'فارغ';
 
   @override
-  String get onlineResourcesSubtitle => 'الوصول الى المكتبة الرقمية وحلول التمارين';
+  String get onlineResourcesSubtitle => 'الوصول إلى المكتبة الرقمية وسلاسل التمارين المصححة';
 
   @override
-  String get onlineResources => 'الموارد الالكترونية';
+  String get onlineResources => 'الموارد عبر الإنترنت';
 
   @override
-  String moduleBreadcrumb(Object year, Object semester) {
-    return '$year / $semester';
-  }
+  String moduleBreadcrumb(Object year, Object semester) => '$year / $semester';
 
   @override
-  String get activeModules => 'المقاييس النشطة';
+  String get activeModules => 'الوحدات النشطة';
 
   @override
-  String get allModules => 'جميع المقاييس';
+  String get allModules => 'جميع الوحدات';
 
   @override
   String get searchResults => 'نتائج البحث';
 
   @override
-  String totalCount(num count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count اجمالي',
-      one: '$count اجمالي',
-    );
-    return '$_temp0';
-  }
+  String totalCount(num count) => '$count المجموع';
 
   @override
   String folderFileBreakdown(num folders, num files) {
-    String _temp0 = intl.Intl.pluralLogic(
-      folders,
-      locale: localeName,
-      other: '$folders مجلدات',
-      one: '$folders مجلد',
-    );
-    String _temp1 = intl.Intl.pluralLogic(
-      files,
-      locale: localeName,
-      other: '$files ملفات',
-      one: '$files ملف',
-    );
-    return '$_temp0 · $_temp1';
+    final f = '$folders ${folders == 1 ? 'مجلد' : 'مجلدات'}';
+    final fi = '$files ${files == 1 ? 'ملف' : 'ملفات'}';
+    return '$f · $fi';
   }
 
   @override
-  String fileCount(num files) {
-    String _temp0 = intl.Intl.pluralLogic(
-      files,
-      locale: localeName,
-      other: '$files ملفات',
-      one: '$files ملف',
-    );
-    return '$_temp0';
-  }
+  String fileCount(num files) => '$files ${files == 1 ? 'ملف' : 'ملفات'}';
 
   @override
-  String get totalModules => 'اجمالي المقاييس';
+  String get totalModules => 'إجمالي الوحدات';
 
   @override
-  String get totalFiles => 'اجمالي الملفات';
+  String get totalFiles => 'إجمالي الملفات';
 
   @override
-  String get courseModuleBadge => 'مقياس دراسي';
+  String get courseModuleBadge => 'وحدة مقرر';
 
   @override
-  String folderFileCount(num count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count ملفات',
-      one: '$count ملف',
-    );
-    return '$_temp0';
-  }
+  String folderFileCount(num count) => '$count ${count == 1 ? 'ملف' : 'ملفات'}';
 
   @override
-  String get searchHint => 'البحث عن مقاييس، ملفات...';
+  String get searchHint => 'ابحث عن الوحدات والملفات...';
 
   @override
   String get searchFilterYear => 'السنة';
 
   @override
-  String get searchFilterSemester => 'الفصل الدراسي';
+  String get searchFilterSemester => 'الفصل';
 
   @override
-  String get searchFilterModule => 'المقياس';
+  String get searchFilterModule => 'الوحدة';
 
   @override
   String get searchFilterType => 'النوع';
@@ -278,7 +214,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get couldNotLoadFilters => 'تعذر تحميل الفلاتر. تحقق من اتصالك.';
 
   @override
-  String get searchResultModule => 'مقياس';
+  String get searchResultModule => 'وحدة';
 
   @override
   String get searchResultFolder => 'مجلد';
@@ -287,55 +223,37 @@ class AppLocalizationsAr extends AppLocalizations {
   String get searchResultFile => 'ملف';
 
   @override
-  String get startExploring => 'ابدا الاستكشاف';
+  String get startExploring => 'ابدأ الاستكشاف';
 
   @override
-  String get searchEmptyMessage => 'البحث عن مقاييس، ملفات، او مواضيع\nفي مكتبة CS Bouira بالكامل.';
+  String get searchEmptyMessage => 'ابحث عن الوحدات أو الملفات أو المواضيع\nفي جميع أنحاء مكتبة CS Bouira.';
 
   @override
-  String get topResults => 'اهم النتائج';
+  String get topResults => 'أفضل النتائج';
 
   @override
-  String itemsFound(num count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count عناصر تم العثور عليها',
-      one: '$count عنصر تم العثور عليه',
-    );
-    return '$_temp0';
-  }
+  String itemsFound(num count) => '$count ${count == 1 ? 'نتيجة' : 'نتائج'}';
 
   @override
-  String noResultsForQuery(Object query) {
-    return 'لا توجد نتائج لـ \"$query\"';
-  }
+  String noResultsForQuery(Object query) => 'لا توجد نتائج لـ "$query"';
 
   @override
   String get favoritesTitle => 'المفضلة';
 
   @override
-  String get favoritesSavedModules => 'المقاييس المحفوظة';
+  String get favoritesSavedModules => 'الوحدات المحفوظة';
 
   @override
   String get favoritesSavedFiles => 'الملفات المحفوظة';
 
   @override
-  String get favoritesOnlineResources => 'الموارد الالكترونية';
+  String get favoritesOnlineResources => 'الموارد عبر الإنترنت';
 
   @override
-  String favoritesTotal(num count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count اجمالي',
-      one: '$count اجمالي',
-    );
-    return '$_temp0';
-  }
+  String favoritesTotal(num count) => '$count المجموع';
 
   @override
-  String get favoritesTabModules => 'المقاييس';
+  String get favoritesTabModules => 'الوحدات';
 
   @override
   String get favoritesTabFiles => 'الملفات';
@@ -344,197 +262,163 @@ class AppLocalizationsAr extends AppLocalizations {
   String get favoritesTabResources => 'الموارد';
 
   @override
-  String get removedFromFavorites => 'تمت الازالة من المفضلة';
+  String get removedFromFavorites => 'تمت الإزالة من المفضلة';
 
   @override
-  String get noModulesSaved => 'لا توجد مقاييس محفوظة';
+  String get noModulesSaved => 'لا توجد وحدات محفوظة';
 
   @override
-  String get noModulesSavedHint => 'قم بتمييز مقياس بنجمة لحفظه هنا\nللوصول السريع.';
+  String get noModulesSavedHint => 'ضع علامة نجمة على وحدة لحفظها\nللوصول السريع.';
 
   @override
   String get noFilesSaved => 'لا توجد ملفات محفوظة';
 
   @override
-  String get noFilesSavedHint => 'قم بتمييز ملف بنجمة لحفظه هنا\nللوصول السريع.';
+  String get noFilesSavedHint => 'ضع علامة نجمة على ملف لحفظه\nللوصول السريع.';
 
   @override
   String get noResourcesSaved => 'لا توجد موارد محفوظة';
 
   @override
-  String get noResourcesSavedHint => 'قم بتمييز مورد الكتروني بنجمة لحفظه هنا\nللوصول السريع.';
+  String get noResourcesSavedHint => 'ضع علامة نجمة على مورد عبر الإنترنت\nلحفظه للوصول السريع.';
 
   @override
   String get browseHome => 'تصفح الرئيسية';
 
   @override
-  String favoritesFileCount(num count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count ملفات',
-      one: '$count ملف',
-    );
-    return '$_temp0';
-  }
+  String favoritesFileCount(num count) => '$count ${count == 1 ? 'ملف' : 'ملفات'}';
 
   @override
-  String favoritesFolderCount(num count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count مجلدات',
-      one: '$count مجلد',
-    );
-    return '$_temp0';
-  }
+  String favoritesFolderCount(num count) => '$count ${count == 1 ? 'مجلد' : 'مجلدات'}';
 
   @override
-  String get viewModule => 'عرض المقياس';
+  String get viewModule => 'عرض الوحدة';
 
   @override
-  String get downloadingSnackbar => 'جاري التنزيل...';
+  String get downloadingSnackbar => 'جاري التحميل...';
 
   @override
-  String downloadComplete(Object name) {
-    return 'تم تنزيل \"$name\"';
-  }
+  String downloadComplete(Object name) => '"$name" تم التحميل';
 
   @override
   String get viewAction => 'عرض';
 
   @override
-  String downloadFailed(Object error) {
-    return 'فشل التنزيل: $error';
-  }
+  String downloadFailed(Object error) => 'فشل التحميل: $error';
 
   @override
   String get couldNotOpenLink => 'تعذر فتح الرابط';
 
   @override
-  String get previewMenuDownload => 'تنزيل';
+  String get previewMenuDownload => 'تحميل';
 
   @override
-  String get previewMenuShareQr => 'مشاركة رمز QR';
+  String get previewMenuShareQr => 'مشاركة QR';
 
   @override
   String get previewMenuOpenDrive => 'فتح في Google Drive';
 
   @override
-  String get tapToExitFullscreen => 'اضغط للخروج من وضع ملء الشاشة';
+  String get tapToExitFullscreen => 'اضغط للخروج من ملء الشاشة';
 
   @override
   String get fileTypeLabel => 'ملف';
 
   @override
-  String get uploadTitle => 'شارك موردا';
+  String get uploadTitle => 'مشاركة مورد';
 
   @override
-  String get uploadHeader => 'ساهم في المنصة';
+  String get uploadHeader => 'ساهم في المركز';
 
   @override
-  String get uploadSubtitle => 'ساعد زملاءك الطلاب من خلال رفع مواد دراسية موثقة.';
+  String get uploadSubtitle => 'ساعد زملائك الطلاب عن طريق رفع الموارد الأكاديمية الموثقة.';
 
   @override
   String get uploadFieldFullName => 'الاسم الكامل';
 
   @override
-  String get uploadFieldEmail => 'البريد الالكتروني';
+  String get uploadFieldEmail => 'البريد الإلكتروني';
 
   @override
   String get uploadCategorySection => 'فئة المورد';
 
   @override
-  String get uploadGrade => 'السنة الدراسية';
+  String get uploadGrade => 'المستوى';
 
   @override
-  String get uploadSemester => 'الفصل الدراسي';
+  String get uploadSemester => 'الفصل';
 
   @override
-  String get uploadModule => 'المقياس';
+  String get uploadModule => 'الوحدة';
 
   @override
   String get uploadDropdownPlaceholder => 'اختر';
 
   @override
-  String get uploadFileSection => 'الملف المرفق';
+  String get uploadFileSection => 'المرفقات';
 
   @override
-  String get uploadChooseOrScan => 'اختر او مسح ملف';
+  String get uploadChooseOrScan => 'اختر أو امسح ملفاً';
 
   @override
-  String uploadAcceptedFormats(Object maxSize) {
-    return 'PDF, DOCX, ZIP (الحد الاقصى $maxSize ميغابايت)';
-  }
+  String uploadAcceptedFormats(Object maxSize) => 'PDF, DOCX, ZIP (الحد الأقصى $maxSize ميغابايت)';
 
   @override
-  String get uploadAddMoreFiles => 'اضافة ملفات اخرى';
+  String get uploadAddMoreFiles => 'أضف المزيد من الملفات';
 
   @override
-  String uploadFileSelected(num count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count  ملفا محددا',
-      one: '$count ملف محدد',
-    );
-    return '$_temp0';
-  }
+  String uploadFileSelected(num count) => '$count ${count == 1 ? 'ملف محدد' : 'ملفات محددة'}';
 
   @override
   String get uploadButton => 'رفع المورد';
 
   @override
-  String get uploading => 'جاري الرفع...';
+  String get uploading => 'جاري الرفع…';
 
   @override
-  String uploadingProgress(Object current, Object total) {
-    return 'جاري رفع $current من $total...';
-  }
+  String uploadingProgress(Object current, Object total) => 'جاري رفع $current من $total…';
 
   @override
-  String get cancelUpload => 'الغاء الرفع';
+  String get cancelUpload => 'إلغاء الرفع';
 
   @override
-  String get uploadAgreement => 'بالرفع، فانك توافق على ارشادات المجتمع وسياسة النزاهة الاكاديمية لـ CS Bouira.';
+  String get uploadAgreement => 'بالرفع، أنت توافق على إرشادات المجتمع وسياسة النزاهة الأكاديمية لـ CS Bouira.';
 
   @override
-  String get uploadPickerOption => 'اختر ملفا';
+  String get uploadPickerOption => 'اختر ملفاً';
 
   @override
-  String get uploadPickerSubtitle => 'تصفح ذاكرة الجهاز';
+  String get uploadPickerSubtitle => 'تصفح جهاز التخزين';
 
   @override
-  String get uploadScanOption => 'مسح ملف';
+  String get uploadScanOption => 'مسح ملف ضوئياً';
 
   @override
-  String get uploadScanSubtitle => 'استخدم الكاميرا لمسح الوثائق';
+  String get uploadScanSubtitle => 'استخدم الكاميرا لمسح المستندات ضوئياً';
 
   @override
-  String get uploadErrorNoInternet => 'لا يوجد اتصال بالانترنت';
+  String get uploadErrorNoInternet => 'لا يوجد اتصال بالإنترنت';
 
   @override
   String get uploadErrorTimeout => 'انتهت مهلة الطلب';
 
   @override
-  String get uploadErrorCancelled => 'تم الغاء الرفع';
+  String get uploadErrorCancelled => 'تم إلغاء الرفع';
 
   @override
   String get uploadErrorFailed => 'فشل الرفع.';
 
   @override
-  String get uploadRetry => 'اعادة المحاولة';
+  String get uploadRetry => 'إعادة المحاولة';
 
   @override
-  String get uploadSuccessSingle => 'تم رفع ملفك بنجاح.';
+  String get uploadSuccessSingle => 'تم رفع المورد بنجاح.';
 
   @override
-  String uploadSuccessMultiple(Object count) {
-    return 'تم رفع جميع $count موارد بنجاح.';
-  }
+  String uploadSuccessMultiple(Object count) => 'تم رفع جميع الموارد $count بنجاح.';
 
   @override
-  String get uploadSuccessTitle => 'شكرا لمساهمتك!';
+  String get uploadSuccessTitle => 'شكراً لمساهمتك!';
 
   @override
   String get uploadSuccessUploadMore => 'رفع المزيد';
@@ -543,85 +427,79 @@ class AppLocalizationsAr extends AppLocalizations {
   String get uploadSuccessDone => 'تم';
 
   @override
-  String uploadFileTooLarge(Object fileName, Object maxMB) {
-    return '$fileName يتجاوز الحد الاقصى $maxMB ميغابايت وتم تجاهله.';
-  }
+  String uploadFileTooLarge(Object fileName, Object maxMB) => '$fileName يتجاوز حد $maxMB ميغابايت وتم تخطيه.';
 
   @override
-  String get uploadScanError => 'تعذر قراءة الوثيقة الممسوحة.';
+  String get uploadScanError => 'تعذر قراءة المستند الممسوخ ضوئياً.';
 
   @override
   String get reviewTitle => 'مراجعة الملف';
 
   @override
-  String reviewFileCounter(Object current, Object total) {
-    return '$current من $total';
-  }
+  String reviewFileCounter(Object current, Object total) => '$current من $total';
 
   @override
-  String get reviewRetake => 'اعادة المسح / اختيار مرة اخرى';
+  String get reviewRetake => 'إعادة / اختيار مجدداً';
 
   @override
   String get reviewUseThisFile => 'استخدام هذا الملف';
 
   @override
-  String reviewApproveAll(Object remaining) {
-    return 'الموافقة على الكل ($remaining متبقي)';
-  }
+  String reviewApproveAll(Object remaining) => 'الموافقة على الكل ($remaining متبقي)';
 
   @override
   String get reviewPreviewNotAvailable => 'المعاينة غير متاحة';
 
   @override
-  String get authTagline => 'مركز الموارد الاكاديمية لعلوم الحاسوب';
+  String get authTagline => 'مركز الموارد الأكاديمية لعلوم الحاسوب';
 
   @override
   String get authLoginToggle => 'تسجيل الدخول';
 
   @override
-  String get authSignUpToggle => 'انشاء حساب';
+  String get authSignUpToggle => 'إنشاء حساب';
 
   @override
   String get authFieldFullName => 'الاسم الكامل';
 
   @override
-  String get authFieldEmail => 'البريد الالكتروني';
+  String get authFieldEmail => 'البريد الإلكتروني';
 
   @override
   String get authFieldPassword => 'كلمة المرور';
 
   @override
-  String get authFieldConfirmPassword => 'تاكيد كلمة المرور';
+  String get authFieldConfirmPassword => 'تأكيد كلمة المرور';
 
   @override
   String get authForgotPassword => 'نسيت كلمة المرور؟';
 
   @override
-  String get authSignUpButton => 'انشاء حساب';
+  String get authSignUpButton => 'إنشاء حساب';
 
   @override
   String get authLoginButton => 'تسجيل الدخول';
 
   @override
-  String get authOrDivider => 'او';
+  String get authOrDivider => 'أو';
 
   @override
-  String get authGoogleButton => 'الاستمرار باستخدام Google';
+  String get authGoogleButton => 'المتابعة مع Google';
 
   @override
-  String get authAgreement => 'بالاستمرار فانك توافق على شروط الخدمة وسياسة الخصوصية الخاصة بنا.';
+  String get authAgreement => 'بالمتابعة، أنت توافق على شروط الخدمة وسياسة الخصوصية.';
 
   @override
-  String get authValidationEmailRequired => 'البريد الالكتروني مطلوب';
+  String get authValidationEmailRequired => 'البريد الإلكتروني مطلوب';
 
   @override
-  String get authValidationEmailInvalid => 'ادخل بريدا الكترونيا صحيحا';
+  String get authValidationEmailInvalid => 'أدخل بريداً إلكترونياً صحيحاً';
 
   @override
   String get authValidationPasswordRequired => 'كلمة المرور مطلوبة';
 
   @override
-  String get authValidationPasswordLength => 'يجب ان تتكون كلمة المرور من 8 احرف على الاقل';
+  String get authValidationPasswordLength => 'يجب أن تتكون كلمة المرور من 8 أحرف على الأقل';
 
   @override
   String get authValidationPasswordsDoNotMatch => 'كلمتا المرور غير متطابقتين';
@@ -630,20 +508,17 @@ class AppLocalizationsAr extends AppLocalizations {
   String get authValidationNameRequired => 'الاسم الكامل مطلوب';
 
   @override
-  String get authSignupFailed => 'فشل انشاء الحساب. يرجى المحاولة مرة اخرى.';
+  String get authSignupFailed => 'فشل إنشاء الحساب. حاول مرة أخرى.';
 
   @override
   String get authMergeDialogTitle => 'دمج المفضلة';
 
   @override
   String authMergeDialogMessage(num count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'وجدنا $count عناصر محفوظة في مفضلتك المحلية. هل تريد اضافتها الى حسابك؟',
-      one: 'وجدنا $count عنصر محفوظ في مفضلتك المحلية. هل تريد اضافته الى حسابك؟',
-    );
-    return '$_temp0';
+    if (count == 1) {
+      return 'وجدنا $count عنصراً محفوظاً في مفضلتك المحلية. هل ترغب في إضافته إلى حسابك؟';
+    }
+    return 'وجدنا $count عناصر محفوظة في مفضلتك المحلية. هل ترغب في إضافتها إلى حسابك؟';
   }
 
   @override
@@ -653,34 +528,34 @@ class AppLocalizationsAr extends AppLocalizations {
   String get authMergeDialogMerge => 'دمج';
 
   @override
-  String get forgotPasswordTitle => 'اعادة تعيين كلمة المرور';
+  String get forgotPasswordTitle => 'إعادة تعيين كلمة المرور';
 
   @override
-  String get forgotPasswordSubtitle => 'ادخل بريدك الالكتروني وسنرسل لك رابط اعادة التعيين.';
+  String get forgotPasswordSubtitle => 'أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة التعيين.';
 
   @override
-  String get forgotPasswordFieldEmail => 'البريد الالكتروني';
+  String get forgotPasswordFieldEmail => 'البريد الإلكتروني';
 
   @override
-  String get forgotPasswordButton => 'ارسال رابط اعادة التعيين';
+  String get forgotPasswordButton => 'إرسال رابط إعادة التعيين';
 
   @override
-  String get forgotPasswordBackToLogin => 'الرجوع الى تسجيل الدخول';
+  String get forgotPasswordBackToLogin => 'العودة إلى تسجيل الدخول';
 
   @override
-  String get forgotPasswordValidationEmailRequired => 'البريد الالكتروني مطلوب';
+  String get forgotPasswordValidationEmailRequired => 'البريد الإلكتروني مطلوب';
 
   @override
-  String get forgotPasswordValidationEmailInvalid => 'ادخل بريدا الكترونيا صحيحا';
+  String get forgotPasswordValidationEmailInvalid => 'أدخل بريداً إلكترونياً صحيحاً';
 
   @override
-  String get forgotPasswordSuccess => 'تحقق من بريدك الالكتروني للحصول على رابط اعادة تعيين كلمة المرور.';
+  String get forgotPasswordSuccess => 'تحقق من بريدك الإلكتروني للحصول على رابط إعادة تعيين كلمة المرور.';
 
   @override
-  String get forgotPasswordError => 'فشل ارسال بريد اعادة التعيين. يرجى المحاولة مرة اخرى.';
+  String get forgotPasswordError => 'فشل إرسال بريد إعادة التعيين. حاول مرة أخرى.';
 
   @override
-  String get profileTitle => ' ملفي';
+  String get profileTitle => 'الملف الشخصي';
 
   @override
   String get profileGuestName => 'زائر';
@@ -689,16 +564,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get profileGuestBadge => 'زائر';
 
   @override
-  String get profileEmailPlaceholder => 'اضف بريدك الالكتروني';
+  String get profileEmailPlaceholder => 'أضف بريدك الإلكتروني';
 
   @override
-  String get profileStatUploads => 'المرفوعات';
+  String get profileStatUploads => 'الرفع';
 
   @override
   String get profileStatFavorites => 'المفضلة';
 
   @override
-  String get profileSettingMyUploads => 'مرفوعاتي';
+  String get profileSettingMyUploads => 'رفوعاتي';
 
   @override
   String get profileSettingDownloads => 'التنزيلات';
@@ -707,37 +582,37 @@ class AppLocalizationsAr extends AppLocalizations {
   String get profileSettingFavorites => 'المفضلة';
 
   @override
-  String get profileSettingLeaderboard => 'قائمة المتصدرين';
+  String get profileSettingLeaderboard => 'لوحة المتصدرين';
 
   @override
   String get profileSettingAbout => 'حول CS Bouira';
 
   @override
-  String get profileGuestButton => 'تسجيل الدخول او انشاء حساب';
+  String get profileGuestButton => 'تسجيل الدخول أو إنشاء حساب';
 
   @override
   String get profileEditNameTitle => 'تعديل الاسم';
 
   @override
-  String get profileEditNameHint => 'ادخل اسمك';
+  String get profileEditNameHint => 'أدخل اسمك';
 
   @override
-  String get profileEditNameCancel => 'الغاء';
+  String get profileEditNameCancel => 'إلغاء';
 
   @override
   String get profileEditNameSave => 'حفظ';
 
   @override
-  String get profileEditEmailTitle => 'تعديل البريد الالكتروني';
+  String get profileEditEmailTitle => 'تعديل البريد الإلكتروني';
 
   @override
-  String get profileEditEmailHint => 'ادخل بريدك الالكتروني';
+  String get profileEditEmailHint => 'أدخل بريدك الإلكتروني';
 
   @override
   String get profileLogoutTitle => 'تسجيل الخروج';
 
   @override
-  String get profileLogoutMessage => 'هل انت متاكد من انك تريد تسجيل الخروج؟';
+  String get profileLogoutMessage => 'هل أنت متأكد أنك تريد تسجيل الخروج؟';
 
   @override
   String get profileLogoutConfirm => 'تسجيل الخروج';
@@ -746,13 +621,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get profileLanguage => 'اللغة';
 
   @override
-  String get profileLanguageEnglish => 'الانجليزية';
+  String get profileLanguageEnglish => 'English';
 
   @override
   String get profileLanguageArabic => 'العربية';
 
   @override
-  String get profileLanguageFrench => 'الفرنسية';
+  String get profileLanguageFrench => 'Français';
 
   @override
   String get myUploadsTitle => 'رفوعاتي';
@@ -761,7 +636,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get myUploadsEmpty => 'لا توجد رفوعات بعد';
 
   @override
-  String get myUploadsEmptyHint => 'ستظهر هنا الموارد التي رفعتها.';
+  String get myUploadsEmptyHint => 'ستظهر الموارد التي رفعتها هنا.';
 
   @override
   String get downloadsTitle => 'التنزيلات';
@@ -770,7 +645,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get downloadsEmpty => 'لا توجد تنزيلات بعد';
 
   @override
-  String get downloadsEmptyHint => 'ستظهر هنا الملفات التي قمت بتنزيلها.';
+  String get downloadsEmptyHint => 'ستظهر الملفات التي تم تنزيلها هنا.';
 
   @override
   String get downloadsOpenAction => 'فتح';
@@ -779,30 +654,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get downloadsDeleteAction => 'حذف';
 
   @override
-  String get leaderboardTitle => 'قائمة المتصدرين';
+  String get leaderboardTitle => 'لوحة المتصدرين';
 
   @override
-  String get leaderboardHeader => 'اهم المساهمين';
+  String get leaderboardHeader => 'أفضل المساهمين';
 
   @override
   String get leaderboardYourRank => 'ترتيبك';
 
   @override
-  String get leaderboardNotRanked => 'غير مصنف بعد';
+  String get leaderboardNotRanked => 'لم يتم ترتيبك بعد';
 
   @override
   String get leaderboardEmpty => 'لا يوجد مساهمون بعد';
 
   @override
-  String leaderboardUploadCount(num count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count ملفا مرفوعا',
-      one: '$count مرفوع',
-    );
-    return '$_temp0';
-  }
+  String leaderboardUploadCount(num count) => '$count ${count == 1 ? 'رفع' : 'رفوعات'}';
 
   @override
   String get leaderboardPoints => 'نقاط';
@@ -811,43 +678,43 @@ class AppLocalizationsAr extends AppLocalizations {
   String get aboutTitle => 'حول CS Bouira';
 
   @override
-  String get aboutVersion => 'الاصدار';
+  String get aboutVersion => 'الإصدار';
 
   @override
-  String get aboutDescription => 'CS Bouira هي منصة لمشاركة الموارد الاكاديمية لطلاب علوم الحاسوب في جامعة البويرة.';
+  String get aboutDescription => 'CS Bouira هي منصة لمشاركة الموارد الأكاديمية لطلاب علوم الحاسوب في جامعة البويرة.';
 
   @override
-  String get aboutFeatures => 'المميزات';
+  String get aboutFeatures => 'الميزات';
 
   @override
-  String get aboutFeatureBrowseResources => 'تصفح الموارد حسب السنة والفصل والمقياس';
+  String get aboutFeatureBrowseResources => 'تصفح الموارد حسب السنة والفصل والوحدة';
 
   @override
   String get aboutFeatureSearch => 'البحث في جميع المواد الدراسية';
 
   @override
-  String get aboutFeatureDownload => 'تنزيل ومعاينة ملفات PDF والمستندات والصور';
+  String get aboutFeatureDownload => 'تحميل ومعاينة PDF والمستندات والصور';
 
   @override
-  String get aboutFeatureUpload => 'رفع ومشاركة الموارد الاكاديمية';
+  String get aboutFeatureUpload => 'رفع ومشاركة الموارد الأكاديمية';
 
   @override
   String get aboutFeatureBookmarks => 'حفظ المفضلة للوصول السريع';
 
   @override
-  String get aboutFeatureQrCode => 'ماسح رمز QR للروابط الفورية للموارد';
+  String get aboutFeatureQrCode => 'ماسح رمز QR للروابط الفورية';
 
   @override
-  String get aboutFeatureOffline => 'الوصول دون اتصال الى المواد التي تم تنزيلها';
+  String get aboutFeatureOffline => 'الوصول دون اتصال للمواد التي تم تنزيلها';
 
   @override
-  String get aboutCreator => 'المطور';
+  String get aboutCreator => 'المبتكر';
 
   @override
-  String get aboutCreatorSalimZedDesc => 'المطور الأصلي لمنصة Cs Bouira و api';
+  String get aboutCreatorSalimZedDesc => 'المبتكر الأصلي لموقع و API CS Bouira';
 
   @override
-  String get aboutCreatorAhmedAmineDesc => 'مطور تطبيق الاندرويد';
+  String get aboutCreatorAhmedAmineDesc => 'مطور تطبيق Android';
 
   @override
   String get aboutSourceCode => 'الكود المصدري';
@@ -856,22 +723,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get aboutSourceCodeGithub => 'مستودع GitHub';
 
   @override
-  String get aboutSourceCodeReportIssue => 'الابلاغ عن مشكلة';
+  String get aboutSourceCodeReportIssue => 'الإبلاغ عن مشكلة';
 
   @override
-  String get aboutContact => 'الاتصال';
+  String get aboutContact => 'اتصل بنا';
 
   @override
   String get aboutLicense => 'الترخيص';
 
   @override
-  String get aboutLicenseText => 'هذا التطبيق مرخص بموجب رخصة MIT.\n\nحقوق النشر © 2026 احمد امين. جميع الحقوق محفوظة.\n\nيُسمح لأي شخص يحصل على نسخة من هذا البرنامج والملفات المرتبطة به، التعامل مع البرنامج دون قيود، بما في ذلك دون حصر حقوق الاستخدام والنسخ والتعديل والدمج والنشر والتوزيع والترخيص و/أو بيع نسخ من البرنامج،';
+  String get aboutLicenseText => 'هذا التطبيق منشور تحت رخصة MIT.\n\nحقوق النشر © 2026 أحمد أمين. جميع الحقوق محفوظة.\n\nيُمنح الإذن لأي شخص يحصل على نسخة من هذا البرنامج وملفات الوثائق المرتبطة به للتعامل مع البرنامج دون قيود.';
 
   @override
   String get qrScannerTitle => 'مسح رمز QR';
 
   @override
-  String get qrScannerInstruction => 'وجه كاميراك نحو رمز QR';
+  String get qrScannerInstruction => 'وجّه كاميرتك نحو رمز QR';
 
   @override
   String get qrScannerSuccess => 'تم مسح رمز QR!';
@@ -883,7 +750,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get bottomNavHome => 'الرئيسية';
 
   @override
-  String get bottomNavSearch => 'البحث';
+  String get bottomNavSearch => 'بحث';
 
   @override
   String get bottomNavFavs => 'المفضلة';
@@ -892,10 +759,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get bottomNavUpload => 'رفع';
 
   @override
-  String get bottomNavProfile => ' ملفي';
+  String get bottomNavProfile => 'الملف';
 
   @override
-  String get networkReconnected => 'عدت الى الاتصال بالانترنت';
+  String get networkReconnected => 'تمت إعادة الاتصال';
 
   @override
   String get networkOffline => 'لا يوجد اتصال بالانترنت';
@@ -953,4 +820,22 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get downloadsBrowseFiles => 'تصفح الملفات';
+
+  @override
+  String get updateDialogTitle => 'تحديث متوفر';
+
+  @override
+  String updateDialogBody(Object version) => 'الإصدار $version جاهز للتثبيت.';
+
+  @override
+  String get updateDialogUpdate => 'تحديث';
+
+  @override
+  String get updateDialogLater => 'لاحقاً';
+
+  @override
+  String get updateDialogDownloading => 'جاري تحميل التحديث...';
+
+  @override
+  String get updateDialogError => 'فشل تحميل التحديث.';
 }

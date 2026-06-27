@@ -953,4 +953,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get downloadsBrowseFiles => 'Browse Files';
+  @override
+  String get updateDialogTitle => 'Update Available';
+
+  @override
+  String updateDialogBody(Object version) => 'Version $version is ready to install.';
+
+  @override
+  String get updateDialogUpdate => 'Update';
+
+  @override
+  String get updateDialogLater => 'Later';
+
+  @override
+  String get updateDialogDownloading => 'Downloading update...';
+
+  @override
+  String get updateDialogError => 'Failed to download update.';
 }
