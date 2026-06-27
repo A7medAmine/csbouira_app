@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -7,15 +9,39 @@ import '../../core/theme/app_spacing.dart';
 import '../../data/navigation_data.dart';
 import '../../data/providers/auth_providers.dart';
 import '../../data/providers/drive_providers.dart';
+import '../../data/services/update_service.dart';
 import '../../shared/widgets/avatar_widget.dart';
 import '../../shared/widgets/network_banner.dart';
 import '../../shared/widgets/user_avatar.dart';
+import 'widgets/update_dialog.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  bool _updateChecked = false;
+
+  Future<void> _checkUpdate() async {
+    if (!Platform.isAndroid || !mounted) return;
+    final service = UpdateService();
+    if (await service.isThrottled()) return;
+    final info = await service.checkForUpdate();
+    if (info != null && mounted) {
+      showUpdateDialog(context, info);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_updateChecked) {
+      _updateChecked = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) => _checkUpdate());
+    }
+
     final theme = Theme.of(context);
     final countsAsync = ref.watch(fileCountsProvider);
     final counts = countsAsync.asData?.value ?? {};
