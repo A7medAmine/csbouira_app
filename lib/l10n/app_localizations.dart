@@ -100,7 +100,7 @@ abstract class AppLocalizations {
   /// Application title used in splash and branding
   ///
   /// In en, this message translates to:
-  /// **'CS Bouira'**
+  /// **'CS Bouira updated'**
   String get appTitle;
 
   /// Subtitle shown on the splash screen
@@ -1740,6 +1740,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to download update.'**
   String get updateDialogError;
+
+  /// Background update banner progress message
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading update... {progress}%'**
+  String updateBannerDownloading(Object progress);
+
+  /// Background update banner completed message
+  ///
+  /// In en, this message translates to:
+  /// **'Update downloaded. Tap to install.'**
+  String get updateBannerReady;
+
+  /// Background update banner error message
+  ///
+  /// In en, this message translates to:
+  /// **'Download failed. Tap to retry.'**
+  String get updateBannerError;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

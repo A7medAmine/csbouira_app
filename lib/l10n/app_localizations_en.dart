@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'CS Bouira';
+  String get appTitle => 'CS Bouira updated';
 
   @override
   String get appSubtitle => 'THE RESOURCE HUB';
@@ -973,4 +973,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get updateDialogError => 'Failed to download update.';
+
+  @override
+  String updateBannerDownloading(Object progress) {
+    return 'Downloading update... $progress%';
+  }
+
+  @override
+  String get updateBannerReady => 'Update downloaded. Tap to install.';
+
+  @override
+  String get updateBannerError => 'Download failed. Tap to retry.';
 }

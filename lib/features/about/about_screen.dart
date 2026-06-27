@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:csbouira_app/l10n/app_localizations.dart';
 
 class AboutScreen extends StatelessWidget {
@@ -61,11 +62,17 @@ class AboutScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 4),
-                      Text(
-                        '${AppLocalizations.of(context)!.aboutVersion} 1.0.0',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
+                      FutureBuilder<PackageInfo>(
+                        future: PackageInfo.fromPlatform(),
+                        builder: (context, snapshot) {
+                          final version = snapshot.data?.version ?? '1.0.0';
+                          return Text(
+                            '${AppLocalizations.of(context)!.aboutVersion} $version',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),

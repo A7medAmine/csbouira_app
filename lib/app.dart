@@ -27,6 +27,7 @@ import 'features/search/search_screen.dart';
 import 'features/splash/splash_screen.dart';
 import 'features/upload/upload_screen.dart';
 import 'shared/widgets/app_bottom_nav.dart';
+import 'shared/widgets/update_download_banner.dart';
 import 'l10n/app_localizations.dart';
 
 class _AuthRefreshNotifier extends ChangeNotifier {
@@ -368,14 +369,24 @@ class _ShellScaffoldState extends State<_ShellScaffold> {
           canPop: false,
           onPopInvokedWithResult: _onPopInvokedWithResult,
           child: Scaffold(
-            body: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 180),
-              switchInCurve: Curves.easeInOut,
-              switchOutCurve: Curves.easeInOut,
-              child: KeyedSubtree(
-                key: ValueKey<int>(widget.navigationShell.currentIndex),
-                child: widget.navigationShell,
-              ),
+            body: Stack(
+              children: [
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 180),
+                  switchInCurve: Curves.easeInOut,
+                  switchOutCurve: Curves.easeInOut,
+                  child: KeyedSubtree(
+                    key: ValueKey<int>(widget.navigationShell.currentIndex),
+                    child: widget.navigationShell,
+                  ),
+                ),
+                Positioned(
+                  left: 16,
+                  right: 16,
+                  bottom: isFullScreen ? 24 : 16,
+                  child: const UpdateDownloadBanner(),
+                ),
+              ],
             ),
             bottomNavigationBar: isFullScreen
                 ? null

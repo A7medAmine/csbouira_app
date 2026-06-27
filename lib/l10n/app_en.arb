@@ -1,7 +1,7 @@
 {
   "@@locale": "en",
 
-  "appTitle": "CS Bouira",
+  "appTitle": "CS Bouira updated",
   "@appTitle": {
     "description": "Application title used in splash and branding"
   },
@@ -1169,5 +1169,20 @@
   "updateDialogError": "Failed to download update.",
   "@updateDialogError": {
     "description": "Error message when update download fails"
+  },
+  "updateBannerDownloading": "Downloading update... {progress}%",
+  "@updateBannerDownloading": {
+    "description": "Background update banner progress message",
+    "placeholders": {
+      "progress": {}
+    }
+  },
+  "updateBannerReady": "Update downloaded. Tap to install.",
+  "@updateBannerReady": {
+    "description": "Background update banner completed message"
+  },
+  "updateBannerError": "Download failed. Tap to retry.",
+  "@updateBannerError": {
+    "description": "Background update banner error message"
   }
 }

@@ -1,7 +1,7 @@
 {
   "@@locale": "fr",
 
-  "appTitle": "CS Bouira",
+  "appTitle": "CS Bouira updated",
   "@appTitle": {
     "description": "Application title used in splash and branding"
   },
@@ -1153,5 +1153,13 @@
   "updateDialogUpdate": "Mettre à jour",
   "updateDialogLater": "Plus tard",
   "updateDialogDownloading": "Téléchargement...",
-  "updateDialogError": "Échec du téléchargement."
+  "updateDialogError": "Échec du téléchargement.",
+  "updateBannerDownloading": "Téléchargement... {progress}%",
+  "@updateBannerDownloading": {
+    "placeholders": {
+      "progress": {}
+    }
+  },
+  "updateBannerReady": "Mise à jour téléchargée. Appuyez pour installer.",
+  "updateBannerError": "Échec du téléchargement. Appuyez pour réessayer."
 }
