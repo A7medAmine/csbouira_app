@@ -370,6 +370,16 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
                       onTap: () => _launchUrl('https://csbouira.xyz/'),
                       child: _FeatureRow(theme: theme, icon: Icons.language, text: 'csbouira.xyz'),
                     ),
+                    const SizedBox(height: AppSpacing.stackSm),
+                    GestureDetector(
+                      onTap: () => context.push('/legal/terms'),
+                      child: _FeatureRow(theme: theme, icon: Icons.description_outlined, text: AppLocalizations.of(context)!.authAgreementTerms),
+                    ),
+                    const SizedBox(height: AppSpacing.stackSm),
+                    GestureDetector(
+                      onTap: () => context.push('/legal/privacy'),
+                      child: _FeatureRow(theme: theme, icon: Icons.privacy_tip_outlined, text: AppLocalizations.of(context)!.authAgreementPrivacy),
+                    ),
                   ],
                 ),
                 const SizedBox(height: AppSpacing.stackMd),

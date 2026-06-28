@@ -5,10 +5,6 @@
   "@appTitle": {
     "description": "Application title used in splash and branding"
   },
-  "appSubtitle": "LE PORTAIL DES RESSOURCES",
-  "@appSubtitle": {
-    "description": "Subtitle shown on the splash screen"
-  },
   "splashFooter": "Département d'Informatique",
   "@splashFooter": {
     "description": "Footer text on the splash screen"
@@ -724,6 +720,14 @@
   "authGoogleButton": "Continuer avec Google",
   "@authGoogleButton": {
     "description": "Button to sign in with Google"
+  },
+  "authAgreementTerms": "Conditions d'utilisation",
+  "@authAgreementTerms": {
+    "description": "Link label for Terms of Service in the auth agreement text"
+  },
+  "authAgreementPrivacy": "Politique de confidentialité",
+  "@authAgreementPrivacy": {
+    "description": "Link label for Privacy Policy in the auth agreement text"
   },
   "authAgreement": "En continuant, vous acceptez nos Conditions d'utilisation et notre Politique de confidentialité.",
   "@authAgreement": {

@@ -37,6 +37,7 @@ dependencies:
   connectivity_plus: ^6.1.0
   package_info_plus: ^9.0.1
   pub_semver: ^2.1.5
+  flutter_markdown: ^0.7.7+1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -56,6 +57,8 @@ flutter:
   assets:
     - .env
     - images/
+    - PRIVACY_POLICY.md
+    - TERMS_OF_USE.md
   fonts:
     - family: Manrope
       fonts:

@@ -12,9 +12,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get appTitle => 'CS Bouira';
 
   @override
-  String get appSubtitle => 'THE RESOURCE HUB';
-
-  @override
   String get splashFooter => 'قسم علوم الحاسوب';
 
   @override
@@ -609,6 +606,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get authGoogleButton => 'الاستمرار باستخدام Google';
+
+  @override
+  String get authAgreementTerms => 'شروط الخدمة';
+
+  @override
+  String get authAgreementPrivacy => 'سياسة الخصوصية';
 
   @override
   String get authAgreement => 'بالاستمرار فانك توافق على شروط الخدمة وسياسة الخصوصية الخاصة بنا.';

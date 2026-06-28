@@ -11,6 +11,7 @@ import 'data/providers/favorites_providers.dart';
 import 'features/about/about_screen.dart';
 import 'features/auth/forgot_password_screen.dart';
 import 'features/auth/login_screen.dart';
+import 'features/legal/legal_screen.dart';
 import 'features/browse/file_screen.dart';
 import 'features/leaderboard/leaderboard_screen.dart';
 import 'features/browse/folder_screen.dart';
@@ -300,6 +301,28 @@ final _routerProvider = Provider<GoRouter>((ref) {
         pageBuilder: (_, state) => _buildTransitionPage(
           key: state.pageKey,
           child: const AboutScreen(),
+        ),
+      ),
+      GoRoute(
+        path: '/legal/terms',
+        name: 'termsOfUse',
+        pageBuilder: (_, state) => _buildTransitionPage(
+          key: state.pageKey,
+          child: LegalScreen(
+            title: 'Terms of Use',
+            assetPath: 'TERMS_OF_USE.md',
+          ),
+        ),
+      ),
+      GoRoute(
+        path: '/legal/privacy',
+        name: 'privacyPolicy',
+        pageBuilder: (_, state) => _buildTransitionPage(
+          key: state.pageKey,
+          child: LegalScreen(
+            title: 'Privacy Policy',
+            assetPath: 'PRIVACY_POLICY.md',
+          ),
         ),
       ),
     ],

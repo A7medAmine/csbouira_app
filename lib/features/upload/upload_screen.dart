@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -1626,14 +1627,79 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
   }
 
   Widget _buildDisclaimer(ThemeData theme, AppLocalizations l10n) {
+    final baseStyle = theme.textTheme.labelMedium?.copyWith(
+      color: theme.colorScheme.onSurfaceVariant.withAlpha(128),
+    );
+    final linkStyle = theme.textTheme.labelMedium?.copyWith(
+      color: theme.colorScheme.primary,
+      decoration: TextDecoration.underline,
+    );
+    final locale = Localizations.localeOf(context).languageCode;
+
+    List<InlineSpan> spans;
+    switch (locale) {
+      case 'fr':
+        spans = [
+          TextSpan(text: 'En envoyant ce fichier, vous acceptez les ', style: baseStyle),
+          TextSpan(
+            text: l10n.authAgreementTerms,
+            style: linkStyle,
+            recognizer: TapGestureRecognizer()
+              ..onTap = () => context.push('/legal/terms'),
+          ),
+          TextSpan(text: ' et la ', style: baseStyle),
+          TextSpan(
+            text: l10n.authAgreementPrivacy,
+            style: linkStyle,
+            recognizer: TapGestureRecognizer()
+              ..onTap = () => context.push('/legal/privacy'),
+          ),
+          TextSpan(text: ' de CS Bouira.', style: baseStyle),
+        ];
+      case 'ar':
+        spans = [
+          TextSpan(text: 'بالرفع، فانك توافق على ', style: baseStyle),
+          TextSpan(
+            text: l10n.authAgreementTerms,
+            style: linkStyle,
+            recognizer: TapGestureRecognizer()
+              ..onTap = () => context.push('/legal/terms'),
+          ),
+          TextSpan(text: ' و', style: baseStyle),
+          TextSpan(
+            text: l10n.authAgreementPrivacy,
+            style: linkStyle,
+            recognizer: TapGestureRecognizer()
+              ..onTap = () => context.push('/legal/privacy'),
+          ),
+          TextSpan(text: ' الخاصة بـ CS Bouira.', style: baseStyle),
+        ];
+      default:
+        spans = [
+          TextSpan(text: 'By uploading, you agree to the ', style: baseStyle),
+          TextSpan(
+            text: l10n.authAgreementTerms,
+            style: linkStyle,
+            recognizer: TapGestureRecognizer()
+              ..onTap = () => context.push('/legal/terms'),
+          ),
+          TextSpan(text: ' and ', style: baseStyle),
+          TextSpan(
+            text: l10n.authAgreementPrivacy,
+            style: linkStyle,
+            recognizer: TapGestureRecognizer()
+              ..onTap = () => context.push('/legal/privacy'),
+          ),
+          TextSpan(text: ' of CS Bouira.', style: baseStyle),
+        ];
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.stackMd),
-      child: Text(
-        l10n.uploadAgreement,
+      child: RichText(
+        text: TextSpan(children: spans),
         textAlign: TextAlign.center,
-        style: theme.textTheme.labelMedium?.copyWith(
-          color: theme.colorScheme.onSurfaceVariant.withAlpha(128),
-        ),
+        textWidthBasis: TextWidthBasis.longestLine,
       ),
     );
   }

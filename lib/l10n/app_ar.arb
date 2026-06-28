@@ -2,6 +2,7 @@
   "@@locale": "ar",
 
   "appTitle": "CS Bouira",
+
   "splashFooter": "قسم علوم الحاسوب",
 
   "pressBackAgain": "اضغط على زر الرجوع مرة اخرى للخروج",
@@ -175,6 +176,14 @@
   "authLoginButton": "تسجيل الدخول",
   "authOrDivider": "او",
   "authGoogleButton": "الاستمرار باستخدام Google",
+  "authAgreementTerms": "شروط الخدمة",
+  "@authAgreementTerms": {
+    "description": "Link label for Terms of Service in the auth agreement text"
+  },
+  "authAgreementPrivacy": "سياسة الخصوصية",
+  "@authAgreementPrivacy": {
+    "description": "Link label for Privacy Policy in the auth agreement text"
+  },
   "authAgreement": "بالاستمرار فانك توافق على شروط الخدمة وسياسة الخصوصية الخاصة بنا.",
   "authValidationEmailRequired": "البريد الالكتروني مطلوب",
   "authValidationEmailInvalid": "ادخل بريدا الكترونيا صحيحا",

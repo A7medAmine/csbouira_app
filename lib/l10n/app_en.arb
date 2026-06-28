@@ -5,10 +5,6 @@
   "@appTitle": {
     "description": "Application title used in splash and branding"
   },
-  "appSubtitle": "THE RESOURCE HUB",
-  "@appSubtitle": {
-    "description": "Subtitle shown on the splash screen"
-  },
   "splashFooter": "Department of Computer Science",
   "@splashFooter": {
     "description": "Footer text on the splash screen"
@@ -724,6 +720,14 @@
   "authGoogleButton": "Continue with Google",
   "@authGoogleButton": {
     "description": "Button to sign in with Google"
+  },
+  "authAgreementTerms": "Terms of Service",
+  "@authAgreementTerms": {
+    "description": "Link label for Terms of Service in the auth agreement text"
+  },
+  "authAgreementPrivacy": "Privacy Policy",
+  "@authAgreementPrivacy": {
+    "description": "Link label for Privacy Policy in the auth agreement text"
   },
   "authAgreement": "By continuing you agree to our Terms of Service and Privacy Policy.",
   "@authAgreement": {

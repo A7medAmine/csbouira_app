@@ -12,9 +12,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get appTitle => 'CS Bouira';
 
   @override
-  String get appSubtitle => 'LE PORTAIL DES RESSOURCES';
-
-  @override
   String get splashFooter => 'Département d\'Informatique';
 
   @override
@@ -609,6 +606,12 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get authGoogleButton => 'Continuer avec Google';
+
+  @override
+  String get authAgreementTerms => 'Conditions d\'utilisation';
+
+  @override
+  String get authAgreementPrivacy => 'Politique de confidentialité';
 
   @override
   String get authAgreement => 'En continuant, vous acceptez nos Conditions d\'utilisation et notre Politique de confidentialité.';

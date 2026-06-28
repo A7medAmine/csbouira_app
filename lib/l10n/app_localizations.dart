@@ -103,12 +103,6 @@ abstract class AppLocalizations {
   /// **'CS Bouira'**
   String get appTitle;
 
-  /// Subtitle shown on the splash screen
-  ///
-  /// In en, this message translates to:
-  /// **'THE RESOURCE HUB'**
-  String get appSubtitle;
-
   /// Footer text on the splash screen
   ///
   /// In en, this message translates to:
@@ -1044,6 +1038,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Continue with Google'**
   String get authGoogleButton;
+
+  /// Link label for Terms of Service in the auth agreement text
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Service'**
+  String get authAgreementTerms;
+
+  /// Link label for Privacy Policy in the auth agreement text
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get authAgreementPrivacy;
 
   /// Legal agreement text on auth screen
   ///

@@ -1,14 +1,15 @@
 import 'package:flutter/foundation.dart' show kReleaseMode;
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:csbouira_app/core/theme/app_radius.dart';
+import 'package:csbouira_app/core/theme/app_spacing.dart';
+import 'package:csbouira_app/data/providers/auth_providers.dart';
+import 'package:csbouira_app/data/providers/favorites_providers.dart';
 import 'package:csbouira_app/l10n/app_localizations.dart';
-import '../../core/theme/app_radius.dart';
-import '../../core/theme/app_spacing.dart';
-import '../../data/providers/auth_providers.dart';
-import '../../data/providers/favorites_providers.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -835,14 +836,80 @@ class _Footer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final linkStyle = theme.textTheme.labelMedium?.copyWith(
+      color: theme.colorScheme.primary,
+      decoration: TextDecoration.underline,
+    );
+    final baseStyle = theme.textTheme.labelMedium?.copyWith(
+      color: theme.colorScheme.onSurfaceVariant.withAlpha(153),
+    );
+    final locale = Localizations.localeOf(context).languageCode;
+
+    List<InlineSpan> spans;
+    switch (locale) {
+      case 'fr':
+        spans = [
+          TextSpan(text: 'En continuant, vous acceptez nos ', style: baseStyle),
+          TextSpan(
+            text: l10n.authAgreementTerms,
+            style: linkStyle,
+            recognizer: TapGestureRecognizer()
+              ..onTap = () => context.push('/legal/terms'),
+          ),
+          TextSpan(text: ' et notre ', style: baseStyle),
+          TextSpan(
+            text: l10n.authAgreementPrivacy,
+            style: linkStyle,
+            recognizer: TapGestureRecognizer()
+              ..onTap = () => context.push('/legal/privacy'),
+          ),
+          TextSpan(text: '.', style: baseStyle),
+        ];
+      case 'ar':
+        spans = [
+          TextSpan(text: 'بالاستمرار فانك توافق على ', style: baseStyle),
+          TextSpan(
+            text: l10n.authAgreementTerms,
+            style: linkStyle,
+            recognizer: TapGestureRecognizer()
+              ..onTap = () => context.push('/legal/terms'),
+          ),
+          TextSpan(text: ' و', style: baseStyle),
+          TextSpan(
+            text: l10n.authAgreementPrivacy,
+            style: linkStyle,
+            recognizer: TapGestureRecognizer()
+              ..onTap = () => context.push('/legal/privacy'),
+          ),
+          TextSpan(text: ' الخاصة بنا.', style: baseStyle),
+        ];
+      default:
+        spans = [
+          TextSpan(text: 'By continuing you agree to our ', style: baseStyle),
+          TextSpan(
+            text: l10n.authAgreementTerms,
+            style: linkStyle,
+            recognizer: TapGestureRecognizer()
+              ..onTap = () => context.push('/legal/terms'),
+          ),
+          TextSpan(text: ' and ', style: baseStyle),
+          TextSpan(
+            text: l10n.authAgreementPrivacy,
+            style: linkStyle,
+            recognizer: TapGestureRecognizer()
+              ..onTap = () => context.push('/legal/privacy'),
+          ),
+          TextSpan(text: '.', style: baseStyle),
+        ];
+    }
+
     return Column(
       children: [
-        Text(
-          AppLocalizations.of(context)!.authAgreement,
+        RichText(
+          text: TextSpan(children: spans),
           textAlign: TextAlign.center,
-          style: theme.textTheme.labelMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant.withAlpha(153),
-          ),
+          textWidthBasis: TextWidthBasis.longestLine,
         ),
         const SizedBox(height: AppSpacing.stackMd),
         Row(
