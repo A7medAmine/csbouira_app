@@ -682,7 +682,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get forgotPasswordError => 'Échec de l\'envoi de l\'e-mail de réinitialisation. Veuillez réessayer.';
 
   @override
-  String get profileTitle => 'Profil';
+  String get profileTitle => 'Profile';
 
   @override
   String get profileGuestName => 'Invité';

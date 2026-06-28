@@ -13,4 +13,8 @@ void main() async {
   await Supabase.initialize(
     url: _requireEnv('SUPABASE_URL'),
     publishableKey: _requireEnv('SUPABASE_ANON_KEY'),
-  );  final serverClientId =      dotenv.env['GOOGLE_SERVER_CLIENT_ID'] ??      'TODO_INSERT_YOUR_WEB_CLIENT_ID.apps.googleusercontent.com';  final androidClientId = dotenv.env['GOOGLE_ANDROID_CLIENT_ID'];  await GoogleSignIn.instance.initialize(    clientId: androidClientId,    serverClientId: serverClientId,  );  runApp(const ProviderScope(child: CSBouiraApp()));}
+  );    final rawClientId = dotenv.env['GOOGLE_SERVER_CLIENT_ID'];
+  final serverClientId = (rawClientId != null &&
+          rawClientId != 'TODO_INSERT_YOUR_WEB_CLIENT_ID.apps.googleusercontent.com')
+      ? rawClientId
+      : null;  final androidClientId = dotenv.env['GOOGLE_ANDROID_CLIENT_ID'];  await GoogleSignIn.instance.initialize(    clientId: androidClientId,    serverClientId: serverClientId,  );  runApp(const ProviderScope(child: CSBouiraApp()));}
