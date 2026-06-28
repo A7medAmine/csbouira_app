@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class ThumbnailService {
@@ -57,12 +58,16 @@ class ThumbnailService {
         final thumb = data['thumbnail_url'] as String?;
         if (thumb != null && thumb.isNotEmpty) return thumb;
       }
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('Error in ThumbnailService.getThumbnailUrl: $e');
+    }
 
     try {
       final avatar = await _getChannelAvatar(url);
       if (avatar != null) return avatar;
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('Error in ThumbnailService.getThumbnailUrl (avatar): $e');
+    }
 
     return null;
   }

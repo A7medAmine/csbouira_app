@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:open_filex/open_filex.dart';
@@ -82,7 +83,9 @@ class UpdateDownloadNotifier extends StateNotifier<UpdateDownloadState> {
           await file.delete();
         }
       }
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('Error in UpdateDownloadNotifier.checkUninstalledUpdate: $e');
+    }
   }
 
   Future<void> startDownload(String downloadUrl, String latestVersion) async {
@@ -156,7 +159,9 @@ class UpdateDownloadNotifier extends StateNotifier<UpdateDownloadState> {
           await file.delete();
         }
       }
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('Error in UpdateDownloadNotifier.reset: $e');
+    }
     state = const UpdateDownloadState();
   }
 }

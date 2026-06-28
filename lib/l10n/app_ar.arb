@@ -318,7 +318,178 @@
   },
   "updateBannerReady": "تم تحميل التحديث. انقر للتثبيت.",
   "updateBannerError": "فشل التحميل. انقر لإعادة المحاولة.",
+  "aboutCreatorSalimZed": "Salim Zed",
+  "aboutCreatorAhmedAmine": "Ahmed Amine",
+
+  "downloadsLoadError": "فشل تحميل التنزيلات.",
+  "downloadsNoAppToOpen": "لا يوجد تطبيق متاح لفتح هذا النوع من الملفات.",
+  "downloadsDeleteTitle": "حذف التنزيل",
+  "downloadsDeleteMessage": "حذف \"{name}\" من جهازك؟",
+  "@downloadsDeleteMessage": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "downloadsDeletedSnackbar": "تم حذف \"{name}\"",
+  "@downloadsDeletedSnackbar": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+
   "aboutCheckUpdate": "التحقق من وجود تحديثات",
   "aboutCheckingUpdate": "جاري التحقق من وجود تحديثات...",
-  "aboutNoUpdate": "تطبيقك محدث إلى آخر إصدار."
+  "aboutNoUpdate": "تطبيقك محدث إلى آخر إصدار.",
+
+  "qrFileNotFound": "الملف غير موجود",
+  "@qrFileNotFound": {
+    "description": "Error title when scanned QR code file is not found"
+  },
+  "qrFileNotFoundHint": "ربما تم نقل هذا الملف أو حذفه.",
+  "@qrFileNotFoundHint": {
+    "description": "Subtitle hint when scanned file is not found"
+  },
+  "qrCameraError": "خطأ في الكاميرا: {error}",
+  "@qrCameraError": {
+    "description": "Error message when camera fails with error details",
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "qrPermissionRequired": "تصريح الكاميرا مطلوب",
+  "@qrPermissionRequired": {
+    "description": "Title when camera permission is denied on QR scanner"
+  },
+  "qrPermissionHint": "الوصول إلى الكاميرا ضروري لمسح رموز QR. يرجى تمكينه في إعدادات جهازك.",
+  "@qrPermissionHint": {
+    "description": "Hint text explaining why camera permission is needed"
+  },
+  "openSettings": "فتح الإعدادات",
+  "@openSettings": {
+    "description": "Button text to open device settings"
+  },
+  "shareFileTitle": "مشاركة الملف",
+  "@shareFileTitle": {
+    "description": "Title of the share modal dialog"
+  },
+  "shareQrHint": "امسح رمز QR هذا باستخدام الماسح الضوئي المدمج في التطبيق لفتح هذا الملف فوراً.",
+  "@shareQrHint": {
+    "description": "Hint text below QR code in share modal"
+  },
+  "previewNotAvailableForExt": "لا تتوفر معاينة للملفات من نوع .{ext}.",
+  "@previewNotAvailableForExt": {
+    "description": "Message when preview is not available for a specific file extension",
+    "placeholders": {
+      "ext": {}
+    }
+  },
+  "openInDrive": "فتح في Drive",
+  "@openInDrive": {
+    "description": "Button to open a file in Google Drive"
+  },
+  "extractFileIdError": "تعذر استخراج معرف الملف من الرابط.",
+  "@extractFileIdError": {
+    "description": "Error when file ID cannot be extracted from a Drive link"
+  },
+  "failedToLoadPdf": "فشل تحميل PDF",
+  "@failedToLoadPdf": {
+    "description": "Error title when PDF fails to load"
+  },
+  "failedToLoadImage": "فشل تحميل الصورة",
+  "@failedToLoadImage": {
+    "description": "Error title when image fails to load"
+  },
+  "failedToDisplayImage": "فشل عرض الصورة",
+  "@failedToDisplayImage": {
+    "description": "Error text when image fails to display in viewer"
+  },
+
+  "forgotPasswordEmailNotRegistered": "هذا البريد الإلكتروني غير مسجل.",
+  "@forgotPasswordEmailNotRegistered": {
+    "description": "Error when email is not found in the system"
+  },
+  "forgotPasswordOtpInvalidLength": "أدخل الرمز الكامل المكون من 6 أرقام",
+  "@forgotPasswordOtpInvalidLength": {
+    "description": "Error when OTP code is incomplete"
+  },
+  "forgotPasswordOtpInvalidCode": "رمز غير صالح. يرجى التحقق والمحاولة مرة أخرى.",
+  "@forgotPasswordOtpInvalidCode": {
+    "description": "Error when OTP code is invalid"
+  },
+  "forgotPasswordValidationPasswordNumber": "يجب أن تحتوي كلمة المرور على رقم",
+  "@forgotPasswordValidationPasswordNumber": {
+    "description": "Validation error when password has no number"
+  },
+  "forgotPasswordOtpTitle": "التحقق",
+  "@forgotPasswordOtpTitle": {
+    "description": "App bar title for OTP verification step"
+  },
+  "forgotPasswordNewPasswordTitle": "كلمة مرور جديدة",
+  "@forgotPasswordNewPasswordTitle": {
+    "description": "App bar title and step header for new password step"
+  },
+  "forgotPasswordOtpHeadline": "تحقق من بريدك الإلكتروني",
+  "@forgotPasswordOtpHeadline": {
+    "description": "Headline text on OTP verification screen"
+  },
+  "forgotPasswordOtpSubtitle": "أدخل الرمز المكون من 6 أرقام المرسل إلى ",
+  "@forgotPasswordOtpSubtitle": {
+    "description": "Subtitle on OTP verification screen before the email address"
+  },
+  "forgotPasswordOtpPasteCode": "لصق الرمز",
+  "@forgotPasswordOtpPasteCode": {
+    "description": "Button to paste OTP code from clipboard"
+  },
+  "forgotPasswordOtpResend": "إعادة إرسال الرمز",
+  "@forgotPasswordOtpResend": {
+    "description": "Button to resend OTP code"
+  },
+  "forgotPasswordOtpVerify": "تحقق من الرمز",
+  "@forgotPasswordOtpVerify": {
+    "description": "Button to verify OTP code"
+  },
+  "forgotPasswordEmailHint": "student@univ-bouira.dz",
+  "@forgotPasswordEmailHint": {
+    "description": "Hint text for email field on forgot password"
+  },
+  "forgotPasswordCreateNewPassword": "إنشاء كلمة مرور جديدة",
+  "@forgotPasswordCreateNewPassword": {
+    "description": "Headline for creating a new password"
+  },
+  "forgotPasswordNewPasswordSubtitle": "يجب أن تكون كلمة المرور الجديدة مختلفة عن كلمات المرور المستخدمة سابقًا.",
+  "@forgotPasswordNewPasswordSubtitle": {
+    "description": "Subtitle on new password creation screen"
+  },
+  "forgotPasswordFieldNewPassword": "كلمة المرور الجديدة",
+  "@forgotPasswordFieldNewPassword": {
+    "description": "Label for the new password field"
+  },
+  "forgotPasswordNewPasswordHint": "أدخل كلمة المرور الجديدة",
+  "@forgotPasswordNewPasswordHint": {
+    "description": "Hint text for the new password field"
+  },
+  "forgotPasswordFieldConfirmPassword": "تأكيد كلمة المرور الجديدة",
+  "@forgotPasswordFieldConfirmPassword": {
+    "description": "Label for the confirm new password field"
+  },
+  "forgotPasswordConfirmPasswordHint": "أعد إدخال كلمة المرور الجديدة",
+  "@forgotPasswordConfirmPasswordHint": {
+    "description": "Hint text for the confirm password field"
+  },
+  "forgotPasswordRequirementMinChars": "8 أحرف على الأقل",
+  "@forgotPasswordRequirementMinChars": {
+    "description": "Password requirement indicator for minimum length"
+  },
+  "forgotPasswordRequirementNumber": "يحتوي على رقم",
+  "@forgotPasswordRequirementNumber": {
+    "description": "Password requirement indicator for containing a number"
+  },
+  "forgotPasswordUpdateButton": "تحديث كلمة المرور",
+  "@forgotPasswordUpdateButton": {
+    "description": "Button to update the password"
+  },
+  "forgotPasswordNewPasswordStepSubtitle": "اختر كلمة مرور جديدة لحسابك.",
+  "@forgotPasswordNewPasswordStepSubtitle": {
+    "description": "Subtitle on the new password step header"
+  }
 }

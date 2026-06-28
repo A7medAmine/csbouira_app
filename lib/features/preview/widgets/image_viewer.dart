@@ -4,6 +4,7 @@ import 'package:photo_view/photo_view.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../data/models/drive_node.dart';
 import '../../../data/services/file_cache_service.dart';
+import 'package:csbouira_app/l10n/app_localizations.dart';
 
 /// Image viewer with pinch-to-zoom and pan using PhotoView.
 ///
@@ -53,7 +54,7 @@ class _ImageViewerWidgetState extends ConsumerState<ImageViewerWidget> {
 
       if (fileId == null) {
         setState(() {
-          _error = 'Could not extract file ID from link.';
+          _error = AppLocalizations.of(context)!.extractFileIdError;
           _isLoading = false;
         });
         return;
@@ -100,7 +101,7 @@ class _ImageViewerWidgetState extends ConsumerState<ImageViewerWidget> {
               ),
               const SizedBox(height: 16),
               Text(
-                'Failed to load image',
+                AppLocalizations.of(context)!.failedToLoadImage,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 8),
@@ -142,7 +143,7 @@ class _ImageViewerWidgetState extends ConsumerState<ImageViewerWidget> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Failed to display image',
+              AppLocalizations.of(context)!.failedToDisplayImage,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           ],

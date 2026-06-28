@@ -190,12 +190,12 @@ class _QrScannerScreenState extends ConsumerState<QrScannerScreen>
                       Icon(Icons.error_outline, color: theme.colorScheme.error, size: 64),
                       const SizedBox(height: 16),
                       Text(
-                        'File not found',
+                        AppLocalizations.of(context)!.qrFileNotFound,
                         style: theme.textTheme.headlineMedium?.copyWith(color: Colors.white),
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'This file may have been moved or deleted.',
+                        AppLocalizations.of(context)!.qrFileNotFoundHint,
                         textAlign: TextAlign.center,
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant,
@@ -263,7 +263,7 @@ class _QrScannerScreenState extends ConsumerState<QrScannerScreen>
                   Icon(Icons.error_outline, color: Colors.white, size: 48),
                   const SizedBox(height: 16),
                   Text(
-                    'Camera error: $error',
+                    AppLocalizations.of(context)!.qrCameraError(error),
                     style: const TextStyle(color: Colors.white),
                   ),
                 ],
@@ -387,13 +387,13 @@ class _PermissionDeniedView extends StatelessWidget {
             Icon(Icons.camera_alt, color: Colors.white.withAlpha(150), size: 64),
             const SizedBox(height: 24),
             Text(
-              'Camera Permission Required',
+              AppLocalizations.of(context)!.qrPermissionRequired,
               style: theme.textTheme.headlineMedium?.copyWith(color: Colors.white),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
             Text(
-              'Camera access is needed to scan QR codes. Please enable it in your device settings.',
+              AppLocalizations.of(context)!.qrPermissionHint,
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
@@ -403,7 +403,7 @@ class _PermissionDeniedView extends StatelessWidget {
             FilledButton.icon(
               onPressed: onOpenSettings,
               icon: const Icon(Icons.settings, size: 18),
-              label: const Text('Open Settings'),
+              label: Text(AppLocalizations.of(context)!.openSettings),
               style: FilledButton.styleFrom(
                 backgroundColor: AppColors.accentBlue,
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),

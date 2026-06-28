@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../services/local_favorites_cache.dart';
 import '../services/auth_service.dart';
@@ -32,7 +33,9 @@ class FavoritesRepository {
           if (resourceType != null) 'resource_type': resourceType,
           if (folderPath != null) 'folder_path': folderPath,
         });
-      } catch (_) {}
+      } catch (e) {
+        debugPrint('Error in FavoritesRepository.addFavorite: $e');
+      }
     }
   }
 
@@ -46,7 +49,9 @@ class FavoritesRepository {
             .eq('user_id', _userId!)
             .eq('item_type', itemType)
             .eq('item_path', itemPath);
-      } catch (_) {}
+      } catch (e) {
+        debugPrint('Error in FavoritesRepository.removeFavorite: $e');
+      }
     }
   }
 

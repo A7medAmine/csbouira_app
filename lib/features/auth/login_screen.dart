@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kReleaseMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -121,7 +122,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<void> _signInWithGoogle() async {
-    debugPrint('\x1B[31m[GoogleSignIn] Starting Google Sign-In flow...\x1B[0m');
+    if (!kReleaseMode) { debugPrint('\x1B[31m[GoogleSignIn] Starting Google Sign-In flow...\x1B[0m'); }
     setState(() {
       _googleLoading = true;
       _generalError = null;
@@ -129,15 +130,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     try {
       final googleSignIn = ref.read(googleSignInProvider);
-      debugPrint('\x1B[31m[GoogleSignIn] Calling authenticate()...\x1B[0m');
+      if (!kReleaseMode) { debugPrint('\x1B[31m[GoogleSignIn] Calling authenticate()...\x1B[0m'); }
       final account = await googleSignIn.authenticate();
 
-      debugPrint('\x1B[31m[GoogleSignIn] authenticate() succeeded. Account email: ${account.email}\x1B[0m');
+      if (!kReleaseMode) { debugPrint('\x1B[31m[GoogleSignIn] authenticate() succeeded. Account email: ${account.email}\x1B[0m'); }
       final auth = account.authentication;
-      debugPrint('\x1B[31m[GoogleSignIn] idToken present: ${auth.idToken != null} (length: ${auth.idToken?.length ?? 0})\x1B[0m');
+      if (!kReleaseMode) { debugPrint('\x1B[31m[GoogleSignIn] idToken present: ${auth.idToken != null} (length: ${auth.idToken?.length ?? 0})\x1B[0m'); }
 
       if (auth.idToken == null) {
-        debugPrint('\x1B[31m[GoogleSignIn] FATAL: idToken is null after successful authenticate()\x1B[0m');
+        if (!kReleaseMode) { debugPrint('\x1B[31m[GoogleSignIn] FATAL: idToken is null after successful authenticate()\x1B[0m'); }
         setState(() {
           _generalError = 'Google Sign-In failed: ID token is null. Check Google Cloud Console configuration.';
           _googleLoading = false;
@@ -146,23 +147,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       }
 
       final authService = ref.read(authServiceProvider);
-      debugPrint('\x1B[31m[GoogleSignIn] Calling supabase.auth.signInWithIdToken()...\x1B[0m');
+      if (!kReleaseMode) { debugPrint('\x1B[31m[GoogleSignIn] Calling supabase.auth.signInWithIdToken()...\x1B[0m'); }
       final response = await authService.signInWithGoogle(
         idToken: auth.idToken!,
       );
 
-      debugPrint('\x1B[31m[GoogleSignIn] signInWithIdToken response — user: ${response.user?.id}, session: ${response.session?.accessToken != null}\x1B[0m');
+      if (!kReleaseMode) { debugPrint('\x1B[31m[GoogleSignIn] signInWithIdToken response — user: ${response.user?.id}, session: ${response.session?.accessToken != null}\x1B[0m'); }
 
       final user = authService.currentUser;
-      debugPrint('\x1B[31m[GoogleSignIn] currentUser after signIn: ${user?.id ?? 'null'}\x1B[0m');
+      if (!kReleaseMode) { debugPrint('\x1B[31m[GoogleSignIn] currentUser after signIn: ${user?.id ?? 'null'}\x1B[0m'); }
 
       if (user != null) {
-        debugPrint('\x1B[31m[GoogleSignIn] Upserting profile row...\x1B[0m');
+        if (!kReleaseMode) { debugPrint('\x1B[31m[GoogleSignIn] Upserting profile row...\x1B[0m'); }
         final supabase = ref.read(supabaseProvider);
         final meta = user.userMetadata;
         try {
           final googlePhotoUrl = account.photoUrl;
-          debugPrint('\x1B[31m[GoogleSignIn] account.photoUrl: $googlePhotoUrl\x1B[0m');
+          if (!kReleaseMode) { debugPrint('\x1B[31m[GoogleSignIn] account.photoUrl: $googlePhotoUrl\x1B[0m'); }
           await supabase.from('profiles').upsert({
             'id': user.id,
             'full_name': meta?['full_name'] ?? account.displayName ?? user.email ?? 'User',
@@ -170,29 +171,29 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             'avatar_url': meta?['avatar_url'] ?? meta?['picture'] ?? googlePhotoUrl,
           }, onConflict: 'id');
         } catch (e) {
-          debugPrint('\x1B[31m[GoogleSignIn] Profile upsert failed: $e\x1B[0m');
+          if (!kReleaseMode) { debugPrint('\x1B[31m[GoogleSignIn] Profile upsert failed: $e\x1B[0m'); }
         }
 
         if (await _promptMergeIfNeeded(user.id)) {
-          debugPrint('\x1B[31m[GoogleSignIn] Merging guest data for user ${user.id}...\x1B[0m');
+          if (!kReleaseMode) { debugPrint('\x1B[31m[GoogleSignIn] Merging guest data for user ${user.id}...\x1B[0m'); }
           final mergeService = ref.read(guestMergeServiceProvider);
           await mergeService.mergeGuestDataIntoAccount(user.id);
           ref.invalidate(favoritesListProvider);
-          debugPrint('\x1B[31m[GoogleSignIn] Guest merge complete.\x1B[0m');
+          if (!kReleaseMode) { debugPrint('\x1B[31m[GoogleSignIn] Guest merge complete.\x1B[0m'); }
         }
       }
 
-      debugPrint('\x1B[31m[GoogleSignIn] Navigating to home.\x1B[0m');
+      if (!kReleaseMode) { debugPrint('\x1B[31m[GoogleSignIn] Navigating to home.\x1B[0m'); }
       if (mounted) context.go('/');
     } on GoogleSignInException catch (e) {
-      debugPrint('\x1B[31m[GoogleSignIn] GoogleSignInException — code: ${e.code}, description: ${e.description}\x1B[0m');
+      if (!kReleaseMode) { debugPrint('\x1B[31m[GoogleSignIn] GoogleSignInException — code: ${e.code}, description: ${e.description}\x1B[0m'); }
       setState(() => _generalError = 'Google Sign-In failed\n${e.code}:\n${e.description}');
     } on AuthException catch (e) {
-      debugPrint('\x1B[31m[GoogleSignIn] Supabase AuthException: ${e.message}\x1B[0m');
+      if (!kReleaseMode) { debugPrint('\x1B[31m[GoogleSignIn] Supabase AuthException: ${e.message}\x1B[0m'); }
       setState(() => _generalError = 'Supabase rejected the login:\n${e.message}');
     } catch (e, stack) {
-      debugPrint('\x1B[31m[GoogleSignIn] Unexpected error: $e\x1B[0m');
-      debugPrint('\x1B[31m[GoogleSignIn] Stack: $stack\x1B[0m');
+      if (!kReleaseMode) { debugPrint('\x1B[31m[GoogleSignIn] Unexpected error: $e\x1B[0m'); }
+      if (!kReleaseMode) { debugPrint('\x1B[31m[GoogleSignIn] Stack: $stack\x1B[0m'); }
       setState(() => _generalError = 'Google Sign-In failed:\n$e');
     } finally {
       if (mounted) setState(() => _googleLoading = false);
@@ -368,7 +369,7 @@ class _Header extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.stackMd),
         Text(
-          'CS Bouira',
+          AppLocalizations.of(context)!.appTitle,
           style: theme.textTheme.headlineLarge?.copyWith(
             color: theme.colorScheme.primary,
             fontWeight: FontWeight.bold,

@@ -96,7 +96,7 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
                       ),
                       const SizedBox(height: AppSpacing.stackMd),
                       Text(
-                        'CS Bouira',
+                        AppLocalizations.of(context)!.appTitle,
                         style: theme.textTheme.headlineLarge?.copyWith(
                           color: theme.colorScheme.onSurface,
                           fontWeight: FontWeight.bold,
@@ -218,7 +218,7 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Salim Zed',
+                                  AppLocalizations.of(context)!.aboutCreatorSalimZed,
                                   style: theme.textTheme.bodyLarge?.copyWith(
                                     color: theme.colorScheme.onSurface,
                                     fontWeight: FontWeight.bold,
@@ -270,7 +270,7 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Ahmed Amine',
+                                  AppLocalizations.of(context)!.aboutCreatorAhmedAmine,
                                   style: theme.textTheme.bodyLarge?.copyWith(
                                     color: theme.colorScheme.onSurface,
                                     fontWeight: FontWeight.bold,
@@ -398,7 +398,9 @@ class _AboutScreenState extends ConsumerState<AboutScreen> {
     final uri = Uri.parse(url);
     try {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('Error in _AboutScreenState._launchUrl: $e');
+    }
   }
 }
 

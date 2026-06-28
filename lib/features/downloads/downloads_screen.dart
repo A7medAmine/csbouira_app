@@ -49,7 +49,7 @@ class DownloadsScreen extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, _) => FetchErrorWidget(
           error: err,
-          message: 'Failed to load downloads.',
+          message: AppLocalizations.of(context)!.downloadsLoadError,
         ),
         data: (downloads) {
           if (downloads.isEmpty) {
@@ -190,7 +190,9 @@ class _DownloadCardState extends ConsumerState<_DownloadCard> {
         try {
           await launchUrl(uri, mode: LaunchMode.externalApplication);
           return;
-        } catch (_) {}
+        } catch (e) {
+          debugPrint('Error in _DownloadCardState._openFile: $e');
+        }
       }
     }
 
@@ -199,7 +201,7 @@ class _DownloadCardState extends ConsumerState<_DownloadCard> {
     if (result.type == ResultType.noAppToOpen) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No app available to open this file type.')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.downloadsNoAppToOpen)),
       );
     }
   }
@@ -214,14 +216,14 @@ class _DownloadCardState extends ConsumerState<_DownloadCard> {
           borderRadius: BorderRadius.circular(AppRadius.lg),
         ),
         title: Text(
-          'Delete Download',
+          AppLocalizations.of(ctx)!.downloadsDeleteTitle,
           style: theme.textTheme.headlineMedium?.copyWith(
             color: theme.colorScheme.onSurface,
             fontWeight: FontWeight.bold,
           ),
         ),
         content: Text(
-          'Delete "${widget.item.fileName}" from your device?',
+          AppLocalizations.of(ctx)!.downloadsDeleteMessage(widget.item.fileName),
           style: theme.textTheme.bodyMedium?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
           ),
@@ -230,7 +232,7 @@ class _DownloadCardState extends ConsumerState<_DownloadCard> {
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(false),
             child: Text(
-              'Cancel',
+              AppLocalizations.of(ctx)!.deleteCancel,
               style: theme.textTheme.labelMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -256,7 +258,7 @@ class _DownloadCardState extends ConsumerState<_DownloadCard> {
       ref.invalidate(downloadsListProvider);
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('"${widget.item.fileName}" deleted')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.downloadsDeletedSnackbar(widget.item.fileName))),
       );
     }
   }

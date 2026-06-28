@@ -1090,8 +1090,8 @@ class _FileCardState extends ConsumerState<_FileCard>
     try {
       final result = await repo.isFavorite('file', widget.file.link);
       if (mounted) setState(() => _isFavorited = result);
-    } catch (_) {
-      // ignore
+    } catch (e) {
+      debugPrint('Error in _FileCardState._loadFavoriteState: $e');
     }
   }
 

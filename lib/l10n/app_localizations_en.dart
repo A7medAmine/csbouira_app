@@ -988,6 +988,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get updateBannerError => 'Download failed. Tap to retry.';
 
   @override
+  String get aboutCreatorSalimZed => 'Salim Zed';
+
+  @override
+  String get aboutCreatorAhmedAmine => 'Ahmed Amine';
+
+  @override
+  String get downloadsLoadError => 'Failed to load downloads.';
+
+  @override
+  String get downloadsNoAppToOpen => 'No app available to open this file type.';
+
+  @override
+  String get downloadsDeleteTitle => 'Delete Download';
+
+  @override
+  String downloadsDeleteMessage(Object name) {
+    return 'Delete \"$name\" from your device?';
+  }
+
+  @override
+  String downloadsDeletedSnackbar(Object name) {
+    return '\"$name\" deleted';
+  }
+
+  @override
   String get aboutCheckUpdate => 'Check for updates';
 
   @override
@@ -995,4 +1020,116 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aboutNoUpdate => 'Your app is up to date.';
+
+  @override
+  String get qrFileNotFound => 'File not found';
+
+  @override
+  String get qrFileNotFoundHint => 'This file may have been moved or deleted.';
+
+  @override
+  String qrCameraError(Object error) {
+    return 'Camera error: $error';
+  }
+
+  @override
+  String get qrPermissionRequired => 'Camera Permission Required';
+
+  @override
+  String get qrPermissionHint => 'Camera access is needed to scan QR codes. Please enable it in your device settings.';
+
+  @override
+  String get openSettings => 'Open Settings';
+
+  @override
+  String get shareFileTitle => 'Share File';
+
+  @override
+  String get shareQrHint => 'Scan this QR code with the in-app scanner to open this file instantly.';
+
+  @override
+  String previewNotAvailableForExt(Object ext) {
+    return 'No preview available for .$ext files.';
+  }
+
+  @override
+  String get openInDrive => 'Open in Drive';
+
+  @override
+  String get extractFileIdError => 'Could not extract file ID from link.';
+
+  @override
+  String get failedToLoadPdf => 'Failed to load PDF';
+
+  @override
+  String get failedToLoadImage => 'Failed to load image';
+
+  @override
+  String get failedToDisplayImage => 'Failed to display image';
+
+  @override
+  String get forgotPasswordEmailNotRegistered => 'This email is not registered.';
+
+  @override
+  String get forgotPasswordOtpInvalidLength => 'Enter the full 6-digit code';
+
+  @override
+  String get forgotPasswordOtpInvalidCode => 'Invalid code. Please check and try again.';
+
+  @override
+  String get forgotPasswordValidationPasswordNumber => 'Password must contain a number';
+
+  @override
+  String get forgotPasswordOtpTitle => 'Verification';
+
+  @override
+  String get forgotPasswordNewPasswordTitle => 'New Password';
+
+  @override
+  String get forgotPasswordOtpHeadline => 'Verify your email';
+
+  @override
+  String get forgotPasswordOtpSubtitle => 'Enter the 6-digit code sent to ';
+
+  @override
+  String get forgotPasswordOtpPasteCode => 'Paste code';
+
+  @override
+  String get forgotPasswordOtpResend => 'Resend Code';
+
+  @override
+  String get forgotPasswordOtpVerify => 'Verify Code';
+
+  @override
+  String get forgotPasswordEmailHint => 'student@univ-bouira.dz';
+
+  @override
+  String get forgotPasswordCreateNewPassword => 'Create New Password';
+
+  @override
+  String get forgotPasswordNewPasswordSubtitle => 'Your new password must be different from previous used passwords.';
+
+  @override
+  String get forgotPasswordFieldNewPassword => 'New Password';
+
+  @override
+  String get forgotPasswordNewPasswordHint => 'Enter new password';
+
+  @override
+  String get forgotPasswordFieldConfirmPassword => 'Confirm New Password';
+
+  @override
+  String get forgotPasswordConfirmPasswordHint => 'Repeat new password';
+
+  @override
+  String get forgotPasswordRequirementMinChars => 'At least 8 characters';
+
+  @override
+  String get forgotPasswordRequirementNumber => 'Contains a number';
+
+  @override
+  String get forgotPasswordUpdateButton => 'Update Password';
+
+  @override
+  String get forgotPasswordNewPasswordStepSubtitle => 'Choose a new password for your account.';
 }

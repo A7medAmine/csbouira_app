@@ -988,6 +988,31 @@ class AppLocalizationsAr extends AppLocalizations {
   String get updateBannerError => 'فشل التحميل. انقر لإعادة المحاولة.';
 
   @override
+  String get aboutCreatorSalimZed => 'Salim Zed';
+
+  @override
+  String get aboutCreatorAhmedAmine => 'Ahmed Amine';
+
+  @override
+  String get downloadsLoadError => 'فشل تحميل التنزيلات.';
+
+  @override
+  String get downloadsNoAppToOpen => 'لا يوجد تطبيق متاح لفتح هذا النوع من الملفات.';
+
+  @override
+  String get downloadsDeleteTitle => 'حذف التنزيل';
+
+  @override
+  String downloadsDeleteMessage(Object name) {
+    return 'حذف \"$name\" من جهازك؟';
+  }
+
+  @override
+  String downloadsDeletedSnackbar(Object name) {
+    return 'تم حذف \"$name\"';
+  }
+
+  @override
   String get aboutCheckUpdate => 'التحقق من وجود تحديثات';
 
   @override
@@ -995,4 +1020,116 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get aboutNoUpdate => 'تطبيقك محدث إلى آخر إصدار.';
+
+  @override
+  String get qrFileNotFound => 'الملف غير موجود';
+
+  @override
+  String get qrFileNotFoundHint => 'ربما تم نقل هذا الملف أو حذفه.';
+
+  @override
+  String qrCameraError(Object error) {
+    return 'خطأ في الكاميرا: $error';
+  }
+
+  @override
+  String get qrPermissionRequired => 'تصريح الكاميرا مطلوب';
+
+  @override
+  String get qrPermissionHint => 'الوصول إلى الكاميرا ضروري لمسح رموز QR. يرجى تمكينه في إعدادات جهازك.';
+
+  @override
+  String get openSettings => 'فتح الإعدادات';
+
+  @override
+  String get shareFileTitle => 'مشاركة الملف';
+
+  @override
+  String get shareQrHint => 'امسح رمز QR هذا باستخدام الماسح الضوئي المدمج في التطبيق لفتح هذا الملف فوراً.';
+
+  @override
+  String previewNotAvailableForExt(Object ext) {
+    return 'لا تتوفر معاينة للملفات من نوع .$ext.';
+  }
+
+  @override
+  String get openInDrive => 'فتح في Drive';
+
+  @override
+  String get extractFileIdError => 'تعذر استخراج معرف الملف من الرابط.';
+
+  @override
+  String get failedToLoadPdf => 'فشل تحميل PDF';
+
+  @override
+  String get failedToLoadImage => 'فشل تحميل الصورة';
+
+  @override
+  String get failedToDisplayImage => 'فشل عرض الصورة';
+
+  @override
+  String get forgotPasswordEmailNotRegistered => 'هذا البريد الإلكتروني غير مسجل.';
+
+  @override
+  String get forgotPasswordOtpInvalidLength => 'أدخل الرمز الكامل المكون من 6 أرقام';
+
+  @override
+  String get forgotPasswordOtpInvalidCode => 'رمز غير صالح. يرجى التحقق والمحاولة مرة أخرى.';
+
+  @override
+  String get forgotPasswordValidationPasswordNumber => 'يجب أن تحتوي كلمة المرور على رقم';
+
+  @override
+  String get forgotPasswordOtpTitle => 'التحقق';
+
+  @override
+  String get forgotPasswordNewPasswordTitle => 'كلمة مرور جديدة';
+
+  @override
+  String get forgotPasswordOtpHeadline => 'تحقق من بريدك الإلكتروني';
+
+  @override
+  String get forgotPasswordOtpSubtitle => 'أدخل الرمز المكون من 6 أرقام المرسل إلى ';
+
+  @override
+  String get forgotPasswordOtpPasteCode => 'لصق الرمز';
+
+  @override
+  String get forgotPasswordOtpResend => 'إعادة إرسال الرمز';
+
+  @override
+  String get forgotPasswordOtpVerify => 'تحقق من الرمز';
+
+  @override
+  String get forgotPasswordEmailHint => 'student@univ-bouira.dz';
+
+  @override
+  String get forgotPasswordCreateNewPassword => 'إنشاء كلمة مرور جديدة';
+
+  @override
+  String get forgotPasswordNewPasswordSubtitle => 'يجب أن تكون كلمة المرور الجديدة مختلفة عن كلمات المرور المستخدمة سابقًا.';
+
+  @override
+  String get forgotPasswordFieldNewPassword => 'كلمة المرور الجديدة';
+
+  @override
+  String get forgotPasswordNewPasswordHint => 'أدخل كلمة المرور الجديدة';
+
+  @override
+  String get forgotPasswordFieldConfirmPassword => 'تأكيد كلمة المرور الجديدة';
+
+  @override
+  String get forgotPasswordConfirmPasswordHint => 'أعد إدخال كلمة المرور الجديدة';
+
+  @override
+  String get forgotPasswordRequirementMinChars => '8 أحرف على الأقل';
+
+  @override
+  String get forgotPasswordRequirementNumber => 'يحتوي على رقم';
+
+  @override
+  String get forgotPasswordUpdateButton => 'تحديث كلمة المرور';
+
+  @override
+  String get forgotPasswordNewPasswordStepSubtitle => 'اختر كلمة مرور جديدة لحسابك.';
 }

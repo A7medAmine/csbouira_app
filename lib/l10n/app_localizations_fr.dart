@@ -988,6 +988,31 @@ class AppLocalizationsFr extends AppLocalizations {
   String get updateBannerError => 'Échec du téléchargement. Appuyez pour réessayer.';
 
   @override
+  String get aboutCreatorSalimZed => 'Salim Zed';
+
+  @override
+  String get aboutCreatorAhmedAmine => 'Ahmed Amine';
+
+  @override
+  String get downloadsLoadError => 'Échec du chargement des téléchargements.';
+
+  @override
+  String get downloadsNoAppToOpen => 'Aucune application disponible pour ouvrir ce type de fichier.';
+
+  @override
+  String get downloadsDeleteTitle => 'Supprimer le téléchargement';
+
+  @override
+  String downloadsDeleteMessage(Object name) {
+    return 'Supprimer \"$name\" de votre appareil ?';
+  }
+
+  @override
+  String downloadsDeletedSnackbar(Object name) {
+    return '\"$name\" supprimé';
+  }
+
+  @override
   String get aboutCheckUpdate => 'Rechercher des mises à jour';
 
   @override
@@ -995,4 +1020,116 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get aboutNoUpdate => 'Votre application est à jour.';
+
+  @override
+  String get qrFileNotFound => 'Fichier introuvable';
+
+  @override
+  String get qrFileNotFoundHint => 'Ce fichier a peut-être été déplacé ou supprimé.';
+
+  @override
+  String qrCameraError(Object error) {
+    return 'Erreur de caméra : $error';
+  }
+
+  @override
+  String get qrPermissionRequired => 'Autorisation de la caméra requise';
+
+  @override
+  String get qrPermissionHint => 'L\'accès à la caméra est nécessaire pour scanner les QR codes. Veuillez l\'activer dans les paramètres de votre appareil.';
+
+  @override
+  String get openSettings => 'Ouvrir les paramètres';
+
+  @override
+  String get shareFileTitle => 'Partager le fichier';
+
+  @override
+  String get shareQrHint => 'Scannez ce QR code avec le scanner de l\'application pour ouvrir ce fichier instantanément.';
+
+  @override
+  String previewNotAvailableForExt(Object ext) {
+    return 'Aucun aperçu disponible pour les fichiers .$ext.';
+  }
+
+  @override
+  String get openInDrive => 'Ouvrir dans Drive';
+
+  @override
+  String get extractFileIdError => 'Impossible d\'extraire l\'ID du fichier du lien.';
+
+  @override
+  String get failedToLoadPdf => 'Échec du chargement du PDF';
+
+  @override
+  String get failedToLoadImage => 'Échec du chargement de l\'image';
+
+  @override
+  String get failedToDisplayImage => 'Échec de l\'affichage de l\'image';
+
+  @override
+  String get forgotPasswordEmailNotRegistered => 'Cet e-mail n\'est pas enregistré.';
+
+  @override
+  String get forgotPasswordOtpInvalidLength => 'Saisissez le code complet à 6 chiffres';
+
+  @override
+  String get forgotPasswordOtpInvalidCode => 'Code invalide. Veuillez vérifier et réessayer.';
+
+  @override
+  String get forgotPasswordValidationPasswordNumber => 'Le mot de passe doit contenir un chiffre';
+
+  @override
+  String get forgotPasswordOtpTitle => 'Vérification';
+
+  @override
+  String get forgotPasswordNewPasswordTitle => 'Nouveau mot de passe';
+
+  @override
+  String get forgotPasswordOtpHeadline => 'Vérifiez votre e-mail';
+
+  @override
+  String get forgotPasswordOtpSubtitle => 'Saisissez le code à 6 chiffres envoyé à ';
+
+  @override
+  String get forgotPasswordOtpPasteCode => 'Coller le code';
+
+  @override
+  String get forgotPasswordOtpResend => 'Renvoyer le code';
+
+  @override
+  String get forgotPasswordOtpVerify => 'Vérifier le code';
+
+  @override
+  String get forgotPasswordEmailHint => 'etudiant@univ-bouira.dz';
+
+  @override
+  String get forgotPasswordCreateNewPassword => 'Créer un nouveau mot de passe';
+
+  @override
+  String get forgotPasswordNewPasswordSubtitle => 'Votre nouveau mot de passe doit être différent des mots de passe précédemment utilisés.';
+
+  @override
+  String get forgotPasswordFieldNewPassword => 'Nouveau mot de passe';
+
+  @override
+  String get forgotPasswordNewPasswordHint => 'Saisissez le nouveau mot de passe';
+
+  @override
+  String get forgotPasswordFieldConfirmPassword => 'Confirmer le nouveau mot de passe';
+
+  @override
+  String get forgotPasswordConfirmPasswordHint => 'Répétez le nouveau mot de passe';
+
+  @override
+  String get forgotPasswordRequirementMinChars => 'Au moins 8 caractères';
+
+  @override
+  String get forgotPasswordRequirementNumber => 'Contient un chiffre';
+
+  @override
+  String get forgotPasswordUpdateButton => 'Mettre à jour le mot de passe';
+
+  @override
+  String get forgotPasswordNewPasswordStepSubtitle => 'Choisissez un nouveau mot de passe pour votre compte.';
 }

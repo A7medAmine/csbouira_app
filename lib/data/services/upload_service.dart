@@ -14,14 +14,14 @@ class CancelToken {
 
   /// Abort the upload and tear down the active connection.
   void cancel() {
-    debugPrint('\x1B[31m[UPLOAD] CancelToken.cancel() invoked\x1B[0m');
+    if (!kReleaseMode) { debugPrint('\x1B[31m[UPLOAD] CancelToken.cancel() invoked\x1B[0m'); }
     _cancelled = true;
     final client = _client;
     _client = null;
     try {
       client?.close(force: true);
-    } catch (_) {
-      // ignore close errors during abort
+    } catch (e) {
+      debugPrint('Error in CancelToken.cancel: $e');
     }
   }
 
@@ -95,10 +95,12 @@ class UploadService {
     if (!isScan) {
       final fileSize = fileBytes.length;
       if (fileSize > UploadConstants.maxFileSizeBytes) {
-        debugPrint(
-          '\x1B[31m[UPLOAD] File too large: ${fileSize}B > '
-          '${UploadConstants.maxFileSizeBytes}B\x1B[0m',
-        );
+        if (!kReleaseMode) {
+          debugPrint(
+            '\x1B[31m[UPLOAD] File too large: ${fileSize}B > '
+            '${UploadConstants.maxFileSizeBytes}B\x1B[0m',
+          );
+        }
         return const UploadResult(
           success: false,
           message: 'File exceeds 15MB limit.',
@@ -123,21 +125,25 @@ class UploadService {
     final body = jsonEncode(payload.toJson());
     final bodyBytes = utf8.encode(body);
 
-    debugPrint(
-      '\x1B[31m[UPLOAD] Payload built, body size: ${bodyBytes.length}B\x1B[0m',
-    );
+    if (!kReleaseMode) {
+      debugPrint(
+        '\x1B[31m[UPLOAD] Payload built, body size: ${bodyBytes.length}B\x1B[0m',
+      );
+    }
 
     onProgress?.call(0.0);
 
     // --- retry loop ---------------------------------------------------------
     for (int attempt = 0; attempt <= UploadConstants.maxRetries; attempt++) {
-      debugPrint(
-        '\x1B[31m[UPLOAD] --- Attempt ${attempt + 1}/'
-        '${UploadConstants.maxRetries + 1} ---\x1B[0m',
-      );
+      if (!kReleaseMode) {
+        debugPrint(
+          '\x1B[31m[UPLOAD] --- Attempt ${attempt + 1}/'
+          '${UploadConstants.maxRetries + 1} ---\x1B[0m',
+        );
+      }
 
       if (_isCancelled(cancelToken)) {
-        debugPrint('\x1B[31m[UPLOAD] Cancelled before attempt\x1B[0m');
+        if (!kReleaseMode) { debugPrint('\x1B[31m[UPLOAD] Cancelled before attempt\x1B[0m'); }
         return const UploadResult(
           success: false,
           message: 'Upload cancelled.',
@@ -161,19 +167,23 @@ class UploadService {
         cancelToken?._detach();
 
         if (result.success || !result.isRetryable) {
-          debugPrint(
-            '\x1B[31m[UPLOAD] Result: success=${result.success} '
-            'errorType=${result.errorType}\x1B[0m',
-          );
+          if (!kReleaseMode) {
+            debugPrint(
+              '\x1B[31m[UPLOAD] Result: success=${result.success} '
+              'errorType=${result.errorType}\x1B[0m',
+            );
+          }
           return result;
         }
 
-        debugPrint(
-          '\x1B[31m[UPLOAD] Transient failure (attempt ${attempt + 1}), '
-          'will retry\x1B[0m',
-        );
+        if (!kReleaseMode) {
+          debugPrint(
+            '\x1B[31m[UPLOAD] Transient failure (attempt ${attempt + 1}), '
+            'will retry\x1B[0m',
+          );
+        }
       } on CancelledException {
-        debugPrint('\x1B[31m[UPLOAD] CancelledException caught\x1B[0m');
+        if (!kReleaseMode) { debugPrint('\x1B[31m[UPLOAD] CancelledException caught\x1B[0m'); }
         cancelToken?._detach();
         return const UploadResult(
           success: false,
@@ -184,9 +194,11 @@ class UploadService {
         cancelToken?._detach();
 
         if (_isCancelled(cancelToken)) {
-          debugPrint(
-            '\x1B[31m[UPLOAD] Cancelled after exception: $e\x1B[0m',
-          );
+          if (!kReleaseMode) {
+            debugPrint(
+              '\x1B[31m[UPLOAD] Cancelled after exception: $e\x1B[0m',
+            );
+          }
           return const UploadResult(
             success: false,
             message: 'Upload cancelled.',
@@ -194,10 +206,12 @@ class UploadService {
           );
         }
 
-        debugPrint(
-          '\x1B[31m[UPLOAD] Exception on attempt ${attempt + 1}: $e '
-          '(${e.runtimeType})\x1B[0m',
-        );
+        if (!kReleaseMode) {
+          debugPrint(
+            '\x1B[31m[UPLOAD] Exception on attempt ${attempt + 1}: $e '
+            '(${e.runtimeType})\x1B[0m',
+          );
+        }
 
         if (attempt == UploadConstants.maxRetries) {
           return UploadResult(
@@ -221,13 +235,15 @@ class UploadService {
 
       // Backoff — do NOT reset progress so the bar stays smooth.
       final delay = _computeBackoff(attempt);
-      debugPrint(
-        '\x1B[31m[UPLOAD] Backoff ${delay.inMilliseconds}ms before retry\x1B[0m',
-      );
+      if (!kReleaseMode) {
+        debugPrint(
+          '\x1B[31m[UPLOAD] Backoff ${delay.inMilliseconds}ms before retry\x1B[0m',
+        );
+      }
       await Future.delayed(delay);
     }
 
-    debugPrint('\x1B[31m[UPLOAD] All attempts exhausted\x1B[0m');
+    if (!kReleaseMode) { debugPrint('\x1B[31m[UPLOAD] All attempts exhausted\x1B[0m'); }
     return const UploadResult(
       success: false,
       message: 'Upload failed after multiple attempts.',
@@ -271,10 +287,12 @@ class UploadService {
     for (int redirectCount = 0; redirectCount < 5; redirectCount++) {
       if (_isCancelled(cancelToken)) throw CancelledException();
 
-      debugPrint(
-        '\x1B[31m[UPLOAD] ${isRedirect ? "GET" : "POST"} → $currentUri'
-        '${isRedirect ? "" : "  (${totalBytes}B body)"}\x1B[0m',
-      );
+      if (!kReleaseMode) {
+        debugPrint(
+          '\x1B[31m[UPLOAD] ${isRedirect ? "GET" : "POST"} → $currentUri'
+          '${isRedirect ? "" : "  (${totalBytes}B body)"}\x1B[0m',
+        );
+      }
 
       final request = isRedirect
           ? await httpClient
@@ -296,7 +314,9 @@ class UploadService {
           if (_isCancelled(cancelToken)) {
             try {
               request.close();
-            } catch (_) {}
+            } catch (e) {
+              debugPrint('Error in UploadService._sendRequest (close): $e');
+            }
             throw CancelledException();
           }
           final end = (offset + chunkSize).clamp(0, totalBytes);
@@ -335,20 +355,24 @@ class UploadService {
         simTimer?.cancel();
       }
 
-      debugPrint(
-        '\x1B[31m[UPLOAD] Response: ${response.statusCode}'
-        ' ${response.reasonPhrase}\x1B[0m',
-      );
+      if (!kReleaseMode) {
+        debugPrint(
+          '\x1B[31m[UPLOAD] Response: ${response.statusCode}'
+          ' ${response.reasonPhrase}\x1B[0m',
+        );
+      }
 
       onProgress?.call(isRedirect ? 0.8 : 0.6);
 
       // --- redirect handling -----------------------------------------------
       if (_isRedirectStatusCode(response.statusCode)) {
         final location = response.headers.value(HttpHeaders.locationHeader);
-        debugPrint(
-          '\x1B[31m[UPLOAD] Redirect ${response.statusCode} → '
-          '${location ?? "(no Location header)"}\x1B[0m',
-        );
+        if (!kReleaseMode) {
+          debugPrint(
+            '\x1B[31m[UPLOAD] Redirect ${response.statusCode} → '
+            '${location ?? "(no Location header)"}\x1B[0m',
+          );
+        }
         if (location == null) {
           final respBody = await _readResponseWithSimulatedProgress(
             response, onProgress, 0.6, 0.65,
@@ -367,16 +391,18 @@ class UploadService {
         response, onProgress, 0.6, 0.65,
       );
 
-      debugPrint(
-        '\x1B[31m[UPLOAD] Response body (first 200 chars): '
-        '${responseBody.length > 200 ? "${responseBody.substring(0, 200)}…" : responseBody}\x1B[0m',
-      );
+      if (!kReleaseMode) {
+        debugPrint(
+          '\x1B[31m[UPLOAD] Response body (first 200 chars): '
+          '${responseBody.length > 200 ? "${responseBody.substring(0, 200)}…" : responseBody}\x1B[0m',
+        );
+      }
 
       onProgress?.call(1.0);
       return _processResponse(response.statusCode, responseBody);
     }
 
-    debugPrint('\x1B[31m[UPLOAD] Too many redirects\x1B[0m');
+    if (!kReleaseMode) { debugPrint('\x1B[31m[UPLOAD] Too many redirects\x1B[0m'); }
     return const UploadResult(
       success: false,
       message: 'Too many redirects. Try again.',
@@ -430,10 +456,12 @@ class UploadService {
       try {
         final responseJson = jsonDecode(responseBody);
         if (responseJson is Map && responseJson['error'] == true) {
-          debugPrint(
-            '\x1B[31m[UPLOAD] Server returned error=true: '
-            '${responseJson['message']}\x1B[0m',
-          );
+          if (!kReleaseMode) {
+            debugPrint(
+              '\x1B[31m[UPLOAD] Server returned error=true: '
+              '${responseJson['message']}\x1B[0m',
+            );
+          }
           return UploadResult(
             success: false,
             message: responseJson['message'] as String? ?? 'Upload failed.',
@@ -441,17 +469,21 @@ class UploadService {
           );
         }
       } catch (_) {
-        debugPrint(
-          '\x1B[31m[UPLOAD] Could not parse 200 response JSON\x1B[0m',
-        );
+        if (!kReleaseMode) {
+          debugPrint(
+            '\x1B[31m[UPLOAD] Could not parse 200 response JSON\x1B[0m',
+          );
+        }
       }
-      debugPrint('\x1B[31m[UPLOAD] ✅ Upload successful\x1B[0m');
+      if (!kReleaseMode) { debugPrint('\x1B[31m[UPLOAD] ✅ Upload successful\x1B[0m'); }
       return const UploadResult(success: true);
     }
 
-    debugPrint(
-      '\x1B[31m[UPLOAD] Non-200 status: $statusCode\x1B[0m',
-    );
+    if (!kReleaseMode) {
+      debugPrint(
+        '\x1B[31m[UPLOAD] Non-200 status: $statusCode\x1B[0m',
+      );
+    }
     return UploadResult(
       success: false,
       message: statusCode >= 500

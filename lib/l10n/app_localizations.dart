@@ -1759,6 +1759,48 @@ abstract class AppLocalizations {
   /// **'Download failed. Tap to retry.'**
   String get updateBannerError;
 
+  /// Salim Zed's name in creators section
+  ///
+  /// In en, this message translates to:
+  /// **'Salim Zed'**
+  String get aboutCreatorSalimZed;
+
+  /// Ahmed Amine's name in creators section
+  ///
+  /// In en, this message translates to:
+  /// **'Ahmed Amine'**
+  String get aboutCreatorAhmedAmine;
+
+  /// Error message when downloads list fails to load
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load downloads.'**
+  String get downloadsLoadError;
+
+  /// Error when no app can open the file type
+  ///
+  /// In en, this message translates to:
+  /// **'No app available to open this file type.'**
+  String get downloadsNoAppToOpen;
+
+  /// Title for the delete download confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Download'**
+  String get downloadsDeleteTitle;
+
+  /// Body of the delete download confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Delete \"{name}\" from your device?'**
+  String downloadsDeleteMessage(Object name);
+
+  /// Snackbar message after deleting a download
+  ///
+  /// In en, this message translates to:
+  /// **'\"{name}\" deleted'**
+  String downloadsDeletedSnackbar(Object name);
+
   /// Button to manually check for updates
   ///
   /// In en, this message translates to:
@@ -1776,6 +1818,222 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your app is up to date.'**
   String get aboutNoUpdate;
+
+  /// Error title when scanned QR code file is not found
+  ///
+  /// In en, this message translates to:
+  /// **'File not found'**
+  String get qrFileNotFound;
+
+  /// Subtitle hint when scanned file is not found
+  ///
+  /// In en, this message translates to:
+  /// **'This file may have been moved or deleted.'**
+  String get qrFileNotFoundHint;
+
+  /// Error message when camera fails with error details
+  ///
+  /// In en, this message translates to:
+  /// **'Camera error: {error}'**
+  String qrCameraError(Object error);
+
+  /// Title when camera permission is denied on QR scanner
+  ///
+  /// In en, this message translates to:
+  /// **'Camera Permission Required'**
+  String get qrPermissionRequired;
+
+  /// Hint text explaining why camera permission is needed
+  ///
+  /// In en, this message translates to:
+  /// **'Camera access is needed to scan QR codes. Please enable it in your device settings.'**
+  String get qrPermissionHint;
+
+  /// Button text to open device settings
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings'**
+  String get openSettings;
+
+  /// Title of the share modal dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Share File'**
+  String get shareFileTitle;
+
+  /// Hint text below QR code in share modal
+  ///
+  /// In en, this message translates to:
+  /// **'Scan this QR code with the in-app scanner to open this file instantly.'**
+  String get shareQrHint;
+
+  /// Message when preview is not available for a specific file extension
+  ///
+  /// In en, this message translates to:
+  /// **'No preview available for .{ext} files.'**
+  String previewNotAvailableForExt(Object ext);
+
+  /// Button to open a file in Google Drive
+  ///
+  /// In en, this message translates to:
+  /// **'Open in Drive'**
+  String get openInDrive;
+
+  /// Error when file ID cannot be extracted from a Drive link
+  ///
+  /// In en, this message translates to:
+  /// **'Could not extract file ID from link.'**
+  String get extractFileIdError;
+
+  /// Error title when PDF fails to load
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load PDF'**
+  String get failedToLoadPdf;
+
+  /// Error title when image fails to load
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load image'**
+  String get failedToLoadImage;
+
+  /// Error text when image fails to display in viewer
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to display image'**
+  String get failedToDisplayImage;
+
+  /// Error when email is not found in the system
+  ///
+  /// In en, this message translates to:
+  /// **'This email is not registered.'**
+  String get forgotPasswordEmailNotRegistered;
+
+  /// Error when OTP code is incomplete
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the full 6-digit code'**
+  String get forgotPasswordOtpInvalidLength;
+
+  /// Error when OTP code is invalid
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid code. Please check and try again.'**
+  String get forgotPasswordOtpInvalidCode;
+
+  /// Validation error when password has no number
+  ///
+  /// In en, this message translates to:
+  /// **'Password must contain a number'**
+  String get forgotPasswordValidationPasswordNumber;
+
+  /// App bar title for OTP verification step
+  ///
+  /// In en, this message translates to:
+  /// **'Verification'**
+  String get forgotPasswordOtpTitle;
+
+  /// App bar title and step header for new password step
+  ///
+  /// In en, this message translates to:
+  /// **'New Password'**
+  String get forgotPasswordNewPasswordTitle;
+
+  /// Headline text on OTP verification screen
+  ///
+  /// In en, this message translates to:
+  /// **'Verify your email'**
+  String get forgotPasswordOtpHeadline;
+
+  /// Subtitle on OTP verification screen before the email address
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the 6-digit code sent to '**
+  String get forgotPasswordOtpSubtitle;
+
+  /// Button to paste OTP code from clipboard
+  ///
+  /// In en, this message translates to:
+  /// **'Paste code'**
+  String get forgotPasswordOtpPasteCode;
+
+  /// Button to resend OTP code
+  ///
+  /// In en, this message translates to:
+  /// **'Resend Code'**
+  String get forgotPasswordOtpResend;
+
+  /// Button to verify OTP code
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Code'**
+  String get forgotPasswordOtpVerify;
+
+  /// Hint text for email field on forgot password
+  ///
+  /// In en, this message translates to:
+  /// **'student@univ-bouira.dz'**
+  String get forgotPasswordEmailHint;
+
+  /// Headline for creating a new password
+  ///
+  /// In en, this message translates to:
+  /// **'Create New Password'**
+  String get forgotPasswordCreateNewPassword;
+
+  /// Subtitle on new password creation screen
+  ///
+  /// In en, this message translates to:
+  /// **'Your new password must be different from previous used passwords.'**
+  String get forgotPasswordNewPasswordSubtitle;
+
+  /// Label for the new password field
+  ///
+  /// In en, this message translates to:
+  /// **'New Password'**
+  String get forgotPasswordFieldNewPassword;
+
+  /// Hint text for the new password field
+  ///
+  /// In en, this message translates to:
+  /// **'Enter new password'**
+  String get forgotPasswordNewPasswordHint;
+
+  /// Label for the confirm new password field
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm New Password'**
+  String get forgotPasswordFieldConfirmPassword;
+
+  /// Hint text for the confirm password field
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat new password'**
+  String get forgotPasswordConfirmPasswordHint;
+
+  /// Password requirement indicator for minimum length
+  ///
+  /// In en, this message translates to:
+  /// **'At least 8 characters'**
+  String get forgotPasswordRequirementMinChars;
+
+  /// Password requirement indicator for containing a number
+  ///
+  /// In en, this message translates to:
+  /// **'Contains a number'**
+  String get forgotPasswordRequirementNumber;
+
+  /// Button to update the password
+  ///
+  /// In en, this message translates to:
+  /// **'Update Password'**
+  String get forgotPasswordUpdateButton;
+
+  /// Subtitle on the new password step header
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a new password for your account.'**
+  String get forgotPasswordNewPasswordStepSubtitle;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

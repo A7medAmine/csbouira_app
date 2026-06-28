@@ -5,6 +5,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_radius.dart';
 import '../../data/models/drive_node.dart';
 import '../../data/services/qr_share_service.dart';
+import 'package:csbouira_app/l10n/app_localizations.dart';
 
 class ShareModal extends StatelessWidget {
   final DriveFile file;
@@ -49,7 +50,7 @@ class ShareModal extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Share File',
+                  AppLocalizations.of(context)!.shareFileTitle,
                   style: theme.textTheme.headlineMedium?.copyWith(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
@@ -108,7 +109,7 @@ class ShareModal extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                'Scan this QR code with the in-app scanner to open this file instantly.',
+                AppLocalizations.of(context)!.shareQrHint,
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
@@ -132,7 +133,7 @@ class ShareModal extends StatelessWidget {
                   }
                 },
                 icon: const Icon(Icons.open_in_new, size: 18),
-                label: const Text('Open in Google Drive'),
+                label: Text(AppLocalizations.of(context)!.previewMenuOpenDrive),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppColors.accentBlue,
                   side: const BorderSide(color: AppColors.accentBlue),

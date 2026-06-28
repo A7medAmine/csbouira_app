@@ -29,14 +29,14 @@ class GuestMergeService {
             onConflict: 'user_id, item_type, item_path',
           );
         } catch (e) {
-          debugPrint('GuestMergeService: failed to merge favorite: $e');
+          if (!kReleaseMode) { debugPrint('GuestMergeService: failed to merge favorite: $e'); }
         }
       }
       if (localFavorites.isNotEmpty) {
         await _localCache.clear();
       }
     } catch (e) {
-      debugPrint('GuestMergeService: merge failed: $e');
+      if (!kReleaseMode) { debugPrint('GuestMergeService: merge failed: $e'); }
     }
   }
 }

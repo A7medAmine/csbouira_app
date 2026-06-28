@@ -1188,6 +1188,42 @@
   "@updateBannerError": {
     "description": "Background update banner error message"
   },
+  "aboutCreatorSalimZed": "Salim Zed",
+  "@aboutCreatorSalimZed": {
+    "description": "Salim Zed's name in creators section"
+  },
+  "aboutCreatorAhmedAmine": "Ahmed Amine",
+  "@aboutCreatorAhmedAmine": {
+    "description": "Ahmed Amine's name in creators section"
+  },
+
+  "downloadsLoadError": "Failed to load downloads.",
+  "@downloadsLoadError": {
+    "description": "Error message when downloads list fails to load"
+  },
+  "downloadsNoAppToOpen": "No app available to open this file type.",
+  "@downloadsNoAppToOpen": {
+    "description": "Error when no app can open the file type"
+  },
+  "downloadsDeleteTitle": "Delete Download",
+  "@downloadsDeleteTitle": {
+    "description": "Title for the delete download confirmation dialog"
+  },
+  "downloadsDeleteMessage": "Delete \"{name}\" from your device?",
+  "@downloadsDeleteMessage": {
+    "description": "Body of the delete download confirmation dialog",
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "downloadsDeletedSnackbar": "\"{name}\" deleted",
+  "@downloadsDeletedSnackbar": {
+    "description": "Snackbar message after deleting a download",
+    "placeholders": {
+      "name": {}
+    }
+  },
+
   "aboutCheckUpdate": "Check for updates",
   "@aboutCheckUpdate": {
     "description": "Button to manually check for updates"
@@ -1199,5 +1235,157 @@
   "aboutNoUpdate": "Your app is up to date.",
   "@aboutNoUpdate": {
     "description": "Message shown when no update is available"
+  },
+
+  "qrFileNotFound": "File not found",
+  "@qrFileNotFound": {
+    "description": "Error title when scanned QR code file is not found"
+  },
+  "qrFileNotFoundHint": "This file may have been moved or deleted.",
+  "@qrFileNotFoundHint": {
+    "description": "Subtitle hint when scanned file is not found"
+  },
+  "qrCameraError": "Camera error: {error}",
+  "@qrCameraError": {
+    "description": "Error message when camera fails with error details",
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "qrPermissionRequired": "Camera Permission Required",
+  "@qrPermissionRequired": {
+    "description": "Title when camera permission is denied on QR scanner"
+  },
+  "qrPermissionHint": "Camera access is needed to scan QR codes. Please enable it in your device settings.",
+  "@qrPermissionHint": {
+    "description": "Hint text explaining why camera permission is needed"
+  },
+  "openSettings": "Open Settings",
+  "@openSettings": {
+    "description": "Button text to open device settings"
+  },
+  "shareFileTitle": "Share File",
+  "@shareFileTitle": {
+    "description": "Title of the share modal dialog"
+  },
+  "shareQrHint": "Scan this QR code with the in-app scanner to open this file instantly.",
+  "@shareQrHint": {
+    "description": "Hint text below QR code in share modal"
+  },
+  "previewNotAvailableForExt": "No preview available for .{ext} files.",
+  "@previewNotAvailableForExt": {
+    "description": "Message when preview is not available for a specific file extension",
+    "placeholders": {
+      "ext": {}
+    }
+  },
+  "openInDrive": "Open in Drive",
+  "@openInDrive": {
+    "description": "Button to open a file in Google Drive"
+  },
+  "extractFileIdError": "Could not extract file ID from link.",
+  "@extractFileIdError": {
+    "description": "Error when file ID cannot be extracted from a Drive link"
+  },
+  "failedToLoadPdf": "Failed to load PDF",
+  "@failedToLoadPdf": {
+    "description": "Error title when PDF fails to load"
+  },
+  "failedToLoadImage": "Failed to load image",
+  "@failedToLoadImage": {
+    "description": "Error title when image fails to load"
+  },
+  "failedToDisplayImage": "Failed to display image",
+  "@failedToDisplayImage": {
+    "description": "Error text when image fails to display in viewer"
+  },
+
+  "forgotPasswordEmailNotRegistered": "This email is not registered.",
+  "@forgotPasswordEmailNotRegistered": {
+    "description": "Error when email is not found in the system"
+  },
+  "forgotPasswordOtpInvalidLength": "Enter the full 6-digit code",
+  "@forgotPasswordOtpInvalidLength": {
+    "description": "Error when OTP code is incomplete"
+  },
+  "forgotPasswordOtpInvalidCode": "Invalid code. Please check and try again.",
+  "@forgotPasswordOtpInvalidCode": {
+    "description": "Error when OTP code is invalid"
+  },
+  "forgotPasswordValidationPasswordNumber": "Password must contain a number",
+  "@forgotPasswordValidationPasswordNumber": {
+    "description": "Validation error when password has no number"
+  },
+  "forgotPasswordOtpTitle": "Verification",
+  "@forgotPasswordOtpTitle": {
+    "description": "App bar title for OTP verification step"
+  },
+  "forgotPasswordNewPasswordTitle": "New Password",
+  "@forgotPasswordNewPasswordTitle": {
+    "description": "App bar title and step header for new password step"
+  },
+  "forgotPasswordOtpHeadline": "Verify your email",
+  "@forgotPasswordOtpHeadline": {
+    "description": "Headline text on OTP verification screen"
+  },
+  "forgotPasswordOtpSubtitle": "Enter the 6-digit code sent to ",
+  "@forgotPasswordOtpSubtitle": {
+    "description": "Subtitle on OTP verification screen before the email address"
+  },
+  "forgotPasswordOtpPasteCode": "Paste code",
+  "@forgotPasswordOtpPasteCode": {
+    "description": "Button to paste OTP code from clipboard"
+  },
+  "forgotPasswordOtpResend": "Resend Code",
+  "@forgotPasswordOtpResend": {
+    "description": "Button to resend OTP code"
+  },
+  "forgotPasswordOtpVerify": "Verify Code",
+  "@forgotPasswordOtpVerify": {
+    "description": "Button to verify OTP code"
+  },
+  "forgotPasswordEmailHint": "student@univ-bouira.dz",
+  "@forgotPasswordEmailHint": {
+    "description": "Hint text for email field on forgot password"
+  },
+  "forgotPasswordCreateNewPassword": "Create New Password",
+  "@forgotPasswordCreateNewPassword": {
+    "description": "Headline for creating a new password"
+  },
+  "forgotPasswordNewPasswordSubtitle": "Your new password must be different from previous used passwords.",
+  "@forgotPasswordNewPasswordSubtitle": {
+    "description": "Subtitle on new password creation screen"
+  },
+  "forgotPasswordFieldNewPassword": "New Password",
+  "@forgotPasswordFieldNewPassword": {
+    "description": "Label for the new password field"
+  },
+  "forgotPasswordNewPasswordHint": "Enter new password",
+  "@forgotPasswordNewPasswordHint": {
+    "description": "Hint text for the new password field"
+  },
+  "forgotPasswordFieldConfirmPassword": "Confirm New Password",
+  "@forgotPasswordFieldConfirmPassword": {
+    "description": "Label for the confirm new password field"
+  },
+  "forgotPasswordConfirmPasswordHint": "Repeat new password",
+  "@forgotPasswordConfirmPasswordHint": {
+    "description": "Hint text for the confirm password field"
+  },
+  "forgotPasswordRequirementMinChars": "At least 8 characters",
+  "@forgotPasswordRequirementMinChars": {
+    "description": "Password requirement indicator for minimum length"
+  },
+  "forgotPasswordRequirementNumber": "Contains a number",
+  "@forgotPasswordRequirementNumber": {
+    "description": "Password requirement indicator for containing a number"
+  },
+  "forgotPasswordUpdateButton": "Update Password",
+  "@forgotPasswordUpdateButton": {
+    "description": "Button to update the password"
+  },
+  "forgotPasswordNewPasswordStepSubtitle": "Choose a new password for your account.",
+  "@forgotPasswordNewPasswordStepSubtitle": {
+    "description": "Subtitle on the new password step header"
   }
 }

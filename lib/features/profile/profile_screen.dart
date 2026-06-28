@@ -874,7 +874,9 @@ class _LogOutButton extends StatelessWidget {
           await authService.signOut();
           try {
             await GoogleSignIn.instance.signOut();
-          } catch (_) {}
+          } catch (e) {
+            debugPrint('Error in _LogOutButton.build (signOut): $e');
+          }
           if (context.mounted) {
             context.go('/');
           }

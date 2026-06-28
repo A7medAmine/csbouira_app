@@ -4,6 +4,7 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../data/models/drive_node.dart';
 import '../../../data/services/file_cache_service.dart';
+import 'package:csbouira_app/l10n/app_localizations.dart';
 
 /// PDF viewer using Syncfusion's SfPdfViewer.
 ///
@@ -59,7 +60,7 @@ class _PdfViewerWidgetState extends ConsumerState<PdfViewerWidget> {
 
       if (fileId == null) {
         setState(() {
-          _error = 'Could not extract file ID from link.';
+          _error = AppLocalizations.of(context)!.extractFileIdError;
           _isLoading = false;
         });
         return;
@@ -108,7 +109,7 @@ class _PdfViewerWidgetState extends ConsumerState<PdfViewerWidget> {
               ),
               const SizedBox(height: 16),
               Text(
-                'Failed to load PDF',
+                AppLocalizations.of(context)!.failedToLoadPdf,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 8),

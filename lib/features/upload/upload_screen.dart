@@ -549,12 +549,16 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
     }
     try {
       return await File.fromUri(uri).readAsBytes();
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('Error in _UploadScreenState._readBytesFromUri (first): $e');
+    }
     try {
       if (uri.path.isNotEmpty) {
         return await File(uri.path).readAsBytes();
       }
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('Error in _UploadScreenState._readBytesFromUri (second): $e');
+    }
     if (uri.scheme == 'content') {
       final channel = MethodChannel('csbouira_app/file_utils');
       final bytes = await channel.invokeMethod<Uint8List>('readContentUri', uriString);
@@ -658,7 +662,9 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
               'semester': _mapSemester(_selectedSemester!),
               'file_type': fileType,
             });
-          } catch (_) {}
+          } catch (e) {
+            debugPrint('Error in _UploadScreenState._submit (supabase insert): $e');
+          }
         } else {
           final cache = LocalProfileCache();
           await cache.incrementUploadCount();

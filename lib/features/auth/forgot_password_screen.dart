@@ -84,7 +84,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
 
       if (emailExists == false) {
         if (mounted) {
-          setState(() => _error = 'This email is not registered.');
+          setState(() => _error = AppLocalizations.of(context)!.forgotPasswordEmailNotRegistered);
         }
         return;
       }
@@ -111,7 +111,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
   Future<void> _verifyOtp() async {
     final code = _otpCode;
     if (code.length < 6) {
-      setState(() => _error = 'Enter the full 6-digit code');
+      setState(() => _error = AppLocalizations.of(context)!.forgotPasswordOtpInvalidLength);
       return;
     }
 
@@ -130,7 +130,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
     } on AuthException {
       if (mounted) {
         setState(
-            () => _error = 'Invalid code. Please check and try again.');
+            () => _error = AppLocalizations.of(context)!.forgotPasswordOtpInvalidCode);
       }
     } catch (e) {
       if (mounted) setState(() => _error = e.toString());
@@ -186,7 +186,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
       return;
     }
     if (!_hasNumber) {
-      setState(() => _error = 'Password must contain a number');
+      setState(() => _error = AppLocalizations.of(context)!.forgotPasswordValidationPasswordNumber);
       return;
     }
     if (password != _confirmPasswordController.text) {
@@ -215,9 +215,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
       case _ResetStep.email:
         return AppLocalizations.of(context)!.forgotPasswordTitle;
       case _ResetStep.otp:
-        return 'Verification';
+        return AppLocalizations.of(context)!.forgotPasswordOtpTitle;
       case _ResetStep.newPassword:
-        return 'New Password';
+        return AppLocalizations.of(context)!.forgotPasswordNewPasswordTitle;
     }
   }
 
@@ -367,7 +367,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
         const SizedBox(height: AppSpacing.stackLg),
         // Title
         Text(
-          'Verify your email',
+          AppLocalizations.of(context)!.forgotPasswordOtpHeadline,
           style: theme.textTheme.headlineLarge?.copyWith(
             color: theme.colorScheme.onSurface,
             fontWeight: FontWeight.bold,
@@ -377,7 +377,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
         // Subtitle with email
         Text.rich(
           TextSpan(
-            text: 'Enter the 6-digit code sent to ',
+            text: AppLocalizations.of(context)!.forgotPasswordOtpSubtitle,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
@@ -460,7 +460,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
             onPressed: _pasteOtp,
             icon: Icon(Icons.content_paste, size: 16),
             label: Text(
-              'Paste code',
+              AppLocalizations.of(context)!.forgotPasswordOtpPasteCode,
               style: theme.textTheme.labelMedium?.copyWith(
                 color: theme.colorScheme.primary,
               ),
@@ -477,7 +477,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
         TextButton(
           onPressed: _loading ? null : _sendOtp,
           child: Text(
-            'Resend Code',
+            AppLocalizations.of(context)!.forgotPasswordOtpResend,
             style: theme.textTheme.labelMedium?.copyWith(
               color: theme.colorScheme.primary,
             ),
@@ -512,7 +512,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Verify Code',
+                        AppLocalizations.of(context)!.forgotPasswordOtpVerify,
                         style: theme.textTheme.headlineMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -606,7 +606,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
               decoration: InputDecoration(
                 prefixIcon: Icon(Icons.mail_outline,
                     color: theme.colorScheme.outline, size: 20),
-                hintText: 'student@univ-bouira.dz',
+                hintText: AppLocalizations.of(context)!.forgotPasswordEmailHint,
                 hintStyle: TextStyle(
                   color: theme.colorScheme.outline.withAlpha(128),
                 ),
@@ -681,7 +681,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
         Align(
           alignment: AlignmentDirectional.centerStart,
           child: Text(
-            'Create New Password',
+            AppLocalizations.of(context)!.forgotPasswordCreateNewPassword,
             style: theme.textTheme.headlineLarge?.copyWith(
               color: theme.colorScheme.onSurface,
               fontWeight: FontWeight.bold,
@@ -692,7 +692,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
         Align(
           alignment: AlignmentDirectional.centerStart,
           child: Text(
-            'Your new password must be different from previous used passwords.',
+            AppLocalizations.of(context)!.forgotPasswordNewPasswordSubtitle,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
@@ -710,7 +710,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
                   Padding(
                     padding: const EdgeInsetsDirectional.only(start: 4),
                     child: Text(
-                      'New Password',
+                      AppLocalizations.of(context)!.forgotPasswordFieldNewPassword,
                       style: theme.textTheme.labelMedium?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
@@ -726,7 +726,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.lock_outline,
                           color: theme.colorScheme.outline, size: 20),
-                      hintText: 'Enter new password',
+                      hintText: AppLocalizations.of(context)!.forgotPasswordNewPasswordHint,
                       hintStyle: TextStyle(
                         color: theme.colorScheme.outline.withAlpha(128),
                       ),
@@ -781,7 +781,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
                   Padding(
                     padding: const EdgeInsetsDirectional.only(start: 4),
                     child: Text(
-                      'Confirm New Password',
+                      AppLocalizations.of(context)!.forgotPasswordFieldConfirmPassword,
                       style: theme.textTheme.labelMedium?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
@@ -797,7 +797,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.lock_outline,
                           color: theme.colorScheme.outline, size: 20),
-                      hintText: 'Repeat new password',
+                      hintText: AppLocalizations.of(context)!.forgotPasswordConfirmPasswordHint,
                       hintStyle: TextStyle(
                         color: theme.colorScheme.outline.withAlpha(128),
                       ),
@@ -848,13 +848,13 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
               _RequirementRow(
                 theme: theme,
                 met: _hasMinChars,
-                label: 'At least 8 characters',
+                label: AppLocalizations.of(context)!.forgotPasswordRequirementMinChars,
               ),
               const SizedBox(height: 12),
               _RequirementRow(
                 theme: theme,
                 met: _hasNumber,
-                label: 'Contains a number',
+                label: AppLocalizations.of(context)!.forgotPasswordRequirementNumber,
               ),
             ],
           ),
@@ -893,7 +893,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Update Password',
+                        AppLocalizations.of(context)!.forgotPasswordUpdateButton,
                         style: theme.textTheme.headlineMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -1048,7 +1048,7 @@ class _StepHeader extends StatelessWidget {
         Text(
           step == _ResetStep.email
               ? AppLocalizations.of(context)!.forgotPasswordTitle
-              : 'New Password',
+              : AppLocalizations.of(context)!.forgotPasswordNewPasswordTitle,
           style: theme.textTheme.headlineMedium?.copyWith(
             color: theme.colorScheme.primary,
             fontWeight: FontWeight.bold,
@@ -1058,7 +1058,7 @@ class _StepHeader extends StatelessWidget {
         Text(
           step == _ResetStep.email
               ? AppLocalizations.of(context)!.forgotPasswordSubtitle
-              : 'Choose a new password for your account.',
+              : AppLocalizations.of(context)!.forgotPasswordNewPasswordStepSubtitle,
           textAlign: TextAlign.center,
           style: theme.textTheme.bodyMedium?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,

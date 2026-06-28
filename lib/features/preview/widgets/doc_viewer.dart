@@ -17,6 +17,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../data/models/drive_node.dart';
 import '../../../core/theme/app_colors.dart';
+import 'package:csbouira_app/l10n/app_localizations.dart';
 
 class DocViewerWidget extends StatefulWidget {
   final DriveFile file;
@@ -125,7 +126,9 @@ class FallbackView extends StatelessWidget {
         final uri = Uri.parse(file.link);
         try {
           await launchUrl(uri, mode: LaunchMode.externalApplication);
-        } catch (_) {}
+        } catch (e) {
+          debugPrint('Error in FallbackView.build (openInDrive): $e');
+        }
       },
     );
   }
@@ -158,14 +161,14 @@ class _FallbackView extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              'Preview not available',
+              AppLocalizations.of(context)!.reviewPreviewNotAvailable,
               style: theme.textTheme.titleMedium?.copyWith(
                 color: theme.colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              'No preview available for .$ext files.',
+              AppLocalizations.of(context)!.previewNotAvailableForExt(ext),
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
@@ -175,7 +178,7 @@ class _FallbackView extends StatelessWidget {
             FilledButton.icon(
               onPressed: onOpenInDrive,
               icon: const Icon(Icons.open_in_new, size: 18),
-              label: const Text('Open in Drive'),
+              label: Text(AppLocalizations.of(context)!.openInDrive),
               style: FilledButton.styleFrom(
                 backgroundColor: AppColors.accentBlue,
               ),
