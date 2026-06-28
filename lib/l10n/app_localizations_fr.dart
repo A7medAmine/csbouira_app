@@ -664,7 +664,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get forgotPasswordFieldEmail => 'Adresse e-mail';
 
   @override
-  String get forgotPasswordButton => 'Envoyer le lien de réinitialisation';
+  String get forgotPasswordButton => 'Envoyer le lien ';
 
   @override
   String get forgotPasswordBackToLogin => 'Retour à la connexion';

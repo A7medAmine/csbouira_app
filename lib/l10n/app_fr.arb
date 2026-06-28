@@ -789,7 +789,7 @@
   "@forgotPasswordFieldEmail": {
     "description": "Label for email field on forgot password form"
   },
-  "forgotPasswordButton": "Envoyer le lien de réinitialisation",
+  "forgotPasswordButton": "Envoyer le lien ",
   "@forgotPasswordButton": {
     "description": "Submit button on forgot password screen"
   },

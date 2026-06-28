@@ -60,7 +60,7 @@ const _moduleShortcuts = {
   'Physique 1': 'PHY1',
   'Structure Machine 1': 'SM1',
   'Terminologie Scientifique': 'TS',
-  'Doc Scanner Testing': 'DST',
+  // 'Doc Scanner Testing': 'DST',
   'Algèbre 2': 'ALG2',
   'Algorithmique Et Structure De Données 2': 'ASD2',
   'Analyse 2': 'ANA2',
@@ -175,8 +175,8 @@ const _modulesByGradeSemester = {
       'Anglais 1',
       'Physique 1',
       'Structure Machine 1',
-      'Terminologie Scientifique',
-      'Doc Scanner Testing'
+      'Terminologie Scientifique'
+      // 'Doc Scanner Testing'
     ],
     'S02': [
       'Algèbre 2',

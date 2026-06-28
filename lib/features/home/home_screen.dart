@@ -26,6 +26,11 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   bool _updateChecked = false;
 
+  Future<void> _onRefresh() async {
+    ref.invalidate(fileCountsProvider);
+    await ref.read(fileCountsProvider.future);
+  }
+
   Future<void> _checkUpdate() async {
     if (!Platform.isAndroid || !mounted) return;
 
@@ -94,14 +99,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           child: SafeArea(
             child: Stack(
               children: [
-                ListView(
-                  padding: const EdgeInsetsDirectional.only(
-                    start: AppSpacing.marginMobile,
-                    end: AppSpacing.marginMobile,
-                    top: 0,
-                    bottom: 24,
-                  ),
-                  children: [
+                RefreshIndicator(
+                  onRefresh: _onRefresh,
+                  child: ListView(
+                    padding: const EdgeInsetsDirectional.only(
+                      start: AppSpacing.marginMobile,
+                      end: AppSpacing.marginMobile,
+                      top: 0,
+                      bottom: 24,
+                    ),
+                    children: [
                     const SizedBox(height: 16),
                     // Top bar
                     Row(
@@ -255,7 +262,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     const SizedBox(height: 32),
 
                     _StatsSection(),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
