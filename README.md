@@ -41,3 +41,16 @@ Required values (from your Supabase project dashboard → Settings → API):
 | `SUPABASE_ANON_KEY`| Your Supabase anon/public API key        |
 
 The app loads these via `flutter_dotenv` at startup — no `--dart-define` flags needed.
+
+## Releases
+
+Pushing a tag matching `v*.*.*` (e.g. `v1.0.2`) triggers `.github/workflows/release.yml`, which builds a release APK and publishes it to the repo's GitHub Releases page. Can also be run manually via the Actions tab (`workflow_dispatch`).
+
+Set these repo secrets (Settings → Secrets and variables → Actions) before releasing:
+
+| Secret                      | Description                        |
+| ---------------------------- | ----------------------------------- |
+| `SUPABASE_URL`               | Supabase project URL                |
+| `SUPABASE_ANON_KEY`          | Supabase anon/public API key        |
+| `GOOGLE_SERVER_CLIENT_ID`    | Google Sign-In web client ID        |
+| `GOOGLE_ANDROID_CLIENT_ID`   | Google Sign-In Android client ID (optional) |

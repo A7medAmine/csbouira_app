@@ -540,6 +540,16 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
         }
       } on DocScanException {
         return;
+      } catch (_) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(l10n.uploadScanError),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+          );
+        }
       }
   }
 

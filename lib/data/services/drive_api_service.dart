@@ -17,6 +17,7 @@ class DriveApiException implements Exception {
 class DriveApiService {
   final http.Client _client;
   final Map<String, DriveNode> _cache = {};
+  final Map<String, List<DriveFile>> _filesCache = {};
 
   DriveApiService({http.Client? client}) : _client = client ?? http.Client();
 
@@ -118,8 +119,8 @@ class DriveApiService {
   /// Get the files array from a folder path.
   Future<List<DriveFile>> getFiles(List<String> folderPath) async {
     final path = '${_buildPath(folderPath)}>files';
-    if (_cache.containsKey(path)) {
-      return _cache[path]!.files;
+    if (_filesCache.containsKey(path)) {
+      return _filesCache[path]!;
     }
     final response = await _client.get(
       Uri.parse(_baseUrl).replace(queryParameters: {'path': path}),
@@ -134,23 +135,20 @@ class DriveApiService {
     final files = (body as List)
         .map((e) => DriveFile.fromJson(e as Map<String, dynamic>))
         .toList();
+    _filesCache[path] = files;
     return files;
   }
 
   /// Get a single file by index from a folder path.
   Future<DriveFile> getFileAt(List<String> folderPath, int index) async {
-    final path = '${_buildPath(folderPath)}>files>$index';
-    final response = await _client.get(
-      Uri.parse(_baseUrl).replace(queryParameters: {'path': path}),
-    );
-    if (response.statusCode != 200) {
-      throw DriveApiException('Failed to fetch file at index $index', path: path);
+    final files = await getFiles(folderPath);
+    if (index < 0 || index >= files.length) {
+      throw DriveApiException(
+        'File index out of range',
+        path: '${_buildPath(folderPath)}>files>$index',
+      );
     }
-    final body = jsonDecode(response.body);
-    if (body is Map && body.containsKey('error')) {
-      throw DriveApiException(body['error'] as String, path: body['path'] as String?);
-    }
-    return DriveFile.fromJson(body as Map<String, dynamic>);
+    return files[index];
   }
 
   /// Navigate through the cached tree given a list of path segments.
