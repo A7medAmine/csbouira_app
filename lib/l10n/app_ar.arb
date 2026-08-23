@@ -192,6 +192,8 @@
   "authValidationPasswordsDoNotMatch": "كلمتا المرور غير متطابقتين",
   "authValidationNameRequired": "الاسم الكامل مطلوب",
   "authSignupFailed": "فشل انشاء الحساب. يرجى المحاولة مرة اخرى.",
+  "authErrorNetwork": "مشكلة في الاتصال. تحقق من اتصالك بالإنترنت وحاول مرة اخرى.",
+  "authErrorGeneric": "حدث خطأ ما. يرجى المحاولة مرة اخرى بعد قليل.",
   "authMergeDialogTitle": "دمج المفضلة",
   "authMergeDialogMessage": "{count, plural, =1{وجدنا {count} عنصر محفوظ في مفضلتك المحلية. هل تريد اضافته الى حسابك؟} other{وجدنا {count} عناصر محفوظة في مفضلتك المحلية. هل تريد اضافتها الى حسابك؟}}",
   "authMergeDialogSkip": "تخطي",

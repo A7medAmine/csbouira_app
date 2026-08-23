@@ -15,6 +15,7 @@ class GuestMergeService {
   Future<void> mergeGuestDataIntoAccount(String userId) async {
     try {
       final localFavorites = await _localCache.getAll();
+      var allSucceeded = true;
       for (final fav in localFavorites) {
         try {
           await _supabase.from('favorites').upsert(
@@ -29,10 +30,11 @@ class GuestMergeService {
             onConflict: 'user_id, item_type, item_path',
           );
         } catch (e) {
+          allSucceeded = false;
           if (!kReleaseMode) { debugPrint('GuestMergeService: failed to merge favorite: $e'); }
         }
       }
-      if (localFavorites.isNotEmpty) {
+      if (localFavorites.isNotEmpty && allSucceeded) {
         await _localCache.clear();
       }
     } catch (e) {

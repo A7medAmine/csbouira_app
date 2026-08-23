@@ -32,7 +32,7 @@ class DocViewerWidget extends StatefulWidget {
 }
 
 class _DocViewerWidgetState extends State<DocViewerWidget> {
-  late final WebViewController _controller;
+  late WebViewController _controller;
   bool _isLoading = true;
   bool _hasError = false;
 

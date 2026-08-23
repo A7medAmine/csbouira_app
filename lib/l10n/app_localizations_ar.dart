@@ -638,6 +638,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get authSignupFailed => 'فشل انشاء الحساب. يرجى المحاولة مرة اخرى.';
 
   @override
+  String get authErrorNetwork => 'مشكلة في الاتصال. تحقق من اتصالك بالإنترنت وحاول مرة اخرى.';
+
+  @override
+  String get authErrorGeneric => 'حدث خطأ ما. يرجى المحاولة مرة اخرى بعد قليل.';
+
+  @override
   String get authMergeDialogTitle => 'دمج المفضلة';
 
   @override

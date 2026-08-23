@@ -638,6 +638,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get authSignupFailed => 'L\'inscription a échoué. Veuillez réessayer.';
 
   @override
+  String get authErrorNetwork => 'Problème de connexion. Vérifiez votre connexion internet et réessayez.';
+
+  @override
+  String get authErrorGeneric => 'Une erreur est survenue. Veuillez réessayer dans un instant.';
+
+  @override
   String get authMergeDialogTitle => 'Fusionner les favoris';
 
   @override

@@ -6,6 +6,7 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:csbouira_app/l10n/app_localizations.dart';
 import '../../app.dart';
+import '../../core/error_messages.dart';
 import '../../core/theme/app_colors.dart';
 import '../../data/models/drive_node.dart';
 import '../../data/providers/downloads_providers.dart';
@@ -155,7 +156,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
       messenger.hideCurrentSnackBar();
       if (!mounted) return;
       messenger.showSnackBar(
-        SnackBar(content: Text(l10n.downloadFailed(e.toString()))),
+        SnackBar(content: Text(l10n.downloadFailed(friendlyErrorMessage(e, l10n)))),
       );
     }
   }

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' show AuthException, Supabase;
 import 'package:csbouira_app/l10n/app_localizations.dart';
+import '../../core/error_messages.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../data/providers/auth_providers.dart';
@@ -99,7 +100,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
       });
       _otpFocusNodes[0].requestFocus();
     } catch (e) {
-      setState(() => _error = e.toString());
+      setState(() => _error = friendlyErrorMessage(e, AppLocalizations.of(context)!));
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -133,7 +134,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
             () => _error = AppLocalizations.of(context)!.forgotPasswordOtpInvalidCode);
       }
     } catch (e) {
-      if (mounted) setState(() => _error = e.toString());
+      if (mounted) setState(() => _error = friendlyErrorMessage(e, AppLocalizations.of(context)!));
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -204,7 +205,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
       await authService.updatePassword(password);
       if (mounted) context.go('/');
     } catch (e) {
-      if (mounted) setState(() => _error = e.toString());
+      if (mounted) setState(() => _error = friendlyErrorMessage(e, AppLocalizations.of(context)!));
     } finally {
       if (mounted) setState(() => _loading = false);
     }

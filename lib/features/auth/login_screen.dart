@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:csbouira_app/core/error_messages.dart';
 import 'package:csbouira_app/core/theme/app_radius.dart';
 import 'package:csbouira_app/core/theme/app_spacing.dart';
 import 'package:csbouira_app/data/providers/auth_providers.dart';
@@ -116,7 +117,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         setState(() => _generalError = e.message);
       }
     } catch (e) {
-      setState(() => _generalError = e.toString());
+      setState(() => _generalError = friendlyErrorMessage(e, AppLocalizations.of(context)!));
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -195,7 +196,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     } catch (e, stack) {
       if (!kReleaseMode) { debugPrint('\x1B[31m[GoogleSignIn] Unexpected error: $e\x1B[0m'); }
       if (!kReleaseMode) { debugPrint('\x1B[31m[GoogleSignIn] Stack: $stack\x1B[0m'); }
-      setState(() => _generalError = 'Google Sign-In failed:\n$e');
+      setState(() => _generalError = friendlyErrorMessage(e, AppLocalizations.of(context)!));
     } finally {
       if (mounted) setState(() => _googleLoading = false);
     }

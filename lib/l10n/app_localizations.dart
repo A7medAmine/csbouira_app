@@ -1099,6 +1099,18 @@ abstract class AppLocalizations {
   /// **'Signup failed. Please try again.'**
   String get authSignupFailed;
 
+  /// Friendly error shown when a network/database request fails due to connectivity
+  ///
+  /// In en, this message translates to:
+  /// **'Connection problem. Check your internet and try again.'**
+  String get authErrorNetwork;
+
+  /// Friendly fallback error shown when a database/server request fails unexpectedly
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong on our end. Please try again in a moment.'**
+  String get authErrorGeneric;
+
   /// Title for merge favorites dialog on login
   ///
   /// In en, this message translates to:

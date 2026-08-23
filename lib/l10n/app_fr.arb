@@ -761,6 +761,14 @@
   "@authSignupFailed": {
     "description": "Error message when sign up fails"
   },
+  "authErrorNetwork": "Problème de connexion. Vérifiez votre connexion internet et réessayez.",
+  "@authErrorNetwork": {
+    "description": "Friendly error shown when a network/database request fails due to connectivity"
+  },
+  "authErrorGeneric": "Une erreur est survenue. Veuillez réessayer dans un instant.",
+  "@authErrorGeneric": {
+    "description": "Friendly fallback error shown when a database/server request fails unexpectedly"
+  },
   "authMergeDialogTitle": "Fusionner les favoris",
   "@authMergeDialogTitle": {
     "description": "Title for merge favorites dialog on login"
