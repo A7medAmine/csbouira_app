@@ -1,56 +1,78 @@
 # CS Bouira
 
-A Flutter app for browsing and downloading academic resources (courses, exams, exercises) for the Computer Science department at University of Bouira.
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Flutter](https://img.shields.io/badge/Flutter-3.29.3-02569B?logo=flutter)](https://flutter.dev)
+[![Latest release](https://img.shields.io/github/v/release/A7medAmine/csbouira_app)](https://github.com/A7medAmine/csbouira_app/releases/latest)
 
-## Tech Stack
+An open-source Android app for Computer Science students at the University of Bouira. Browse, preview, download and share course material (courses, TDs, TPs, exams) organized by year, semester and module — in Arabic, French or English.
 
-- **Framework**: Flutter
-- **State Management**: Riverpod
-- **Routing**: go_router
-- **Data Source**: Custom Drive API
+<!--
+Screenshots: add images to docs/screenshots/ and uncomment.
+<p align="center">
+  <img src="docs/screenshots/home.png" width="200" alt="Home">
+  <img src="docs/screenshots/module.png" width="200" alt="Module">
+  <img src="docs/screenshots/preview.png" width="200" alt="Preview">
+  <img src="docs/screenshots/upload.png" width="200" alt="Upload">
+</p>
+-->
+
+## Download
+
+Grab the latest APK from the [Releases page](https://github.com/A7medAmine/csbouira_app/releases/latest). The app checks GitHub Releases for new versions and can download and install updates itself.
 
 ## Features
 
-- Browse years, semesters, modules, and folders
-- Search and filter files
-- View file previews
-- Favorite/bookmark resources
-- Upload resources
-- Dark theme UI
+- **Browse** every year (Licence 1 → Master 2), semester, module and folder, plus books, exercises and curated online resources.
+- **Preview** PDFs, images and documents in-app, or open them in another app.
+- **Search** modules and files across the whole catalogue.
+- **Favorites** for modules, files and online resources — works as a guest and syncs to your account when you sign in.
+- **Offline downloads** you can open without a connection.
+- **Upload** material from your device or scan paper documents with the camera.
+- **Leaderboard** of the top contributors.
+- **QR sharing**: share a file as a QR code and open it by scanning.
+- **Accounts** with email/password or Google Sign-In, including password reset by email code.
+- **Three languages**: العربية (RTL), Français, English.
 
-## Getting Started
+## Tech stack
+
+| Area | Choice |
+| --- | --- |
+| Framework | Flutter 3.29 (Dart 3.7), Android |
+| State management | Riverpod 2 |
+| Routing | go_router |
+| Catalogue data | [CS Bouira Drive API](api.md) (read-only, backed by Google Drive) |
+| Accounts, favorites, leaderboard | Supabase (Auth + Postgres with row-level security) |
+| Uploads | Google Apps Script endpoint that stores files in Drive |
+| Localization | `flutter_localizations` + ARB files |
+
+See [docs/architecture.md](docs/architecture.md) for how the pieces fit together.
+
+## Quick start
 
 ```bash
+git clone https://github.com/A7medAmine/csbouira_app.git
+cd csbouira_app
+cp .env.example .env      # then fill in the values
 flutter pub get
 flutter run
 ```
 
-## Environment Variables
+Browsing works as soon as the app starts, since the Drive API is public. Accounts, favorites sync and the leaderboard need a Supabase project: follow **[docs/setup.md](docs/setup.md)** for the full setup (Supabase, database, Google Sign-In).
 
-Copy `.env.example` to `.env` and fill in your Supabase credentials:
+## Documentation
 
-```bash
-cp .env.example .env
-```
+| Document | What it covers |
+| --- | --- |
+| [docs/setup.md](docs/setup.md) | Local development setup: Supabase, database, auth, Google Sign-In |
+| [docs/architecture.md](docs/architecture.md) | Project structure, data flow, state management |
+| [api.md](api.md) | The Drive API that serves the catalogue |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | How to contribute, code style, translations, releases |
+| [SECURITY.md](SECURITY.md) | How to report a vulnerability |
 
-Required values (from your Supabase project dashboard → Settings → API):
+## Contributing
 
-| Variable           | Description                              |
-| ------------------ | ---------------------------------------- |
-| `SUPABASE_URL`     | Your Supabase project URL                |
-| `SUPABASE_ANON_KEY`| Your Supabase anon/public API key        |
+Contributions are welcome, whether bug reports, translations, fixes or features. Please read [CONTRIBUTING.md](CONTRIBUTING.md) first.
 
-The app loads these via `flutter_dotenv` at startup — no `--dart-define` flags needed.
+## License
 
-## Releases
-
-Pushing a tag matching `v*.*.*` (e.g. `v1.0.2`) triggers `.github/workflows/release.yml`, which builds a release APK and publishes it to the repo's GitHub Releases page. Can also be run manually via the Actions tab (`workflow_dispatch`).
-
-Set these repo secrets (Settings → Secrets and variables → Actions) before releasing:
-
-| Secret                      | Description                        |
-| ---------------------------- | ----------------------------------- |
-| `SUPABASE_URL`               | Supabase project URL                |
-| `SUPABASE_ANON_KEY`          | Supabase anon/public API key        |
-| `GOOGLE_SERVER_CLIENT_ID`    | Google Sign-In web client ID        |
-| `GOOGLE_ANDROID_CLIENT_ID`   | Google Sign-In Android client ID (optional) |
+[MIT](LICENSE) © 2026 Ahmed Amine. See also the app's [Privacy Policy](PRIVACY_POLICY.md) and [Terms of Use](TERMS_OF_USE.md).

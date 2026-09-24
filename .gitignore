@@ -50,3 +50,5 @@ opencode.json
 
 # Agent skills
 .agents/
+# Supabase CLI local state
+supabase/.temp/
