@@ -16,7 +16,7 @@
     android:paddingStart="10dp"
     android:paddingTop="10dp"
     android:paddingEnd="10dp"
-    android:paddingBottom="30dp">
+    android:paddingBottom="39dp">
 
     <LinearLayout
         android:id="@+id/widget_header"
@@ -309,8 +309,8 @@
          Tapping it plays the full animation (layout/widget_cat_play.xml). -->
     <ViewFlipper
         android:id="@+id/widget_cat"
-        android:layout_width="61dp"
-        android:layout_height="28dp"
+        android:layout_width="80dp"
+        android:layout_height="37dp"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="12dp"
         android:autoStart="true"
@@ -398,8 +398,8 @@
          animation ends. Same size and anchor as the idle cat, just taller. -->
     <FrameLayout
         android:id="@+id/widget_cat_play_slot"
-        android:layout_width="61dp"
-        android:layout_height="48dp"
+        android:layout_width="80dp"
+        android:layout_height="63dp"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="12dp"
         android:importantForAccessibility="noHideDescendants" />

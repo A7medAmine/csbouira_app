@@ -204,7 +204,7 @@ class RecentFilesWidgetProvider : HomeWidgetProvider() {
 
         // Bottom padding while the peeking cat is shown ("show_cat", toggled
         // from the profile screen via lib/data/services/home_widget_service.dart).
-        const val CAT_STRIP_DP = 30
+        const val CAT_STRIP_DP = 39
         const val HEADER_DP = 20
         const val ROW_DP = 47
 
