@@ -9,8 +9,11 @@ import '../../app.dart';
 import '../../core/error_messages.dart';
 import '../../core/theme/app_colors.dart';
 import '../../data/models/drive_node.dart';
+import '../../data/providers/catalog_providers.dart';
 import '../../data/providers/downloads_providers.dart';
 import '../../data/services/download_service.dart';
+import '../../data/services/file_cache_service.dart' show extractDriveFileId;
+import '../../data/services/recent_files_store.dart';
 import '../../data/services/qr_share_service.dart';
 import '../../shared/widgets/favorite_star.dart';
 import 'preview_args.dart';
@@ -18,6 +21,7 @@ import 'share_modal.dart';
 import 'widgets/pdf_viewer.dart';
 import 'widgets/image_viewer.dart';
 import 'widgets/doc_viewer.dart';
+import '../../core/theme/app_surfaces.dart';
 
 /// Supported image extensions for the native image viewer.
 const _imageExtensions = {'jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'};
@@ -59,7 +63,21 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
       _files = extra.files;
       _currentIndex = extra.initialIndex;
       _folderPath = extra.folderPath;
+      if (_files.isNotEmpty) _recordRecent();
     }
+  }
+
+  /// Adds the current file to "recent files" (home screen and widget).
+  void _recordRecent() {
+    final file = _currentFile;
+    final id = extractDriveFileId(file.link);
+    if (id == null) return;
+    ref.read(recentFilesProvider.notifier).add(RecentFile(
+          fileId: id,
+          name: file.name,
+          folderPath: _folderPath ?? const [],
+          viewedAt: DateTime.now(),
+        ));
   }
 
   @override
@@ -103,6 +121,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
       _pdfPage = 1;
       _pdfTotalPages = 0;
     });
+    _recordRecent();
   }
 
   void _goToNext() {
@@ -112,6 +131,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
       _pdfPage = 1;
       _pdfTotalPages = 0;
     });
+    _recordRecent();
   }
 
   Future<void> _downloadFile() async {
@@ -209,9 +229,9 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
   @override
   Widget build(BuildContext context) {
     if (_files.isEmpty) {
-      return const Scaffold(
-        backgroundColor: Color(0xFF111221),
-        body: Center(child: CircularProgressIndicator()),
+      return Scaffold(
+        backgroundColor: context.surfaces.shell,
+        body: const Center(child: CircularProgressIndicator()),
       );
     }
 
@@ -223,11 +243,11 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
       builder: (context, isFullScreen, _) {
         final isRtl = Directionality.of(context) == TextDirection.rtl;
         return Scaffold(
-          backgroundColor: const Color(0xFF111221),
+          backgroundColor: context.surfaces.shell,
           appBar: isFullScreen
               ? null
               : AppBar(
-                  backgroundColor: const Color(0xFF111221),
+                  backgroundColor: context.surfaces.shell,
                   actionsPadding: EdgeInsets.zero,
                   titleSpacing: 0,
                   leading: IconButton(

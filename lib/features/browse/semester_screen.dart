@@ -10,6 +10,7 @@ import '../../data/models/drive_node.dart';
 import '../../data/providers/drive_providers.dart';
 import '../../data/providers/thumbnail_providers.dart';
 import '../../shared/widgets/favorite_star.dart';
+import '../../core/theme/app_surfaces.dart';
 
 class SemesterScreen extends ConsumerWidget {
   final String year;
@@ -31,7 +32,7 @@ class SemesterScreen extends ConsumerWidget {
     final yearResources = onlineAsync.asData?.value[year];
 
     return Scaffold(
-      backgroundColor: const Color(0xFF111221),
+      backgroundColor: context.surfaces.shell,
       body: SafeArea(
         child: Stack(
           children: [
@@ -270,7 +271,7 @@ class _SemesterCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: const Color(0xFF15151F).withAlpha(204),
+          color: context.surfaces.card.withAlpha(204),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: theme.colorScheme.outlineVariant.withAlpha(77),
@@ -425,7 +426,7 @@ class _BooksExercisesCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: const Color(0xFF15151F).withAlpha(204),
+          color: context.surfaces.card.withAlpha(204),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: theme.colorScheme.outlineVariant.withAlpha(77),
@@ -581,7 +582,7 @@ class _OnlineResourceCard extends ConsumerWidget {
         width: 240,
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
         decoration: BoxDecoration(
-          color: const Color(0xFF15151F).withAlpha(204),
+          color: context.surfaces.card.withAlpha(204),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: theme.colorScheme.outlineVariant.withAlpha(77),

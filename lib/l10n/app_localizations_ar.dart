@@ -1152,4 +1152,187 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get authSignupCheckEmail => 'تم إنشاء الحساب. تحقق من بريدك الإلكتروني لتأكيده، ثم سجّل الدخول.';
+
+  @override
+  String get linkFileNotFound => 'هذا الملف لم يعد متاحا. ربما تم نقله او حذفه.';
+
+  @override
+  String get linkGoHome => 'الذهاب الى الرئيسية';
+
+  @override
+  String get categoryCourse => 'دروس';
+
+  @override
+  String get categoryExam => 'امتحانات';
+
+  @override
+  String get categoryTest => 'فروض';
+
+  @override
+  String get categorySummary => 'ملخصات';
+
+  @override
+  String get categoryTdTp => 'اعمال موجهة وتطبيقية';
+
+  @override
+  String get categoryBook => 'كتب';
+
+  @override
+  String get categoryOther => 'اخرى';
+
+  @override
+  String get correctionBadge => 'تصحيح';
+
+  @override
+  String get examsTitle => 'الامتحانات السابقة';
+
+  @override
+  String get examsEmpty => 'لا توجد امتحانات او فروض لهذا السداسي حاليا.';
+
+  @override
+  String get examsCorrectionsOnly => 'مع التصحيح';
+
+  @override
+  String get examsKindAll => 'الكل';
+
+  @override
+  String get whatsNewTitle => 'الجديد';
+
+  @override
+  String get whatsNewToday => 'اليوم';
+
+  @override
+  String get whatsNewYesterday => 'امس';
+
+  @override
+  String whatsNewFollowingOnly(int count) {
+    return 'المقاييس المتابعة ($count)';
+  }
+
+  @override
+  String get whatsNewEmpty => 'لا توجد ملفات جديدة خلال اخر 14 يوما. تظهر الملفات الجديدة هنا بمجرد ان يكتشفها التطبيق.';
+
+  @override
+  String get followingManage => 'المقاييس المتابعة';
+
+  @override
+  String get moduleFollow => 'متابعة الملفات الجديدة';
+
+  @override
+  String get moduleUnfollow => 'الغاء المتابعة';
+
+  @override
+  String get moduleFollowedSnack => 'سيتم اشعارك عند اضافة ملفات جديدة لهذا المقياس.';
+
+  @override
+  String get moduleUnfollowedSnack => 'تم الغاء متابعة المقياس.';
+
+  @override
+  String shareLinkMessage(String name, String appLink, String driveLink) {
+    return '$name\nافتح في CS Bouira: $appLink\nGoogle Drive: $driveLink';
+  }
+
+  @override
+  String get shareLinkAction => 'مشاركة الرابط';
+
+  @override
+  String get copyLinkAction => 'نسخ الرابط';
+
+  @override
+  String get linkCopied => 'تم نسخ الرابط';
+
+  @override
+  String get homeActionExams => 'الامتحانات';
+
+  @override
+  String get homeActionWhatsNew => 'الجديد';
+
+  @override
+  String get homeActionOffline => 'بدون انترنت';
+
+  @override
+  String get homeRecentFiles => 'المفتوحة مؤخرا';
+
+  @override
+  String get homeRecentClear => 'مسح';
+
+  @override
+  String get offlinePackTitle => 'تنزيل للاستخدام بدون انترنت';
+
+  @override
+  String get offlinePackHint => 'يتم حفظ الملفات في التنزيلات. يتم تخطي الملفات الموجودة مسبقا.';
+
+  @override
+  String get offlinePackAll => 'المقياس كاملا';
+
+  @override
+  String get offlinePackBusy => 'هناك تنزيل اخر قيد التنفيذ.';
+
+  @override
+  String offlinePackProgress(int done, int total) {
+    return '$done من $total ملفات';
+  }
+
+  @override
+  String get offlinePackCancelled => 'تم ايقاف التنزيل.';
+
+  @override
+  String offlinePackDone(int count) {
+    return '$count ملفات جاهزة بدون انترنت.';
+  }
+
+  @override
+  String offlinePackDoneWithErrors(int done, int failed) {
+    return '$done ملفات جاهزة، فشل $failed.';
+  }
+
+  @override
+  String get offlinePackCancel => 'ايقاف';
+
+  @override
+  String get offlinePackDismiss => 'اغلاق';
+
+  @override
+  String get searchFilterCategory => 'الفئة';
+
+  @override
+  String get searchRecent => 'عمليات البحث الاخيرة';
+
+  @override
+  String get newFilesChannelName => 'ملفات جديدة';
+
+  @override
+  String newFilesNotificationTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ملفات جديدة في مقاييسك',
+      two: 'ملفان جديدان في مقاييسك',
+      one: 'ملف جديد في مقاييسك',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String newFilesNotificationLine(String module, int count) {
+    return '$module: $count جديد';
+  }
+
+  @override
+  String get profileTheme => 'المظهر';
+
+  @override
+  String get profileThemeDark => 'داكن';
+
+  @override
+  String get profileThemeLight => 'فاتح';
+
+  @override
+  String get profileThemeSystem => 'حسب النظام';
+
+  @override
+  String get profileCrashReports => 'ارسال تقارير الاعطال';
+
+  @override
+  String get profileWidgetCat => 'القطة على ودجت الشاشة الرئيسية';
 }

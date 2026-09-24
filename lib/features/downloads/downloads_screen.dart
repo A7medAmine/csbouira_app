@@ -11,6 +11,8 @@ import '../../data/services/download_service.dart';
 import '../../shared/widgets/fetch_error_widget.dart';
 import 'local_file_viewer.dart';
 import 'package:csbouira_app/l10n/app_localizations.dart';
+import '../../core/theme/app_surfaces.dart';
+import '../../shared/file_icons.dart';
 
 class DownloadsScreen extends ConsumerWidget {
   const DownloadsScreen({super.key});
@@ -21,7 +23,7 @@ class DownloadsScreen extends ConsumerWidget {
     final downloadsAsync = ref.watch(downloadsListProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0D0D14),
+      backgroundColor: context.surfaces.page,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -93,32 +95,6 @@ class _DownloadCard extends ConsumerStatefulWidget {
 }
 
 class _DownloadCardState extends ConsumerState<_DownloadCard> {
-  IconData _fileIcon(String name) {
-    final ext = name.split('.').last.toLowerCase();
-    switch (ext) {
-      case 'pdf':
-        return Icons.picture_as_pdf;
-      case 'doc':
-      case 'docx':
-        return Icons.description;
-      case 'ppt':
-      case 'pptx':
-        return Icons.slideshow;
-      case 'xls':
-      case 'xlsx':
-        return Icons.table_chart;
-      case 'zip':
-      case 'rar':
-        return Icons.folder_zip;
-      case 'mp4':
-      case 'avi':
-      case 'mkv':
-        return Icons.play_circle;
-      default:
-        return Icons.insert_drive_file;
-    }
-  }
-
   Color _iconColor(String name) {
     final ext = name.split('.').last.toLowerCase();
     switch (ext) {
@@ -278,7 +254,7 @@ class _DownloadCardState extends ConsumerState<_DownloadCard> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final icon = _fileIcon(widget.item.fileName);
+    final icon = fileIconFor(widget.item.fileName);
     final iconColor = _iconColor(widget.item.fileName);
     final iconBg = _iconBg(widget.item.fileName);
 
@@ -289,7 +265,7 @@ class _DownloadCardState extends ConsumerState<_DownloadCard> {
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: const Color(0xFF15151F).withAlpha(179),
+            color: context.surfaces.card.withAlpha(179),
             borderRadius: BorderRadius.circular(AppRadius.lg),
             border: Border.all(
               color: theme.colorScheme.outlineVariant.withAlpha(77),

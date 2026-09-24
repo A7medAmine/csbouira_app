@@ -55,7 +55,7 @@ lib/
 │   ├── repositories/      Combine several sources (FavoritesRepository: Supabase + local)
 │   └── providers/         Riverpod providers that expose services and state to the UI
 ├── features/              One folder per screen or flow
-│   ├── splash/ home/ browse/ search/ preview/ downloads/
+│   ├── splash/ home/ browse/ search/ preview/ downloads/ exams/ whats_new/
 │   ├── favorites/ upload/ scan/ leaderboard/ profile/
 │   └── auth/ about/ legal/
 ├── shared/widgets/        Reusable widgets (bottom nav, network banner, favorite star, …)
@@ -75,6 +75,12 @@ All providers are plain Riverpod 2 (no code generation). The important ones:
 | `driveApiServiceProvider` | `Provider` (keep-alive) | Drive API client with an in-memory cache |
 | `driveRootDataProvider` | `FutureProvider` (keep-alive) | The full catalogue tree, preloaded on the splash screen |
 | `driveNodeProvider(key)` | `FutureProvider.family` | One folder node; served from the cached tree when possible |
+| `catalogIndexProvider` | `FutureProvider` | Flat, searchable list of every file (`CatalogIndex`), rebuilt from the Drive tree |
+| `whatsNewProvider` | `FutureProvider` | Files first seen on this device in the last 14 days |
+| `followedModulesProvider` | `AsyncNotifierProvider` | Modules followed for new-file notifications |
+| `recentFilesProvider` | `AsyncNotifierProvider` | Recently opened files (home screen and widget) |
+| `modulePackProvider` | `StateNotifierProvider` | "Download for offline" job for a module |
+| `themeModeProvider` | `StateNotifierProvider` | Light / dark / system theme |
 | `favoritesRepositoryProvider` | `Provider` | Rebuilt whenever the signed-in user changes |
 | `favoritesListProvider` | `AsyncNotifierProvider` | Favorites list with optimistic add and remove |
 | `uploadStateProvider` | `StateNotifierProvider` | Upload progress and error state |
@@ -87,6 +93,28 @@ All providers are plain Riverpod 2 (no code generation). The important ones:
 ### Browsing
 
 `splash_screen` preloads `driveRootDataProvider`, which fetches the whole tree in one request. The browse screens (`semester_screen`, `module_screen`, `folder_screen`, `file_screen`) watch `driveNodeProvider` with a path key. Paths are joined with `>subfolders>`, matching the Drive API's path syntax.
+
+### Catalogue index, search and exams
+
+`CatalogIndex` (`data/services/catalog_index.dart`) walks the Drive tree once and turns every file into a `CatalogFile`: its Drive ID, folder path, year, semester, module, category (taken from the `Cours` / `Exams` / `Tests` / `Résumé` / `TDs & TPs` folder, or `book` under `Books & Exercices`) and whether the name looks like a correction.
+
+- **Search** matches modules and category folders by name and files through `CatalogIndex.search`. Text goes through `normalizeForSearch` (`core/text_search.dart`), which ignores case, French accents and Arabic diacritics/letter variants, and `matchScore`, which accepts prefixes and small typos.
+- **Past exams** (`features/exams/`) lists a semester's exams and tests grouped by module.
+- `openCatalogFile` opens any catalogue file in the previewer with its folder's other files as next/previous.
+
+### What's new and followed modules
+
+The Drive API has no upload dates, so `CatalogSeenStore` records when this device first saw each file ID (a JSON file in the app support directory; the first sync is a baseline and reports nothing). `whatsNewProvider` lists files first seen in the last 14 days.
+
+Following a module (bell on the module screen) stores its `year>semester>module` key locally and schedules a WorkManager job every 6 hours (`data/services/new_files_checker.dart`). The job runs in a background isolate, fetches the tree, records it in the same store and posts one local notification for new files in followed modules. Tapping it opens `csbouira://new`. There is no push server and no Firebase.
+
+### Deep links and the home screen widget
+
+Links look like `csbouira://file/<driveFileId>` (and `csbouira://new`). They come from shared links, QR codes (the share dialog now encodes the link, so the camera app can open it too), notifications and the Android widget.
+
+- `MainActivity.kt` receives the intent and passes the URI over the `csbouira_app/deep_links` channel. Flutter's built-in deep linking is disabled in the manifest because it drops the URI host.
+- `DeepLinkService` (`core/deep_links.dart`) parses the link and queues it until the home screen attaches the router, then pushes `/open/file/<id>`. `OpenFileScreen` looks the ID up in the catalogue index and replaces itself with the previewer.
+- The previewer records each opened file in `RecentFilesStore`. `HomeWidgetService` writes the list for `RecentFilesWidgetProvider.kt`, whose rows open `csbouira://file/<id>`.
 
 ### Favorites: guest vs. signed in
 
@@ -124,6 +152,10 @@ Writes are optimistic: `FavoritesNotifier.add` and `remove` update the UI immedi
 
 `UpdateService` asks GitHub Releases for the latest release, at most once every 12 hours, and compares versions with `pub_semver`. `UpdateDownloadNotifier` downloads the APK and opens the Android installer.
 
+### Crash reporting
+
+When `SENTRY_DSN` is set and the user has not turned reports off (Profile), `main.dart` starts Sentry with `sendDefaultPii` off. Without a DSN the SDK is never initialized.
+
 ## Localization
 
 - Source strings live in `lib/l10n/app_en.arb` (the template). `app_fr.arb` and `app_ar.arb` hold the translations.
@@ -144,4 +176,5 @@ The leaderboard is computed by `get_leaderboard` and `get_user_rank`: security d
 
 ## Android-specific code
 
-`android/app/src/main/kotlin/.../MainActivity.kt` implements the `csbouira_app/file_utils` method channel, which reads `content://` URIs that `file_picker` sometimes returns and Dart cannot open directly.
+- `MainActivity.kt` implements the `csbouira_app/file_utils` method channel, which reads `content://` URIs that `file_picker` sometimes returns and Dart cannot open directly, and the `csbouira_app/deep_links` channel described above.
+- `RecentFilesWidgetProvider.kt` with `res/layout/recent_files_widget.xml` is the home screen widget.

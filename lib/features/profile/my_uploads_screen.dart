@@ -6,6 +6,7 @@ import '../../core/theme/app_spacing.dart';
 import '../../data/providers/my_uploads_provider.dart';
 import '../../shared/widgets/fetch_error_widget.dart';
 import 'package:csbouira_app/l10n/app_localizations.dart';
+import '../../core/theme/app_surfaces.dart';
 
 class MyUploadsScreen extends ConsumerWidget {
   const MyUploadsScreen({super.key});
@@ -16,7 +17,7 @@ class MyUploadsScreen extends ConsumerWidget {
     final uploadsAsync = ref.watch(myUploadsProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0D0D14),
+      backgroundColor: context.surfaces.page,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -121,9 +122,9 @@ class MyUploadsScreen extends ConsumerWidget {
           child: Container(
             padding: const EdgeInsets.all(AppSpacing.stackMd),
             decoration: BoxDecoration(
-              color: const Color(0x0D15151F),
+              color: context.surfaces.faint,
               borderRadius: BorderRadius.circular(AppRadius.xl),
-              border: Border.all(color: const Color(0xFF1A1A26).withAlpha(128)),
+              border: Border.all(color: context.surfaces.cardBorder.withAlpha(128)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

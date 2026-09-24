@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'app.dart';
+import 'core/crash_reporting.dart';
 
 String _requireEnv(String key) {
   final value = dotenv.env[key];
@@ -33,5 +34,5 @@ void main() async {
     serverClientId: serverClientId,
   );
 
-  runApp(const ProviderScope(child: CSBouiraApp()));
+  await runWithCrashReporting(const ProviderScope(child: CSBouiraApp()));
 }

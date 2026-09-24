@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_recent_files_title">Recent files</string>
+    <string name="widget_recent_files_empty">Files you open in CS Bouira appear here.</string>
+    <string name="widget_recent_files_description">Quick access to the files you opened recently</string>
+</resources>

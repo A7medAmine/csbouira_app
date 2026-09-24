@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:csbouira_app/l10n/app_localizations.dart';
+import '../../core/deep_links.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../data/navigation_data.dart';
@@ -14,7 +15,9 @@ import '../../data/providers/update_download_provider.dart';
 import '../../shared/widgets/avatar_widget.dart';
 import '../../shared/widgets/network_banner.dart';
 import '../../shared/widgets/user_avatar.dart';
+import 'widgets/home_shortcuts.dart';
 import 'widgets/update_dialog.dart';
+import '../../core/theme/app_surfaces.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -25,6 +28,18 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   bool _updateChecked = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      // Open links (QR codes, the home screen widget, notifications) that
+      // arrived during startup, and any later ones.
+      final router = GoRouter.of(context);
+      DeepLinkService.instance.attach((route) => router.push(route));
+    });
+  }
 
   Future<void> _onRefresh() => ref.refreshDriveData();
 
@@ -89,7 +104,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final avatarInitials = userInitials(displayName);
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0D0D14),
+      backgroundColor: context.surfaces.page,
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: AppSpacing.containerMax),
@@ -143,7 +158,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           AppLocalizations.of(context)!.homeWelcome(displayName),
                           style: theme.textTheme.headlineLarge?.copyWith(
                             fontWeight: FontWeight.w700,
-                            color: Colors.white,
+                            color: theme.colorScheme.onSurface,
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -217,6 +232,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       ],
                     ),
 
+                    const SizedBox(height: 16),
+                    const HomeQuickActions(),
+                    const RecentFilesStrip(),
+
                     const SizedBox(height: 32),
 
                     // Academic Path header
@@ -227,7 +246,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         Text(
                           AppLocalizations.of(context)!.academicPath,
                           style: theme.textTheme.headlineMedium?.copyWith(
-                            color: Colors.white,
+                            color: theme.colorScheme.onSurface,
                           ),
                         ),
                         Container(
@@ -426,7 +445,7 @@ class _YearCard extends StatelessWidget {
         constraints: const BoxConstraints(minHeight: 140),
         padding: const EdgeInsets.all(AppSpacing.stackMd),
         decoration: BoxDecoration(
-          color: const Color(0xFF15151F).withAlpha(204),
+          color: context.surfaces.card.withAlpha(204),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color:
@@ -470,11 +489,11 @@ class _YearCard extends StatelessWidget {
                         style:
                             _localizedName(l10n).length > 12
                                 ? theme.textTheme.titleMedium?.copyWith(
-                                  color: Colors.white,
+                                  color: theme.colorScheme.onSurface,
                                   fontWeight: FontWeight.w600,
                                 )
                                 : theme.textTheme.headlineMedium?.copyWith(
-                                  color: Colors.white,
+                                  color: theme.colorScheme.onSurface,
                                 ),
                       ),
                     ),
@@ -506,10 +525,10 @@ class _YearCard extends StatelessWidget {
                   const SizedBox(width: 4),
                   Text(
                     AppLocalizations.of(context)!.fileCountOnYear(fileCount),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                 ],

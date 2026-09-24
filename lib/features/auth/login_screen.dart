@@ -11,6 +11,7 @@ import 'package:csbouira_app/core/theme/app_spacing.dart';
 import 'package:csbouira_app/data/providers/auth_providers.dart';
 import 'package:csbouira_app/data/providers/favorites_providers.dart';
 import 'package:csbouira_app/l10n/app_localizations.dart';
+import '../../core/theme/app_surfaces.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -302,7 +303,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         textTheme: theme.textTheme.apply(fontFamily: 'Cairo'),
       ),
       child: Scaffold(
-        backgroundColor: const Color(0xFF0D0D14),
+        backgroundColor: context.surfaces.page,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -460,9 +461,9 @@ class _AuthCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(AppSpacing.stackLg),
       decoration: BoxDecoration(
-        color: const Color(0xFF15151F).withAlpha(204),
+        color: context.surfaces.card.withAlpha(204),
         borderRadius: BorderRadius.circular(AppRadius.xl),
-        border: Border.all(color: const Color(0xFF1A1A26)),
+        border: Border.all(color: context.surfaces.cardBorder),
       ),
       child: Form(
         key: formKey,

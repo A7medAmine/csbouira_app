@@ -1420,5 +1420,272 @@
   "authSignupCheckEmail": "Account created. Check your email to confirm it, then log in.",
   "@authSignupCheckEmail": {
     "description": "Shown after signup when email confirmation is required"
+  },
+
+  "linkFileNotFound": "This file is no longer available. It may have been moved or removed.",
+  "@linkFileNotFound": {
+    "description": "Shown when a shared link points to a file that is not in the catalogue"
+  },
+  "linkGoHome": "Go to home",
+  "@linkGoHome": {
+    "description": "Button to leave a broken link screen"
+  },
+  "categoryCourse": "Course",
+  "@categoryCourse": {
+    "description": "Resource category: lecture notes"
+  },
+  "categoryExam": "Exams",
+  "@categoryExam": {
+    "description": "Resource category: exams"
+  },
+  "categoryTest": "Tests",
+  "@categoryTest": {
+    "description": "Resource category: tests / quizzes"
+  },
+  "categorySummary": "Summary",
+  "@categorySummary": {
+    "description": "Resource category: summaries"
+  },
+  "categoryTdTp": "TD & TP",
+  "@categoryTdTp": {
+    "description": "Resource category: tutorials and labs"
+  },
+  "categoryBook": "Books",
+  "@categoryBook": {
+    "description": "Resource category: books and exercises"
+  },
+  "categoryOther": "Other",
+  "@categoryOther": {
+    "description": "Resource category: anything else"
+  },
+  "correctionBadge": "Correction",
+  "@correctionBadge": {
+    "description": "Badge on files that look like answer keys"
+  },
+  "examsTitle": "Past exams",
+  "@examsTitle": {
+    "description": "Title of the past exams screen"
+  },
+  "examsEmpty": "No exams or tests for this semester yet.",
+  "@examsEmpty": {
+    "description": "Empty state of the past exams screen"
+  },
+  "examsCorrectionsOnly": "With corrections",
+  "@examsCorrectionsOnly": {
+    "description": "Filter chip: only show corrections"
+  },
+  "examsKindAll": "All",
+  "@examsKindAll": {
+    "description": "Segment showing both exams and tests"
+  },
+  "whatsNewTitle": "What's new",
+  "@whatsNewTitle": {
+    "description": "Title of the new files screen"
+  },
+  "whatsNewToday": "Today",
+  "@whatsNewToday": {
+    "description": "Date header"
+  },
+  "whatsNewYesterday": "Yesterday",
+  "@whatsNewYesterday": {
+    "description": "Date header"
+  },
+  "whatsNewFollowingOnly": "Followed modules ({count})",
+  "@whatsNewFollowingOnly": {
+    "description": "Filter chip on the new files screen",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "whatsNewEmpty": "No new files in the last 14 days. New uploads appear here once the app has seen them.",
+  "@whatsNewEmpty": {
+    "description": "Empty state of the new files screen"
+  },
+  "followingManage": "Followed modules",
+  "@followingManage": {
+    "description": "Title of the followed modules sheet"
+  },
+  "moduleFollow": "Follow for new files",
+  "@moduleFollow": {
+    "description": "Tooltip of the follow button"
+  },
+  "moduleUnfollow": "Unfollow",
+  "@moduleUnfollow": {
+    "description": "Tooltip of the unfollow button"
+  },
+  "moduleFollowedSnack": "You'll be notified when new files are added to this module.",
+  "@moduleFollowedSnack": {
+    "description": "Snackbar after following a module"
+  },
+  "moduleUnfollowedSnack": "Module unfollowed.",
+  "@moduleUnfollowedSnack": {
+    "description": "Snackbar after unfollowing a module"
+  },
+  "shareLinkMessage": "{name}\nOpen in CS Bouira: {appLink}\nGoogle Drive: {driveLink}",
+  "@shareLinkMessage": {
+    "description": "Text shared when sharing a file link",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "appLink": {
+        "type": "String"
+      },
+      "driveLink": {
+        "type": "String"
+      }
+    }
+  },
+  "shareLinkAction": "Share link",
+  "@shareLinkAction": {
+    "description": "Button that opens the system share sheet"
+  },
+  "copyLinkAction": "Copy link",
+  "@copyLinkAction": {
+    "description": "Button that copies the app link"
+  },
+  "linkCopied": "Link copied",
+  "@linkCopied": {
+    "description": "Snackbar after copying a link"
+  },
+  "homeActionExams": "Past exams",
+  "@homeActionExams": {
+    "description": "Home shortcut to the past exams screen"
+  },
+  "homeActionWhatsNew": "What's new",
+  "@homeActionWhatsNew": {
+    "description": "Home shortcut to the new files screen"
+  },
+  "homeActionOffline": "Offline",
+  "@homeActionOffline": {
+    "description": "Home shortcut to downloaded files"
+  },
+  "homeRecentFiles": "Recently opened",
+  "@homeRecentFiles": {
+    "description": "Home section with recently opened files"
+  },
+  "homeRecentClear": "Clear",
+  "@homeRecentClear": {
+    "description": "Button that clears the recent files"
+  },
+  "offlinePackTitle": "Download for offline",
+  "@offlinePackTitle": {
+    "description": "Title of the module download sheet"
+  },
+  "offlinePackHint": "Files are saved to Downloads. Files you already have are skipped.",
+  "@offlinePackHint": {
+    "description": "Explanation in the module download sheet"
+  },
+  "offlinePackAll": "Whole module",
+  "@offlinePackAll": {
+    "description": "Option to download every file of a module"
+  },
+  "offlinePackBusy": "Another download is still running.",
+  "@offlinePackBusy": {
+    "description": "Shown when a module download is already running"
+  },
+  "offlinePackProgress": "{done} of {total} files",
+  "@offlinePackProgress": {
+    "description": "Progress of a module download",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "offlinePackCancelled": "Download stopped.",
+  "@offlinePackCancelled": {
+    "description": "Module download was cancelled"
+  },
+  "offlinePackDone": "{count} files ready offline.",
+  "@offlinePackDone": {
+    "description": "Module download finished",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "offlinePackDoneWithErrors": "{done} files ready, {failed} failed.",
+  "@offlinePackDoneWithErrors": {
+    "description": "Module download finished with failures",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      }
+    }
+  },
+  "offlinePackCancel": "Stop",
+  "@offlinePackCancel": {
+    "description": "Button that stops a module download"
+  },
+  "offlinePackDismiss": "Dismiss",
+  "@offlinePackDismiss": {
+    "description": "Button that hides a finished module download"
+  },
+  "searchFilterCategory": "Category",
+  "@searchFilterCategory": {
+    "description": "Search filter chip for resource category"
+  },
+  "searchRecent": "Recent searches",
+  "@searchRecent": {
+    "description": "Header of recent searches"
+  },
+  "newFilesChannelName": "New files",
+  "@newFilesChannelName": {
+    "description": "Android notification channel name"
+  },
+  "newFilesNotificationTitle": "{count, plural, =1{1 new file in your modules} other{{count} new files in your modules}}",
+  "@newFilesNotificationTitle": {
+    "description": "Title of the new files notification",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "newFilesNotificationLine": "{module}: {count} new",
+  "@newFilesNotificationLine": {
+    "description": "One line per module in the new files notification",
+    "placeholders": {
+      "module": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileTheme": "Theme",
+  "@profileTheme": {
+    "description": "Settings row for the app theme"
+  },
+  "profileThemeDark": "Dark",
+  "@profileThemeDark": {
+    "description": "Theme option"
+  },
+  "profileThemeLight": "Light",
+  "@profileThemeLight": {
+    "description": "Theme option"
+  },
+  "profileThemeSystem": "System default",
+  "@profileThemeSystem": {
+    "description": "Theme option"
+  },
+  "profileCrashReports": "Send crash reports",
+  "@profileCrashReports": {
+    "description": "Settings switch for anonymous crash reports"
+  },
+  "profileWidgetCat": "Cat on home screen widget",
+  "@profileWidgetCat": {
+    "description": "Settings switch for the blinking cat on the Android home screen widget"
   }
 }

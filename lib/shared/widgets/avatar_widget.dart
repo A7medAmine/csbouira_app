@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import '../../core/theme/app_surfaces.dart';
 
 class AvatarWidget extends StatelessWidget {
   final double size;
@@ -90,7 +91,7 @@ class AvatarWidget extends StatelessWidget {
                   color: theme.colorScheme.primary,
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: const Color(0xFF0D0D14),
+                    color: context.surfaces.page,
                     width: 2,
                   ),
                 ),

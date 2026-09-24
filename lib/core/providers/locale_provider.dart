@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-const _localeOverrideKey = 'app_locale_override';
+/// Also read by the background new-files checker to localize notifications.
+const localeOverrideKey = 'app_locale_override';
 
 final localeProvider = StateNotifierProvider<LocaleNotifier, Locale>((ref) {
   return LocaleNotifier();
@@ -13,7 +14,7 @@ class LocaleNotifier extends StateNotifier<Locale> {
 
   Future<void> loadSavedLocale() async {
     final prefs = await SharedPreferences.getInstance();
-    final override = prefs.getString(_localeOverrideKey);
+    final override = prefs.getString(localeOverrideKey);
     if (override != null && override.isNotEmpty) {
       state = Locale(override);
       return;
@@ -31,7 +32,7 @@ class LocaleNotifier extends StateNotifier<Locale> {
 
   Future<void> setLocale(String languageCode) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_localeOverrideKey, languageCode);
+    await prefs.setString(localeOverrideKey, languageCode);
     state = Locale(languageCode);
   }
 }

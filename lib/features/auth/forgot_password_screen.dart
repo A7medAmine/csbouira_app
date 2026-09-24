@@ -9,6 +9,7 @@ import '../../core/error_messages.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../data/providers/auth_providers.dart';
+import '../../core/theme/app_surfaces.dart';
 
 enum _ResetStep { email, otp, newPassword }
 
@@ -227,7 +228,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
     final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0D0D14),
+      backgroundColor: context.surfaces.page,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -347,7 +348,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
                     width: 96,
                     height: 96,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF15151F).withAlpha(204),
+                      color: context.surfaces.card.withAlpha(204),
                       borderRadius:
                           BorderRadius.circular(AppRadius.xl * 1.5),
                       border: Border.all(
@@ -932,7 +933,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
                     width: 120,
                     height: 120,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF15151F).withAlpha(204),
+                      color: context.surfaces.card.withAlpha(204),
                       borderRadius: BorderRadius.circular(60),
                     ),
                     child: Icon(
@@ -968,9 +969,9 @@ class _GlassCard extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsets.all(AppSpacing.stackLg),
           decoration: BoxDecoration(
-            color: const Color(0xFF15151F).withAlpha(204),
+            color: context.surfaces.card.withAlpha(204),
             borderRadius: BorderRadius.circular(AppRadius.xl),
-            border: Border.all(color: const Color(0xFF1A1A26)),
+            border: Border.all(color: context.surfaces.cardBorder),
           ),
           child: child,
         ),

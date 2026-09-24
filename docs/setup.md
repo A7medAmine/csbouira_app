@@ -40,6 +40,7 @@ cp .env.example .env
 | `SUPABASE_ANON_KEY` | Yes | Supabase → Project Settings → API → `anon` / publishable key |
 | `GOOGLE_SERVER_CLIENT_ID` | For Google Sign-In | Google Cloud → Credentials → **Web** OAuth client ID |
 | `GOOGLE_ANDROID_CLIENT_ID` | Optional | Google Cloud → Credentials → **Android** OAuth client ID |
+| `SENTRY_DSN` | Optional | Sentry → Project Settings → Client Keys (DSN). Empty means crash reporting is off; see section 7 |
 
 > **Note:** `.env` is bundled into the APK as an asset (`pubspec.yaml`). Anyone can unzip an APK and read it. Only put **public** values in it: the Supabase anon key is designed to be public, and Row Level Security protects the data. Never put a `service_role` key, a database password or any other secret in `.env`, not even in a comment.
 
@@ -126,7 +127,14 @@ Uploaded files are sent to the project's official Google Apps Script endpoint (`
 
 After a successful upload, signed-in users get leaderboard credit through the `record_upload` RPC in your Supabase project, which allows at most 20 uploads per user per hour.
 
-## 7. Run, analyze, test
+## 7. Crash reporting (optional)
+
+Crash reports go to [Sentry](https://sentry.io) when `SENTRY_DSN` is set in `.env`; with no DSN, the Sentry SDK is never started. Users can also turn reports off in **Profile → Send crash reports**.
+
+1. Create a Flutter project in Sentry and copy its DSN into `.env` (and into the `SENTRY_DSN` GitHub secret for release builds).
+2. In the Sentry project, enable **Settings → Security & Privacy → Prevent Storing of IP Addresses**. The app already sends no user names, emails or IP addresses (`sendDefaultPii` is off), and the privacy policy promises this.
+
+## 8. Run, analyze, test
 
 ```bash
 flutter pub get
@@ -135,13 +143,15 @@ flutter analyze            # must report no issues
 flutter test
 ```
 
+Every pull request runs the same three checks on GitHub Actions (`.github/workflows/ci.yml`), plus a check that the generated localization files are up to date.
+
 After editing any `lib/l10n/*.arb` file, regenerate the localization classes:
 
 ```bash
 flutter gen-l10n
 ```
 
-## 8. Release builds
+## 9. Release builds
 
 ```bash
 flutter build apk --release

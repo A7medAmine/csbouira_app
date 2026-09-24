@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../core/deep_links.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_radius.dart';
 import '../../data/models/drive_node.dart';
+import '../../data/services/file_cache_service.dart' show extractDriveFileId;
 import '../../data/services/qr_share_service.dart';
 import 'package:csbouira_app/l10n/app_localizations.dart';
 
@@ -20,7 +24,12 @@ class ShareModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final qrContent = shareData != null
+    final l10n = AppLocalizations.of(context)!;
+    final fileId = extractDriveFileId(file.link);
+    final appLink = fileId != null ? fileDeepLink(fileId) : null;
+    // The app link also opens the app when scanned with the camera app;
+    // the older path-based format is kept for files without a Drive ID.
+    final qrContent = appLink ?? (shareData != null
         ? encodeFileShareData(
             grade: shareData!.grade,
             semester: shareData!.semester,
@@ -29,14 +38,14 @@ class ShareModal extends StatelessWidget {
             fileIndex: shareData!.fileIndex,
             subpath: shareData!.subpath,
           )
-        : null;
+        : null);
 
     return Dialog(
       backgroundColor: Colors.transparent,
       insetPadding: const EdgeInsets.symmetric(horizontal: 24),
       child: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFF1d1e2e),
+          color: theme.colorScheme.surfaceContainer,
           borderRadius: BorderRadius.circular(AppRadius.xl),
           border: Border.all(
             color: theme.colorScheme.outlineVariant.withAlpha(77),
@@ -52,7 +61,7 @@ class ShareModal extends StatelessWidget {
                 Text(
                   AppLocalizations.of(context)!.shareFileTitle,
                   style: theme.textTheme.headlineMedium?.copyWith(
-                    color: Colors.white,
+                    color: theme.colorScheme.onSurface,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -117,6 +126,36 @@ class ShareModal extends StatelessWidget {
               ),
             ],
             const SizedBox(height: 24),
+            if (appLink != null) ...[
+              Row(
+                children: [
+                  Expanded(
+                    child: FilledButton.icon(
+                      onPressed: () => SharePlus.instance.share(ShareParams(
+                        text: l10n.shareLinkMessage(file.name, appLink, file.link),
+                        subject: file.name,
+                      )),
+                      icon: const Icon(Icons.share, size: 18),
+                      label: Text(l10n.shareLinkAction),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  IconButton.outlined(
+                    tooltip: l10n.copyLinkAction,
+                    onPressed: () async {
+                      await Clipboard.setData(ClipboardData(text: appLink));
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(l10n.linkCopied)),
+                        );
+                      }
+                    },
+                    icon: const Icon(Icons.link),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+            ],
             SizedBox(
               width: double.infinity,
               child: OutlinedButton.icon(
@@ -127,7 +166,7 @@ class ShareModal extends StatelessWidget {
                   } catch (_) {
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Could not open link')),
+                        SnackBar(content: Text(l10n.couldNotOpenLink)),
                       );
                     }
                   }

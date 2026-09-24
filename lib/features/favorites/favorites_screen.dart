@@ -15,6 +15,8 @@ import '../../data/services/file_cache_service.dart';
 import '../../shared/widgets/fetch_error_widget.dart';
 import '../../shared/widgets/network_banner.dart';
 import '../preview/preview_args.dart';
+import '../../core/theme/app_surfaces.dart';
+import '../../shared/file_icons.dart';
 
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -43,51 +45,6 @@ String _moduleInitials(String name) {
   final cleaned = name.replaceAll(RegExp(r'[^A-Za-z0-9]'), '');
   if (cleaned.length >= 2) return cleaned.substring(0, 2).toUpperCase();
   return cleaned.toUpperCase();
-}
-
-IconData _fileIcon(String name) {
-  final ext = name.split('.').last.toLowerCase();
-  switch (ext) {
-    case 'pdf':
-      return Icons.picture_as_pdf;
-    case 'doc':
-    case 'docx':
-      return Icons.description;
-    case 'ppt':
-    case 'pptx':
-      return Icons.slideshow;
-    case 'xls':
-    case 'xlsx':
-      return Icons.table_chart;
-    case 'zip':
-    case 'rar':
-      return Icons.folder_zip;
-    case 'mp4':
-    case 'avi':
-    case 'mkv':
-      return Icons.play_circle;
-    default:
-      return Icons.insert_drive_file;
-  }
-}
-
-Color _fileIconColor(String name, ThemeData theme) {
-  final ext = name.split('.').last.toLowerCase();
-  switch (ext) {
-    case 'pdf':
-      return theme.colorScheme.error;
-    case 'doc':
-    case 'docx':
-      return const Color(0xFF448AFF);
-    case 'ppt':
-    case 'pptx':
-      return const Color(0xFFFF7043);
-    case 'xls':
-    case 'xlsx':
-      return const Color(0xFF66BB6A);
-    default:
-      return theme.colorScheme.primary;
-  }
 }
 
 Color _fileIconBg(String name, ThemeData theme) {
@@ -251,7 +208,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
             Text(
               _tabTitle(tabIndex, l10n),
               style: theme.textTheme.headlineMedium?.copyWith(
-                color: Colors.white,
+                color: theme.colorScheme.onSurface,
               ),
             ),
             Text(
@@ -324,7 +281,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF111221),
+      backgroundColor: context.surfaces.shell,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Stack(
@@ -370,7 +327,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                     vertical: 16,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF111221).withAlpha(204),
+                    color: context.surfaces.shell.withAlpha(204),
                     border: Border(
                       bottom: BorderSide(
                         color: theme.colorScheme.outlineVariant.withAlpha(77),
@@ -527,7 +484,7 @@ class _FavoritesTabBar extends StatelessWidget {
         horizontal: AppSpacing.marginMobile,
       ),
       decoration: BoxDecoration(
-        color: const Color(0xFF111221).withAlpha(204),
+        color: context.surfaces.shell.withAlpha(204),
         border: Border(
           bottom: BorderSide(
             color: theme.colorScheme.outlineVariant.withAlpha(26),
@@ -674,7 +631,7 @@ class _ModuleFavoriteCard extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: const Color(0xFF15151F).withAlpha(179),
+            color: context.surfaces.card.withAlpha(179),
             borderRadius: BorderRadius.circular(AppRadius.lg),
             border: Border.all(
               color: theme.colorScheme.outlineVariant.withAlpha(77),
@@ -748,7 +705,7 @@ class _ModuleFavoriteCard extends StatelessWidget {
                     child: Text(
                       item.displayName,
                       style: theme.textTheme.titleMedium?.copyWith(
-                        color: Colors.white,
+                        color: theme.colorScheme.onSurface,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -847,8 +804,8 @@ class _FileFavoriteCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final icon = _fileIcon(item.displayName);
-    final iconColor = _fileIconColor(item.displayName, theme);
+    final icon = fileIconFor(item.displayName);
+    final iconColor = fileIconColorFor(item.displayName, theme);
     final iconBg = _fileIconBg(item.displayName, theme);
 
     return Padding(
@@ -858,7 +815,7 @@ class _FileFavoriteCard extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: const Color(0xFF15151F).withAlpha(179),
+            color: context.surfaces.card.withAlpha(179),
             borderRadius: BorderRadius.circular(AppRadius.lg),
             border: Border.all(
               color: theme.colorScheme.outlineVariant.withAlpha(77),
@@ -937,7 +894,7 @@ class _OnlineResourceFavoriteCard extends ConsumerWidget {
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: const Color(0xFF15151F).withAlpha(179),
+            color: context.surfaces.card.withAlpha(179),
             borderRadius: BorderRadius.circular(AppRadius.lg),
             border: Border.all(
               color: theme.colorScheme.outlineVariant.withAlpha(77),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:csbouira_app/core/theme/app_spacing.dart';
 import 'package:csbouira_app/l10n/app_localizations.dart';
+import '../../core/theme/app_surfaces.dart';
 
 class LegalScreen extends StatelessWidget {
   final String title;
@@ -13,9 +14,9 @@ class LegalScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: const Color(0xFF0D0D14),
+      backgroundColor: context.surfaces.page,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0D0D14),
+        backgroundColor: context.surfaces.page,
         title: Text(title),
       ),
       body: FutureBuilder<String>(
@@ -39,15 +40,15 @@ class LegalScreen extends StatelessWidget {
             styleSheet: MarkdownStyleSheet(
               h1: theme.textTheme.headlineLarge?.copyWith(
                 fontWeight: FontWeight.w700,
-                color: Colors.white,
+                color: theme.colorScheme.onSurface,
               ),
               h2: theme.textTheme.headlineMedium?.copyWith(
                 fontWeight: FontWeight.w600,
-                color: Colors.white,
+                color: theme.colorScheme.onSurface,
               ),
               h3: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.w600,
-                color: Colors.white,
+                color: theme.colorScheme.onSurface,
               ),
               p: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
@@ -58,7 +59,7 @@ class LegalScreen extends StatelessWidget {
               ),
               strong: theme.textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.w700,
-                color: Colors.white,
+                color: theme.colorScheme.onSurface,
               ),
               a: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.primary,
@@ -75,7 +76,7 @@ class LegalScreen extends StatelessWidget {
               ),
               tableHead: theme.textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.w700,
-                color: Colors.white,
+                color: theme.colorScheme.onSurface,
               ),
               tableBody: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
@@ -85,7 +86,7 @@ class LegalScreen extends StatelessWidget {
                 fontFamily: 'JetBrainsMono',
               ),
               codeblockDecoration: BoxDecoration(
-                color: const Color(0xFF15151F),
+                color: context.surfaces.card,
                 borderRadius: BorderRadius.circular(8),
               ),
               blockquoteDecoration: BoxDecoration(

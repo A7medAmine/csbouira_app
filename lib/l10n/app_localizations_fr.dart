@@ -1152,4 +1152,186 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get authSignupCheckEmail => 'Compte créé. Vérifiez votre e-mail pour le confirmer, puis connectez-vous.';
+
+  @override
+  String get linkFileNotFound => 'Ce fichier n\'est plus disponible. Il a peut-être été déplacé ou supprimé.';
+
+  @override
+  String get linkGoHome => 'Aller à l\'accueil';
+
+  @override
+  String get categoryCourse => 'Cours';
+
+  @override
+  String get categoryExam => 'Examens';
+
+  @override
+  String get categoryTest => 'Tests';
+
+  @override
+  String get categorySummary => 'Résumé';
+
+  @override
+  String get categoryTdTp => 'TD & TP';
+
+  @override
+  String get categoryBook => 'Livres';
+
+  @override
+  String get categoryOther => 'Autre';
+
+  @override
+  String get correctionBadge => 'Corrigé';
+
+  @override
+  String get examsTitle => 'Anciens examens';
+
+  @override
+  String get examsEmpty => 'Aucun examen ni test pour ce semestre pour l\'instant.';
+
+  @override
+  String get examsCorrectionsOnly => 'Avec corrigés';
+
+  @override
+  String get examsKindAll => 'Tous';
+
+  @override
+  String get whatsNewTitle => 'Nouveautés';
+
+  @override
+  String get whatsNewToday => 'Aujourd\'hui';
+
+  @override
+  String get whatsNewYesterday => 'Hier';
+
+  @override
+  String whatsNewFollowingOnly(int count) {
+    return 'Modules suivis ($count)';
+  }
+
+  @override
+  String get whatsNewEmpty => 'Aucun nouveau fichier ces 14 derniers jours. Les nouveaux fichiers apparaissent ici dès que l\'application les détecte.';
+
+  @override
+  String get followingManage => 'Modules suivis';
+
+  @override
+  String get moduleFollow => 'Suivre les nouveaux fichiers';
+
+  @override
+  String get moduleUnfollow => 'Ne plus suivre';
+
+  @override
+  String get moduleFollowedSnack => 'Vous serez notifié quand de nouveaux fichiers seront ajoutés à ce module.';
+
+  @override
+  String get moduleUnfollowedSnack => 'Module retiré des suivis.';
+
+  @override
+  String shareLinkMessage(String name, String appLink, String driveLink) {
+    return '$name\nOuvrir dans CS Bouira : $appLink\nGoogle Drive : $driveLink';
+  }
+
+  @override
+  String get shareLinkAction => 'Partager le lien';
+
+  @override
+  String get copyLinkAction => 'Copier le lien';
+
+  @override
+  String get linkCopied => 'Lien copié';
+
+  @override
+  String get homeActionExams => 'Examens';
+
+  @override
+  String get homeActionWhatsNew => 'Nouveautés';
+
+  @override
+  String get homeActionOffline => 'Hors ligne';
+
+  @override
+  String get homeRecentFiles => 'Ouverts récemment';
+
+  @override
+  String get homeRecentClear => 'Effacer';
+
+  @override
+  String get offlinePackTitle => 'Télécharger hors ligne';
+
+  @override
+  String get offlinePackHint => 'Les fichiers sont enregistrés dans Téléchargements. Ceux que vous avez déjà sont ignorés.';
+
+  @override
+  String get offlinePackAll => 'Module entier';
+
+  @override
+  String get offlinePackBusy => 'Un autre téléchargement est en cours.';
+
+  @override
+  String offlinePackProgress(int done, int total) {
+    return '$done sur $total fichiers';
+  }
+
+  @override
+  String get offlinePackCancelled => 'Téléchargement arrêté.';
+
+  @override
+  String offlinePackDone(int count) {
+    return '$count fichiers disponibles hors ligne.';
+  }
+
+  @override
+  String offlinePackDoneWithErrors(int done, int failed) {
+    return '$done fichiers prêts, $failed en échec.';
+  }
+
+  @override
+  String get offlinePackCancel => 'Arrêter';
+
+  @override
+  String get offlinePackDismiss => 'Fermer';
+
+  @override
+  String get searchFilterCategory => 'Catégorie';
+
+  @override
+  String get searchRecent => 'Recherches récentes';
+
+  @override
+  String get newFilesChannelName => 'Nouveaux fichiers';
+
+  @override
+  String newFilesNotificationTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nouveaux fichiers dans vos modules',
+      one: '1 nouveau fichier dans vos modules',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String newFilesNotificationLine(String module, int count) {
+    return '$module : $count nouveau(x)';
+  }
+
+  @override
+  String get profileTheme => 'Thème';
+
+  @override
+  String get profileThemeDark => 'Sombre';
+
+  @override
+  String get profileThemeLight => 'Clair';
+
+  @override
+  String get profileThemeSystem => 'Selon le système';
+
+  @override
+  String get profileCrashReports => 'Envoyer les rapports de plantage';
+
+  @override
+  String get profileWidgetCat => 'Chat sur le widget d\'accueil';
 }
