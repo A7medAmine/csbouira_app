@@ -1141,4 +1141,15 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get forgotPasswordNewPasswordStepSubtitle => 'Choisissez un nouveau mot de passe pour votre compte.';
+
+  @override
+  String get uploadErrorServer => 'Erreur du serveur. Veuillez réessayer.';
+
+  @override
+  String uploadPartialFailure(int failed, int total) {
+    return '$failed fichier(s) sur $total n\'ont pas pu être envoyés. Appuyez sur Réessayer pour les renvoyer.';
+  }
+
+  @override
+  String get authSignupCheckEmail => 'Compte créé. Vérifiez votre e-mail pour le confirmer, puis connectez-vous.';
 }

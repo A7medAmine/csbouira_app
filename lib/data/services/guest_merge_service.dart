@@ -28,6 +28,9 @@ class GuestMergeService {
               if (fav.folderPath != null) 'folder_path': fav.folderPath,
             },
             onConflict: 'user_id, item_type, item_path',
+            // ON CONFLICT DO NOTHING: favorites has no UPDATE RLS policy, so a
+            // DO UPDATE upsert on an existing row would be rejected.
+            ignoreDuplicates: true,
           );
         } catch (e) {
           allSucceeded = false;

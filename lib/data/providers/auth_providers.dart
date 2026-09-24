@@ -45,14 +45,16 @@ final localFavoritesCacheProvider = Provider<LocalFavoritesCache>((ref) {
   return LocalFavoritesCache();
 });
 
+/// Rebuilds when the signed-in user changes (login / logout / account
+/// switch), so everything that watches it reloads the right favorites.
 final favoritesRepositoryProvider = Provider<FavoritesRepository>((ref) {
-  final local = ref.watch(localFavoritesCacheProvider);
-  final authService = ref.watch(authServiceProvider);
+  final guestCache = ref.watch(localFavoritesCacheProvider);
   final supabase = ref.watch(supabaseProvider);
+  final userId = ref.watch(currentUserProvider.select((user) => user?.id));
   return FavoritesRepository(
-    local: local,
-    authService: authService,
+    guestCache: guestCache,
     supabase: supabase,
+    userId: userId,
   );
 });
 

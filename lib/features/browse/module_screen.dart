@@ -121,14 +121,16 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              l10n.moduleBreadcrumb(widget.year, widget.semester),
+                              l10n.moduleBreadcrumb(
+                                widget.year,
+                                widget.semester,
+                              ),
                               style: theme.textTheme.headlineMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: theme.colorScheme.primary,
                               ),
                             ),
                           ),
-
                         ],
                       ),
                     ),
@@ -141,13 +143,14 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
                               child: CircularProgressIndicator(),
                             ),
                         error:
-                            (err, _) =>
-                                FetchErrorWidget(error: err, message: l10n.failedToLoadModules),
+                            (err, _) => FetchErrorWidget(
+                              error: err,
+                              message: l10n.failedToLoadModules,
+                            ),
                         data: (node) {
-                          if (node == null)
-                            return Center(
-                              child: Text(l10n.noModulesFound),
-                            );
+                          if (node == null) {
+                            return Center(child: Text(l10n.noModulesFound));
+                          }
                           final allModules =
                               node.subfolders.entries.where((e) {
                                 return e.key != 'Books & Exercices';
@@ -163,9 +166,7 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
                                       )
                                       .toList();
                           if (allModules.isEmpty) {
-                            return Center(
-                              child: Text(l10n.noModulesAvailable),
-                            );
+                            return Center(child: Text(l10n.noModulesAvailable));
                           }
 
                           final totalFiles = allModules.fold<int>(
@@ -173,22 +174,84 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
                             (sum, e) => sum + e.value.totalFiles,
                           );
 
-                          return ListView(
-                            padding: const EdgeInsets.fromLTRB(
-                              AppSpacing.marginMobile,
-                              AppSpacing.stackLg,
-                              AppSpacing.marginMobile,
-                              24,
-                            ),
-                            children: [
-                              // Search & Filter Row
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 16,
+                          return RefreshIndicator(
+                            onRefresh: () => ref.refreshDriveData(),
+                            child: ListView(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              padding: const EdgeInsets.fromLTRB(
+                                AppSpacing.marginMobile,
+                                AppSpacing.stackLg,
+                                AppSpacing.marginMobile,
+                                24,
+                              ),
+                              children: [
+                                // Search & Filter Row
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 16,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color:
+                                              theme
+                                                  .colorScheme
+                                                  .surfaceContainer,
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                          border: Border.all(
+                                            color: theme
+                                                .colorScheme
+                                                .outlineVariant
+                                                .withAlpha(77),
+                                          ),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.search,
+                                              size: 20,
+                                              color: theme.colorScheme.outline,
+                                            ),
+                                            const SizedBox(width: 12),
+                                            Expanded(
+                                              child: TextField(
+                                                controller: _searchController,
+                                                onChanged:
+                                                    (v) => setState(
+                                                      () => _query = v,
+                                                    ),
+                                                style:
+                                                    theme.textTheme.bodyMedium,
+                                                decoration: InputDecoration(
+                                                  hintText: l10n.searchModules,
+                                                  hintStyle: theme
+                                                      .textTheme
+                                                      .bodyMedium
+                                                      ?.copyWith(
+                                                        color: theme
+                                                            .colorScheme
+                                                            .outline
+                                                            .withAlpha(128),
+                                                      ),
+                                                  border: InputBorder.none,
+                                                  isDense: true,
+                                                  contentPadding:
+                                                      const EdgeInsets.symmetric(
+                                                        vertical: 12,
+                                                      ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
+                                    ),
+                                    const SizedBox(width: AppSpacing.stackMd),
+                                    Container(
+                                      padding: const EdgeInsets.all(12),
                                       decoration: BoxDecoration(
                                         color:
                                             theme.colorScheme.surfaceContainer,
@@ -200,121 +263,54 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
                                               .withAlpha(77),
                                         ),
                                       ),
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.search,
-                                            size: 20,
-                                            color: theme.colorScheme.outline,
-                                          ),
-                                          const SizedBox(width: 12),
-                                          Expanded(
-                                            child: TextField(
-                                              controller: _searchController,
-                                              onChanged:
-                                                  (v) => setState(
-                                                    () => _query = v,
-                                                  ),
-                                              style: theme.textTheme.bodyMedium,
-                                              decoration: InputDecoration(
-                                                hintText: l10n.searchModules,
-                                                hintStyle: theme
-                                                    .textTheme
-                                                    .bodyMedium
-                                                    ?.copyWith(
-                                                      color: theme
-                                                          .colorScheme
-                                                          .outline
-                                                          .withAlpha(128),
-                                                    ),
-                                                border: InputBorder.none,
-                                                isDense: true,
-                                                contentPadding:
-                                                    const EdgeInsets.symmetric(
-                                                      vertical: 12,
-                                                    ),
+                                      child: Icon(
+                                        Icons.filter_list,
+                                        size: 20,
+                                        color:
+                                            theme.colorScheme.onSurfaceVariant,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                                const SizedBox(height: AppSpacing.stackLg),
+
+                                // Section header
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          l10n.activeModules,
+                                          style: theme.textTheme.labelMedium
+                                              ?.copyWith(
+                                                letterSpacing: 1.5,
+                                                color:
+                                                    theme.colorScheme.primary,
                                               ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: AppSpacing.stackMd),
-                                  Container(
-                                    padding: const EdgeInsets.all(12),
-                                    decoration: BoxDecoration(
-                                      color: theme.colorScheme.surfaceContainer,
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(
-                                        color: theme.colorScheme.outlineVariant
-                                            .withAlpha(77),
-                                      ),
-                                    ),
-                                    child: Icon(
-                                      Icons.filter_list,
-                                      size: 20,
-                                      color: theme.colorScheme.onSurfaceVariant,
-                                    ),
-                                  ),
-                                ],
-                              ),
-
-                              const SizedBox(height: AppSpacing.stackLg),
-
-                              // Section header
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        l10n.activeModules,
-                                        style: theme.textTheme.labelMedium
-                                            ?.copyWith(
-                                              letterSpacing: 1.5,
-                                              color: theme.colorScheme.primary,
-                                            ),
-                                      ),
-                                      const SizedBox(height: 2),
-                                      Text(
-                                        _query.isEmpty
-                                            ? l10n.allModules
-                                            : l10n.searchResults,
-                                        style: theme.textTheme.headlineMedium
-                                            ?.copyWith(color: Colors.white),
-                                      ),
-                                    ],
-                                  ),
-                                  Text(
-                                    l10n.totalCount(_query.isEmpty ? allModules.length : filtered.length),
-                                    style: theme.textTheme.labelMedium
-                                        ?.copyWith(
-                                          color:
-                                              theme
-                                                  .colorScheme
-                                                  .onSurfaceVariant,
                                         ),
-                                  ),
-                                ],
-                              ),
-
-                              const SizedBox(height: AppSpacing.stackMd),
-
-                              // Module cards
-                              if (filtered.isEmpty)
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 48,
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      l10n.noModulesMatchSearch,
-                                      style: theme.textTheme.bodyMedium
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          _query.isEmpty
+                                              ? l10n.allModules
+                                              : l10n.searchResults,
+                                          style: theme.textTheme.headlineMedium
+                                              ?.copyWith(color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
+                                    Text(
+                                      l10n.totalCount(
+                                        _query.isEmpty
+                                            ? allModules.length
+                                            : filtered.length,
+                                      ),
+                                      style: theme.textTheme.labelMedium
                                           ?.copyWith(
                                             color:
                                                 theme
@@ -322,25 +318,185 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
                                                     .onSurfaceVariant,
                                           ),
                                     ),
-                                  ),
-                                )
-                              else
-                                ...filtered.map((entry) {
-                                  final fc = entry.value.totalFiles;
-                                  final folCount =
-                                      entry.value.subfolders.length;
-                                  final initials = _moduleInitials(entry.key);
-                                  return Padding(
-                                    padding: const EdgeInsets.only(
-                                      bottom: AppSpacing.stackMd,
+                                  ],
+                                ),
+
+                                const SizedBox(height: AppSpacing.stackMd),
+
+                                // Module cards
+                                if (filtered.isEmpty)
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 48,
                                     ),
-                                    child: GestureDetector(
-                                      onTap:
-                                          () => context.push(
-                                            '/year/${Uri.encodeComponent(widget.year)}'
-                                            '/semester/${Uri.encodeComponent(widget.semester)}'
-                                            '/module/${Uri.encodeComponent(entry.key)}',
+                                    child: Center(
+                                      child: Text(
+                                        l10n.noModulesMatchSearch,
+                                        style: theme.textTheme.bodyMedium
+                                            ?.copyWith(
+                                              color:
+                                                  theme
+                                                      .colorScheme
+                                                      .onSurfaceVariant,
+                                            ),
+                                      ),
+                                    ),
+                                  )
+                                else
+                                  ...filtered.map((entry) {
+                                    final fc = entry.value.totalFiles;
+                                    final folCount =
+                                        entry.value.subfolders.length;
+                                    final initials = _moduleInitials(entry.key);
+                                    return Padding(
+                                      padding: const EdgeInsets.only(
+                                        bottom: AppSpacing.stackMd,
+                                      ),
+                                      child: GestureDetector(
+                                        onTap:
+                                            () => context.push(
+                                              '/year/${Uri.encodeComponent(widget.year)}'
+                                              '/semester/${Uri.encodeComponent(widget.semester)}'
+                                              '/module/${Uri.encodeComponent(entry.key)}',
+                                            ),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(16),
+                                          decoration: BoxDecoration(
+                                            color: const Color(
+                                              0xFF15151F,
+                                            ).withAlpha(179),
+                                            borderRadius: BorderRadius.circular(
+                                              16,
+                                            ),
+                                            border: Border.all(
+                                              color: theme
+                                                  .colorScheme
+                                                  .outlineVariant
+                                                  .withAlpha(77),
+                                            ),
                                           ),
+                                          child: Row(
+                                            children: [
+                                              // Initials badge
+                                              Container(
+                                                width: 56,
+                                                height: 56,
+                                                decoration: BoxDecoration(
+                                                  color: theme
+                                                      .colorScheme
+                                                      .primaryContainer
+                                                      .withAlpha(51),
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                  border: Border.all(
+                                                    color: theme
+                                                        .colorScheme
+                                                        .primary
+                                                        .withAlpha(51),
+                                                  ),
+                                                ),
+                                                child: Center(
+                                                  child: Text(
+                                                    initials,
+                                                    style: theme
+                                                        .textTheme
+                                                        .titleMedium
+                                                        ?.copyWith(
+                                                          color:
+                                                              theme
+                                                                  .colorScheme
+                                                                  .primary,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                width: AppSpacing.stackMd,
+                                              ),
+                                              // Name + metadata
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      entry.key,
+                                                      style: theme
+                                                          .textTheme
+                                                          .titleMedium
+                                                          ?.copyWith(
+                                                            color: Colors.white,
+                                                          ),
+                                                    ),
+                                                    const SizedBox(height: 4),
+                                                    Row(
+                                                      children: [
+                                                        Icon(
+                                                          Icons.folder_open,
+                                                          size: 14,
+                                                          color:
+                                                              theme
+                                                                  .colorScheme
+                                                                  .outline,
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 4,
+                                                        ),
+                                                        Text(
+                                                          folCount > 0
+                                                              ? l10n
+                                                                  .folderFileBreakdown(
+                                                                    folCount,
+                                                                    fc,
+                                                                  )
+                                                              : l10n.fileCount(
+                                                                fc,
+                                                              ),
+                                                          style: theme
+                                                              .textTheme
+                                                              .labelMedium
+                                                              ?.copyWith(
+                                                                color:
+                                                                    theme
+                                                                        .colorScheme
+                                                                        .onSurfaceVariant,
+                                                              ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              FavoriteStar(
+                                                itemType: 'module',
+                                                itemPath:
+                                                    '${widget.year}>subfolders>${widget.semester}>subfolders>${entry.key}',
+                                                displayName: entry.key,
+                                              ),
+                                              const SizedBox(width: 4),
+                                              Icon(
+                                                Directionality.of(context) ==
+                                                        TextDirection.rtl
+                                                    ? Icons.chevron_left
+                                                    : Icons.chevron_right,
+                                                color:
+                                                    theme.colorScheme.outline,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }),
+
+                                const SizedBox(height: AppSpacing.stackMd),
+
+                                // Bottom info cards
+                                Row(
+                                  children: [
+                                    Expanded(
                                       child: Container(
                                         padding: const EdgeInsets.all(16),
                                         decoration: BoxDecoration(
@@ -354,222 +510,99 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
                                             color: theme
                                                 .colorScheme
                                                 .outlineVariant
-                                                .withAlpha(77),
+                                                .withAlpha(51),
                                           ),
                                         ),
-                                        child: Row(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
-                                            // Initials badge
-                                            Container(
-                                              width: 56,
-                                              height: 56,
-                                              decoration: BoxDecoration(
-                                                color: theme
-                                                    .colorScheme
-                                                    .primaryContainer
-                                                    .withAlpha(51),
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                                border: Border.all(
-                                                  color: theme
-                                                      .colorScheme
-                                                      .primary
-                                                      .withAlpha(51),
-                                                ),
-                                              ),
-                                              child: Center(
-                                                child: Text(
-                                                  initials,
-                                                  style: theme
-                                                      .textTheme
-                                                      .titleMedium
-                                                      ?.copyWith(
-                                                        color:
-                                                            theme
-                                                                .colorScheme
-                                                                .primary,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              width: AppSpacing.stackMd,
-                                            ),
-                                            // Name + metadata
-                                            Expanded(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    entry.key,
-                                                    style: theme
-                                                        .textTheme
-                                                        .titleMedium
-                                                        ?.copyWith(
-                                                          color: Colors.white,
-                                                        ),
-                                                  ),
-                                                  const SizedBox(height: 4),
-                                                  Row(
-                                                    children: [
-                                                      Icon(
-                                                        Icons.folder_open,
-                                                        size: 14,
-                                                        color:
-                                                            theme
-                                                                .colorScheme
-                                                                .outline,
-                                                      ),
-                                                      const SizedBox(width: 4),
-                                                      Text(
-                                                        folCount > 0
-                                                            ? l10n.folderFileBreakdown(folCount, fc)
-                                                            : l10n.fileCount(fc),
-                                                        style: theme
-                                                            .textTheme
-                                                            .labelMedium
-                                                            ?.copyWith(
-                                                              color:
-                                                                  theme
-                                                                      .colorScheme
-                                                                      .onSurfaceVariant,
-                                                            ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            FavoriteStar(
-                                              itemType: 'module',
-                                              itemPath:
-                                                  '${widget.year}>subfolders>${widget.semester}>subfolders>${entry.key}',
-                                              displayName: entry.key,
-                                            ),
-                                            const SizedBox(width: 4),
                                             Icon(
-                                              Directionality.of(context) == TextDirection.rtl
-                                                  ? Icons.chevron_left
-                                                  : Icons.chevron_right,
-                                              color: theme.colorScheme.outline,
+                                              Icons.schedule,
+                                              color: theme.colorScheme.primary,
+                                              size: 22,
+                                            ),
+                                            const SizedBox(height: 8),
+                                            Text(
+                                              l10n.totalModules,
+                                              style: theme.textTheme.labelMedium
+                                                  ?.copyWith(
+                                                    color:
+                                                        theme
+                                                            .colorScheme
+                                                            .onSurfaceVariant,
+                                                  ),
+                                            ),
+                                            Text(
+                                              '${allModules.length}',
+                                              style: theme
+                                                  .textTheme
+                                                  .headlineMedium
+                                                  ?.copyWith(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                             ),
                                           ],
                                         ),
                                       ),
                                     ),
-                                  );
-                                }),
-
-                              const SizedBox(height: AppSpacing.stackMd),
-
-                              // Bottom info cards
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      padding: const EdgeInsets.all(16),
-                                      decoration: BoxDecoration(
-                                        color: const Color(
-                                          0xFF15151F,
-                                        ).withAlpha(179),
-                                        borderRadius: BorderRadius.circular(16),
-                                        border: Border.all(
-                                          color: theme
-                                              .colorScheme
-                                              .outlineVariant
-                                              .withAlpha(51),
+                                    const SizedBox(width: AppSpacing.stackMd),
+                                    Expanded(
+                                      child: Container(
+                                        padding: const EdgeInsets.all(16),
+                                        decoration: BoxDecoration(
+                                          color: const Color(
+                                            0xFF15151F,
+                                          ).withAlpha(179),
+                                          borderRadius: BorderRadius.circular(
+                                            16,
+                                          ),
+                                          border: Border.all(
+                                            color: theme
+                                                .colorScheme
+                                                .outlineVariant
+                                                .withAlpha(51),
+                                          ),
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Icon(
+                                              Icons.cloud_download,
+                                              color: theme.colorScheme.tertiary,
+                                              size: 22,
+                                            ),
+                                            const SizedBox(height: 8),
+                                            Text(
+                                              l10n.totalFiles,
+                                              style: theme.textTheme.labelMedium
+                                                  ?.copyWith(
+                                                    color:
+                                                        theme
+                                                            .colorScheme
+                                                            .onSurfaceVariant,
+                                                  ),
+                                            ),
+                                            Text(
+                                              '$totalFiles',
+                                              style: theme
+                                                  .textTheme
+                                                  .headlineMedium
+                                                  ?.copyWith(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Icon(
-                                            Icons.schedule,
-                                            color: theme.colorScheme.primary,
-                                            size: 22,
-                                          ),
-                                          const SizedBox(height: 8),
-                                          Text(
-                                            l10n.totalModules,
-                                            style: theme.textTheme.labelMedium
-                                                ?.copyWith(
-                                                  color:
-                                                      theme
-                                                          .colorScheme
-                                                          .onSurfaceVariant,
-                                                ),
-                                          ),
-                                          Text(
-                                            '${allModules.length}',
-                                            style: theme
-                                                .textTheme
-                                                .headlineMedium
-                                                ?.copyWith(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                          ),
-                                        ],
-                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(width: AppSpacing.stackMd),
-                                  Expanded(
-                                    child: Container(
-                                      padding: const EdgeInsets.all(16),
-                                      decoration: BoxDecoration(
-                                        color: const Color(
-                                          0xFF15151F,
-                                        ).withAlpha(179),
-                                        borderRadius: BorderRadius.circular(16),
-                                        border: Border.all(
-                                          color: theme
-                                              .colorScheme
-                                              .outlineVariant
-                                              .withAlpha(51),
-                                        ),
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Icon(
-                                            Icons.cloud_download,
-                                            color: theme.colorScheme.tertiary,
-                                            size: 22,
-                                          ),
-                                          const SizedBox(height: 8),
-                                          Text(
-                                            l10n.totalFiles,
-                                            style: theme.textTheme.labelMedium
-                                                ?.copyWith(
-                                                  color:
-                                                      theme
-                                                          .colorScheme
-                                                          .onSurfaceVariant,
-                                                ),
-                                          ),
-                                          Text(
-                                            '$totalFiles',
-                                            style: theme
-                                                .textTheme
-                                                .headlineMedium
-                                                ?.copyWith(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                  ],
+                                ),
+                              ],
+                            ),
                           );
                         },
                       ),

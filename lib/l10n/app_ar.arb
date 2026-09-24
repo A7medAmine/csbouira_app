@@ -502,5 +502,9 @@
   "forgotPasswordNewPasswordStepSubtitle": "اختر كلمة مرور جديدة لحسابك.",
   "@forgotPasswordNewPasswordStepSubtitle": {
     "description": "Subtitle on the new password step header"
-  }
+  },
+
+  "uploadErrorServer": "خطأ في الخادم. يرجى المحاولة مرة أخرى.",
+  "uploadPartialFailure": "تعذّر رفع {failed} من أصل {total} ملفات. اضغط على إعادة المحاولة لرفعها مجددًا.",
+  "authSignupCheckEmail": "تم إنشاء الحساب. تحقق من بريدك الإلكتروني لتأكيده، ثم سجّل الدخول."
 }

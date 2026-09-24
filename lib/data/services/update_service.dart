@@ -6,6 +6,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pub_semver/pub_semver.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../core/constants.dart';
 import '../models/update_info.dart';
 
 class UpdateService {
@@ -28,7 +29,7 @@ class UpdateService {
       final response = await http.get(
         Uri.parse(_repoApiUrl),
         headers: {'Accept': 'application/vnd.github.v3+json'},
-      );
+      ).timeout(NetworkConstants.apiTimeout);
       if (response.statusCode != 200) return null;
 
       final json = jsonDecode(response.body) as Map<String, dynamic>;

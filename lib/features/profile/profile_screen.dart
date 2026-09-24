@@ -10,6 +10,7 @@ import '../../core/theme/app_spacing.dart';
 import '../../data/providers/auth_providers.dart';
 import '../../data/providers/favorites_providers.dart';
 import '../../data/providers/upload_count_provider.dart';
+import '../../data/services/local_favorites_cache.dart';
 import '../../shared/widgets/avatar_widget.dart';
 import '../../shared/widgets/network_banner.dart';
 import '../../shared/widgets/user_avatar.dart';
@@ -871,7 +872,12 @@ class _LogOutButton extends StatelessWidget {
 
         if (confirmed == true) {
           final authService = ref.read(authServiceProvider);
+          final userId = authService.currentUser?.id;
           await authService.signOut();
+          if (userId != null) {
+            // Drop this account's offline favorites mirror from the device.
+            await LocalFavoritesCache.forAccount(userId).clear();
+          }
           try {
             await GoogleSignIn.instance.signOut();
           } catch (e) {

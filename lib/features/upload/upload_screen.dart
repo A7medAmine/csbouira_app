@@ -618,8 +618,8 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
     final stateNotifier = ref.read(uploadStateProvider.notifier);
 
     int successCount = 0;
-    String? lastError;
-    UploadErrorType? lastErrorType;
+    final failedFiles = <SelectedUploadFile>[];
+    UploadResult? lastFailure;
 
     _uploadCancelled = false;
 
@@ -660,21 +660,24 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
 
       _cancelToken = null;
 
+      if (!mounted) return;
+
       if (result.success) {
         successCount++;
         if (user != null) {
           try {
+            // Goes through a rate-limited RPC; clients can no longer insert
+            // into `uploads` directly (see supabase/migration_004.sql).
             final supabase = ref.read(supabaseProvider);
-            await supabase.from('uploads').insert({
-              'user_id': user.id,
-              'file_name': uploadFileName,
-              'module_name': moduleName,
-              'grade': _selectedGrade!,
-              'semester': _mapSemester(_selectedSemester!),
-              'file_type': fileType,
+            await supabase.rpc('record_upload', params: {
+              'p_file_name': uploadFileName,
+              'p_module_name': moduleName,
+              'p_grade': _selectedGrade!,
+              'p_semester': _mapSemester(_selectedSemester!),
+              'p_file_type': fileType,
             });
           } catch (e) {
-            debugPrint('Error in _UploadScreenState._submit (supabase insert): $e');
+            debugPrint('Error in _UploadScreenState._submit (record_upload): $e');
           }
         } else {
           final cache = LocalProfileCache();
@@ -689,9 +692,16 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
           });
         }
       } else {
-        lastError = '$uploadFileName: ${result.message ?? l10n.uploadErrorFailed}';
-        lastErrorType = result.errorType;
+        failedFiles.add(file);
+        lastFailure = result;
       }
+    }
+
+    // Files not attempted because the user cancelled count as failed too.
+    if (_uploadCancelled) {
+      failedFiles.addAll(
+        _selectedFiles.skip(successCount + failedFiles.length),
+      );
     }
 
     ref.invalidate(uploadCountProvider);
@@ -699,15 +709,32 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
       ref.invalidate(myUploadsProvider);
     }
 
+    // Form was reset mid-upload: nothing left to report on.
+    if (_selectedFiles.isEmpty) return;
+
     if (mounted) {
       _currentUploadIndex = 0;
-      if (successCount > 0) {
+      if (failedFiles.isEmpty) {
         stateNotifier.setSuccess();
-      } else if (lastError != null) {
+      } else if (successCount == 0) {
+        stateNotifier.setError(lastFailure ??
+            const UploadResult(
+              success: false,
+              errorType: UploadErrorType.cancelled,
+            ));
+      } else {
+        // Partial success: keep only the failed files so Retry re-sends
+        // just those, and tell the user how many did not go through.
+        final total = _selectedFiles.length;
+        setState(() {
+          _selectedFiles
+            ..clear()
+            ..addAll(failedFiles);
+        });
         stateNotifier.setError(UploadResult(
           success: false,
-          message: lastError,
-          errorType: lastErrorType,
+          message: l10n.uploadPartialFailure(failedFiles.length, total),
+          errorType: lastFailure?.errorType,
         ));
       }
     }
@@ -903,10 +930,10 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
       UploadErrorType.offline => (Icons.wifi_off, l10n.uploadErrorNoInternet),
       UploadErrorType.timeout => (Icons.timer_off, l10n.uploadErrorTimeout),
       UploadErrorType.cancelled => (Icons.cancel_outlined, l10n.uploadErrorCancelled),
-      UploadErrorType.serverError => (Icons.error_outline, error.message ?? l10n.uploadErrorFailed),
-      UploadErrorType.unknown => (Icons.error_outline, error.message ?? l10n.uploadErrorFailed),
-      null => (Icons.error_outline, error.message ?? l10n.uploadErrorFailed),
+      UploadErrorType.serverError => (Icons.error_outline, l10n.uploadErrorServer),
+      UploadErrorType.unknown || null => (Icons.error_outline, l10n.uploadErrorFailed),
     };
+    final detail = error.message;
     return Container(
       padding: const EdgeInsets.all(AppSpacing.stackSm),
       decoration: BoxDecoration(
@@ -933,6 +960,15 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
               ),
             ],
           ),
+          if (detail != null && detail.isNotEmpty) ...[
+            const SizedBox(height: 4),
+            Text(
+              detail,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
           if (error.errorType != UploadErrorType.cancelled) ...[
             const SizedBox(height: AppSpacing.stackSm),
             Align(

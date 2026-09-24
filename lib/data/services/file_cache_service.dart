@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'http_download.dart';
 
 const _maxCacheSizeBytes = 200 * 1024 * 1024; // 200 MB
 
@@ -25,12 +27,21 @@ String? extractDriveFileId(String url) {
 }
 
 class FileCacheService {
+  final http.Client _client;
   Directory? _cacheDir;
 
+  FileCacheService({http.Client? client}) : _client = client ?? http.Client();
+
+  /// Dedicated subfolder of the temp dir. Eviction only ever deletes files in
+  /// here, never other temp files (picked/scanned files being uploaded, the
+  /// downloaded update APK, ...).
   Future<Directory> _getCacheDir() async {
     if (_cacheDir != null) return _cacheDir!;
-    _cacheDir = await getTemporaryDirectory();
-    return _cacheDir!;
+    final temp = await getTemporaryDirectory();
+    final dir = Directory('${temp.path}/file_cache');
+    if (!await dir.exists()) await dir.create(recursive: true);
+    _cacheDir = dir;
+    return dir;
   }
 
   /// Initializes the cache: checks size, evicts oldest files if over threshold.
@@ -56,40 +67,39 @@ class FileCacheService {
       return cachedFile;
     }
 
-    final response = await http.get(Uri.parse(downloadUrl));
-    if (response.statusCode != 200) {
-      throw FileCacheException(
-        'Download failed with status ${response.statusCode}',
-      );
+    try {
+      await downloadToFile(_client, Uri.parse(downloadUrl), cachedFile);
+    } on HttpException catch (e) {
+      throw FileCacheException(e.message);
     }
-
-    await cachedFile.writeAsBytes(response.bodyBytes, flush: true);
     return cachedFile;
   }
 
   Future<void> _evictIfNeeded(Directory dir) async {
-    if (!dir.existsSync()) return;
+    if (!await dir.exists()) return;
 
-    final files = dir.listSync().whereType<File>().toList();
+    final entries = <(File, int, DateTime)>[];
     int totalSize = 0;
-    for (final f in files) {
-      totalSize += f.lengthSync();
+    await for (final entity in dir.list()) {
+      if (entity is! File) continue;
+      final stat = await entity.stat();
+      entries.add((entity, stat.size, stat.modified));
+      totalSize += stat.size;
     }
 
     if (totalSize <= _maxCacheSizeBytes) return;
 
-    // Sort by modification time (oldest first) — simple LRU
-    files.sort((a, b) {
-      final aTime = a.lastModifiedSync();
-      final bTime = b.lastModifiedSync();
-      return aTime.compareTo(bTime);
-    });
+    // Oldest first — simple LRU (reads touch the modified time).
+    entries.sort((a, b) => a.$3.compareTo(b.$3));
 
-    for (final f in files) {
+    for (final (file, size, _) in entries) {
       if (totalSize <= _maxCacheSizeBytes) break;
-      final size = f.lengthSync();
-      f.deleteSync();
-      totalSize -= size;
+      try {
+        await file.delete();
+        totalSize -= size;
+      } catch (e) {
+        debugPrint('Error in FileCacheService._evictIfNeeded: $e');
+      }
     }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/local_favorites_cache.dart';
 import 'auth_providers.dart';
@@ -31,38 +32,18 @@ class FavoriteItem {
       createdAt: item.createdAt,
     );
   }
-
-  factory FavoriteItem.fromRemote(Map<String, dynamic> map) {
-    final path = map['item_path'] as String;
-    return FavoriteItem(
-      itemType: map['item_type'] as String,
-      itemPath: path,
-      displayName:
-          map['display_name'] as String? ?? path.split('>subfolders>').last,
-      resourceType: map['resource_type'] as String?,
-      folderPath: map['folder_path'] as String?,
-      createdAt: DateTime.parse(map['created_at'] as String),
-    );
-  }
 }
 
 class FavoritesNotifier extends AsyncNotifier<List<FavoriteItem>> {
   @override
   Future<List<FavoriteItem>> build() async {
     final repo = ref.watch(favoritesRepositoryProvider);
-    final raw = await repo.getAll();
-    if (raw.isEmpty) return [];
-    if (raw.first is LocalFavoriteItem) {
-      return (raw as List<LocalFavoriteItem>)
-          .map(FavoriteItem.fromLocal)
-          .toList();
-    }
-    return (raw as List<Map<String, dynamic>>)
-        .map(FavoriteItem.fromRemote)
-        .toList();
+    final items = await repo.getAll();
+    return items.map(FavoriteItem.fromLocal).toList();
   }
 
-  Future<void> add(FavoriteItem item) async {
+  /// Optimistically adds [item]. Returns false (and rolls back) on failure.
+  Future<bool> add(FavoriteItem item) async {
     final previousState = state;
     state = AsyncData([item, ...(state.valueOrNull ?? [])]);
     try {
@@ -74,12 +55,16 @@ class FavoritesNotifier extends AsyncNotifier<List<FavoriteItem>> {
         resourceType: item.resourceType,
         folderPath: item.folderPath,
       );
-    } catch (_) {
+      return true;
+    } catch (e) {
+      debugPrint('Error in FavoritesNotifier.add: $e');
       state = previousState;
+      return false;
     }
   }
 
-  Future<void> remove(String itemType, String itemPath) async {
+  /// Optimistically removes an item. Returns false (and rolls back) on failure.
+  Future<bool> remove(String itemType, String itemPath) async {
     final previousState = state;
     final items = state.valueOrNull ?? [];
     state = AsyncData(
@@ -90,24 +75,26 @@ class FavoritesNotifier extends AsyncNotifier<List<FavoriteItem>> {
     try {
       final repo = ref.read(favoritesRepositoryProvider);
       await repo.removeFavorite(itemType, itemPath);
-    } catch (_) {
+      return true;
+    } catch (e) {
+      debugPrint('Error in FavoritesNotifier.remove: $e');
       state = previousState;
+      return false;
     }
   }
 
-  Future<void> toggleFile(String fileLink, String displayName) async {
+  Future<bool> toggleFile(String fileLink, String displayName) async {
     final items = state.valueOrNull ?? [];
     final exists = items.any((e) => e.itemType == 'file' && e.itemPath == fileLink);
     if (exists) {
-      await remove('file', fileLink);
-    } else {
-      await add(FavoriteItem(
-        itemType: 'file',
-        itemPath: fileLink,
-        displayName: displayName,
-        createdAt: DateTime.now(),
-      ));
+      return remove('file', fileLink);
     }
+    return add(FavoriteItem(
+      itemType: 'file',
+      itemPath: fileLink,
+      displayName: displayName,
+      createdAt: DateTime.now(),
+    ));
   }
 }
 

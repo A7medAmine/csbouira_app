@@ -76,15 +76,26 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           return;
         }
 
+        // The profile row is created by the `on_auth_user_created` trigger
+        // (supabase/migration_004.sql) from the `full_name` metadata above.
+
+        if (response.session == null) {
+          // Email confirmation is required: no session yet, so the user
+          // cannot act as themselves until they confirm and log in.
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(AppLocalizations.of(context)!.authSignupCheckEmail),
+            duration: const Duration(seconds: 6),
+          ));
+          setState(() {
+            _isSignup = false;
+            _passwordController.clear();
+            _confirmPasswordController.clear();
+          });
+          return;
+        }
+
         final userId = response.user!.id;
-        final supabase = ref.read(supabaseProvider);
-
-        await supabase.from('profiles').insert({
-          'id': userId,
-          'full_name': _fullNameController.text.trim(),
-          'email': _emailController.text.trim(),
-        });
-
         if (await _promptMergeIfNeeded(userId)) {
           final mergeService = ref.read(guestMergeServiceProvider);
           await mergeService.mergeGuestDataIntoAccount(userId);

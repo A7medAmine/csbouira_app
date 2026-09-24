@@ -106,7 +106,6 @@ class SemesterScreen extends ConsumerWidget {
                           ),
                         ),
                       ),
-
                     ],
                   ),
                 ),
@@ -118,85 +117,91 @@ class SemesterScreen extends ConsumerWidget {
                       constraints: const BoxConstraints(
                         maxWidth: AppSpacing.containerMax,
                       ),
-                      child: ListView(
-                        padding: const EdgeInsets.fromLTRB(
-                          AppSpacing.marginMobile,
-                          AppSpacing.marginMobile,
-                          AppSpacing.marginMobile,
-                          24,
-                        ),
-                        children: [
-                          // Academic year badge + description
-                          Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: theme.colorScheme.primary.withAlpha(
-                                    26,
+                      child: RefreshIndicator(
+                        onRefresh: () => ref.refreshDriveData(),
+                        child: ListView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          padding: const EdgeInsets.fromLTRB(
+                            AppSpacing.marginMobile,
+                            AppSpacing.marginMobile,
+                            AppSpacing.marginMobile,
+                            24,
+                          ),
+                          children: [
+                            // Academic year badge + description
+                            Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 4,
                                   ),
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(
+                                  decoration: BoxDecoration(
                                     color: theme.colorScheme.primary.withAlpha(
-                                      51,
+                                      26,
+                                    ),
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                      color: theme.colorScheme.primary
+                                          .withAlpha(51),
                                     ),
                                   ),
-                                ),
-                                child: Text(
-                                  AppLocalizations.of(context)!.academicYear(
-                                    '${DateTime.now().year}/${DateTime.now().year + 1}',
+                                  child: Text(
+                                    AppLocalizations.of(context)!.academicYear(
+                                      '${DateTime.now().year}/${DateTime.now().year + 1}',
+                                    ),
+                                    style: theme.textTheme.labelMedium
+                                        ?.copyWith(
+                                          color: theme.colorScheme.primary,
+                                        ),
                                   ),
-                                  style: theme.textTheme.labelMedium?.copyWith(
-                                    color: theme.colorScheme.primary,
-                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: AppSpacing.stackMd),
-                          Text(
-                            AppLocalizations.of(context)!.semesterSubtitle(year),
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
+                              ],
                             ),
-                          ),
-
-                          const SizedBox(height: AppSpacing.stackLg),
-
-                          // Semester cards
-                          ...semesters.asMap().entries.map((entry) {
-                            final idx = entry.key;
-                            final sem = entry.value;
-                            final count = moduleCounts[sem] ?? 0;
-
-                            return Padding(
-                              padding: EdgeInsets.only(
-                                bottom:
-                                    idx < semesters.length - 1
-                                        ? AppSpacing.stackMd
-                                        : 0,
+                            const SizedBox(height: AppSpacing.stackMd),
+                            Text(
+                              AppLocalizations.of(
+                                context,
+                              )!.semesterSubtitle(year),
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
                               ),
-                              child: _SemesterCard(
-                                semester: sem,
-                                moduleCount: count,
-                                year: year,
-                              ),
-                            );
-                          }),
+                            ),
 
-                          const SizedBox(height: AppSpacing.stackMd),
+                            const SizedBox(height: AppSpacing.stackLg),
 
-                          // Books & Exercises card
-                          _BooksExercisesCard(year: year),
+                            // Semester cards
+                            ...semesters.asMap().entries.map((entry) {
+                              final idx = entry.key;
+                              final sem = entry.value;
+                              final count = moduleCounts[sem] ?? 0;
 
-                          const SizedBox(height: AppSpacing.stackLg),
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                  bottom:
+                                      idx < semesters.length - 1
+                                          ? AppSpacing.stackMd
+                                          : 0,
+                                ),
+                                child: _SemesterCard(
+                                  semester: sem,
+                                  moduleCount: count,
+                                  year: year,
+                                ),
+                              );
+                            }),
 
-                          // Online Resources section
-                          _OnlineResourcesSection(resources: yearResources),
-                        ],
+                            const SizedBox(height: AppSpacing.stackMd),
+
+                            // Books & Exercises card
+                            _BooksExercisesCard(year: year),
+
+                            const SizedBox(height: AppSpacing.stackLg),
+
+                            // Online Resources section
+                            _OnlineResourcesSection(resources: yearResources),
+                          ],
+                        ),
                       ),
                     ),
                   ),

@@ -1,8 +1,19 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// Favorites stored on the device.
+///
+/// The default instance holds guest favorites (key `local_favorites`).
+/// [LocalFavoritesCache.forAccount] holds an offline mirror of a signed-in
+/// user's remote favorites, kept separate so account data never leaks into
+/// the guest list (and never shows up in the guest-merge prompt).
 class LocalFavoritesCache {
-  static const _key = 'local_favorites';
+  final String _key;
+
+  LocalFavoritesCache() : _key = 'local_favorites';
+
+  LocalFavoritesCache.forAccount(String userId)
+      : _key = 'account_favorites_$userId';
 
   Future<List<LocalFavoriteItem>> getAll() async {
     final prefs = await SharedPreferences.getInstance();

@@ -46,25 +46,18 @@ class _FavoriteStarState extends ConsumerState<FavoriteStar> {
     if (_isFavorited == null) return;
     final wasFavorited = _isFavorited!;
     setState(() => _isFavorited = !wasFavorited);
-    try {
-      if (wasFavorited) {
-        await ref.read(favoritesListProvider.notifier).remove(
-          widget.itemType,
-          widget.itemPath,
-        );
-      } else {
-        await ref.read(favoritesListProvider.notifier).add(FavoriteItem(
-          itemType: widget.itemType,
-          itemPath: widget.itemPath,
-          displayName: widget.displayName,
-          resourceType: widget.resourceType,
-          folderPath: widget.folderPath,
-          createdAt: DateTime.now(),
-        ));
-      }
-    } catch (_) {
-      if (mounted) setState(() => _isFavorited = wasFavorited);
-    }
+    final notifier = ref.read(favoritesListProvider.notifier);
+    final ok = wasFavorited
+        ? await notifier.remove(widget.itemType, widget.itemPath)
+        : await notifier.add(FavoriteItem(
+            itemType: widget.itemType,
+            itemPath: widget.itemPath,
+            displayName: widget.displayName,
+            resourceType: widget.resourceType,
+            folderPath: widget.folderPath,
+            createdAt: DateTime.now(),
+          ));
+    if (!ok && mounted) setState(() => _isFavorited = wasFavorited);
   }
 
   @override

@@ -1350,5 +1350,9 @@
   "forgotPasswordNewPasswordStepSubtitle": "Choisissez un nouveau mot de passe pour votre compte.",
   "@forgotPasswordNewPasswordStepSubtitle": {
     "description": "Subtitle on the new password step header"
-  }
+  },
+
+  "uploadErrorServer": "Erreur du serveur. Veuillez réessayer.",
+  "uploadPartialFailure": "{failed} fichier(s) sur {total} n'ont pas pu être envoyés. Appuyez sur Réessayer pour les renvoyer.",
+  "authSignupCheckEmail": "Compte créé. Vérifiez votre e-mail pour le confirmer, puis connectez-vous."
 }

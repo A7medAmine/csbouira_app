@@ -26,10 +26,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   bool _updateChecked = false;
 
-  Future<void> _onRefresh() async {
-    ref.invalidate(fileCountsProvider);
-    await ref.read(fileCountsProvider.future);
-  }
+  Future<void> _onRefresh() => ref.refreshDriveData();
 
   Future<void> _checkUpdate() async {
     if (!Platform.isAndroid || !mounted) return;
