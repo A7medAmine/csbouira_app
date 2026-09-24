@@ -9,6 +9,6 @@ final uploadCountProvider = FutureProvider<int>((ref) async {
     return cache.getUploadCount();
   }
   final supabase = ref.watch(supabaseProvider);
-  final result = await supabase.from('uploads').select('id');
-  return result.length;
+  // Server-side count instead of downloading every row.
+  return supabase.from('uploads').count().eq('user_id', user.id);
 });

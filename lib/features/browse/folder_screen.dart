@@ -141,17 +141,21 @@ class FolderScreen extends ConsumerWidget {
 
                     // Content
                     Expanded(
-                      child: ListView(
-                        padding: const EdgeInsets.fromLTRB(
-                          AppSpacing.marginMobile,
-                          AppSpacing.stackLg,
-                          AppSpacing.marginMobile,
-                          24,
+                      child: RefreshIndicator(
+                        onRefresh: () => ref.refreshDriveData(),
+                        child: ListView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          padding: const EdgeInsets.fromLTRB(
+                            AppSpacing.marginMobile,
+                            AppSpacing.stackLg,
+                            AppSpacing.marginMobile,
+                            24,
+                          ),
+                          children: [
+                            // Folder grid
+                            _buildFolderGrid(context, theme, folderFileCounts),
+                          ],
                         ),
-                        children: [
-                          // Folder grid
-                          _buildFolderGrid(context, theme, folderFileCounts),
-                        ],
                       ),
                     ),
                   ],
@@ -307,12 +311,19 @@ class _FolderCard extends StatelessWidget {
                     : theme.colorScheme.outlineVariant.withAlpha(77),
           ),
         ),
-        child: isHorizontal ? _horizontalLayout(context, theme, l10n) : _verticalLayout(context, theme, l10n),
+        child:
+            isHorizontal
+                ? _horizontalLayout(context, theme, l10n)
+                : _verticalLayout(context, theme, l10n),
       ),
     );
   }
 
-  Widget _verticalLayout(BuildContext context, ThemeData theme, AppLocalizations l10n) {
+  Widget _verticalLayout(
+    BuildContext context,
+    ThemeData theme,
+    AppLocalizations l10n,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -346,7 +357,11 @@ class _FolderCard extends StatelessWidget {
     );
   }
 
-  Widget _horizontalLayout(BuildContext context, ThemeData theme, AppLocalizations l10n) {
+  Widget _horizontalLayout(
+    BuildContext context,
+    ThemeData theme,
+    AppLocalizations l10n,
+  ) {
     return Row(
       children: [
         Container(

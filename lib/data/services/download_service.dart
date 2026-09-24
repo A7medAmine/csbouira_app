@@ -8,6 +8,7 @@ import 'package:open_filex/open_filex.dart';
 import '../models/downloaded_file.dart';
 import '../models/drive_node.dart';
 import 'file_cache_service.dart';
+import 'http_download.dart';
 
 class DownloadService {
   final http.Client _client;
@@ -48,21 +49,24 @@ class DownloadService {
       if (existing != null) return existing;
     }
 
-    final response = await _client.get(Uri.parse(downloadUrl));
-    if (response.statusCode != 200) {
-      throw DownloadException(
-        'Download failed with status ${response.statusCode}',
+    final int fileSize;
+    try {
+      fileSize = await downloadToFile(
+        _client,
+        Uri.parse(downloadUrl),
+        localFile,
+        rejectHtml: !RegExp(r'\.html?$', caseSensitive: false).hasMatch(file.name),
       );
+    } on HttpException catch (e) {
+      throw DownloadException(e.message);
     }
-
-    await localFile.writeAsBytes(response.bodyBytes, flush: true);
 
     final downloaded = DownloadedFile(
       fileName: file.name,
       localPath: localFile.path,
       driveLink: file.link,
       downloadedAt: DateTime.now(),
-      fileSize: response.bodyBytes.length,
+      fileSize: fileSize,
     );
 
     await _saveRecord(downloaded);

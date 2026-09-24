@@ -127,18 +127,16 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: 0);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      ref.listen(favoritesListProvider, (prev, next) {
-        next.whenData((favorites) {
-          if (_removingIds.isNotEmpty && mounted) {
-            final allRemoved = _removingIds.every((key) {
-              return !favorites.any(
-                  (f) => '${f.itemType}:${f.itemPath}' == key);
-            });
-            if (allRemoved) setState(() => _removingIds.clear());
-          }
-        });
+    // `ref.listen` is only allowed inside build; outside it use listenManual.
+    ref.listenManual(favoritesListProvider, (prev, next) {
+      next.whenData((favorites) {
+        if (_removingIds.isNotEmpty && mounted) {
+          final allRemoved = _removingIds.every((key) {
+            return !favorites.any(
+                (f) => '${f.itemType}:${f.itemPath}' == key);
+          });
+          if (allRemoved) setState(() => _removingIds.clear());
+        }
       });
     });
   }
@@ -155,11 +153,15 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
 
     setState(() => _removingIds.add(key));
 
-    await ref.read(favoritesListProvider.notifier).remove(
+    final ok = await ref.read(favoritesListProvider.notifier).remove(
       item.itemType,
       item.itemPath,
     );
     if (!mounted) return;
+    if (!ok) {
+      setState(() => _removingIds.remove(key));
+      return;
+    }
 
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(

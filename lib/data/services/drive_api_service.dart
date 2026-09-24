@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/drive_node.dart';
@@ -37,7 +38,7 @@ class DriveApiService {
     }
 
     final uri = Uri.parse(_baseUrl).replace(queryParameters: params.isNotEmpty ? params : null);
-    final response = await _client.get(uri);
+    final response = await _client.get(uri).timeout(NetworkConstants.apiTimeout);
 
     if (response.statusCode == 404) {
       throw DriveApiException('Not found', path: params['path'], statusCode: 404);
@@ -122,9 +123,9 @@ class DriveApiService {
     if (_filesCache.containsKey(path)) {
       return _filesCache[path]!;
     }
-    final response = await _client.get(
-      Uri.parse(_baseUrl).replace(queryParameters: {'path': path}),
-    );
+    final response = await _client
+        .get(Uri.parse(_baseUrl).replace(queryParameters: {'path': path}))
+        .timeout(NetworkConstants.apiTimeout);
     if (response.statusCode != 200) {
       throw DriveApiException('Failed to fetch files', path: path, statusCode: response.statusCode);
     }
@@ -167,5 +168,8 @@ class DriveApiService {
     return current;
   }
 
-  void clearCache() => _cache.clear();
+  void clearCache() {
+    _cache.clear();
+    _filesCache.clear();
+  }
 }

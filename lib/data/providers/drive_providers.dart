@@ -33,3 +33,16 @@ final driveNodeProvider = FutureProvider.family<DriveNode?, String>((ref, key) {
   if (cached != null) return cached;
   return api.getPath(segments);
 });
+
+extension DriveRefresh on WidgetRef {
+  /// Drops every cached Drive response and refetches the tree, so files
+  /// uploaded since the app started become visible (pull-to-refresh).
+  Future<void> refreshDriveData() async {
+    read(driveApiServiceProvider).clearCache();
+    invalidate(driveRootDataProvider);
+    invalidate(fileCountsProvider);
+    invalidate(onlineResourcesProvider);
+    invalidate(driveNodeProvider);
+    await read(driveRootDataProvider.future);
+  }
+}

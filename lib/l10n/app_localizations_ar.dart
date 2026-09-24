@@ -1141,4 +1141,15 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get forgotPasswordNewPasswordStepSubtitle => 'اختر كلمة مرور جديدة لحسابك.';
+
+  @override
+  String get uploadErrorServer => 'خطأ في الخادم. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String uploadPartialFailure(int failed, int total) {
+    return 'تعذّر رفع $failed من أصل $total ملفات. اضغط على إعادة المحاولة لرفعها مجددًا.';
+  }
+
+  @override
+  String get authSignupCheckEmail => 'تم إنشاء الحساب. تحقق من بريدك الإلكتروني لتأكيده، ثم سجّل الدخول.';
 }

@@ -2052,6 +2052,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Choose a new password for your account.'**
   String get forgotPasswordNewPasswordStepSubtitle;
+
+  /// Upload failed because the server returned an error
+  ///
+  /// In en, this message translates to:
+  /// **'Server error. Please try again.'**
+  String get uploadErrorServer;
+
+  /// Shown when some files in a batch upload failed
+  ///
+  /// In en, this message translates to:
+  /// **'{failed} of {total} files failed to upload. Tap Retry to upload them again.'**
+  String uploadPartialFailure(int failed, int total);
+
+  /// Shown after signup when email confirmation is required
+  ///
+  /// In en, this message translates to:
+  /// **'Account created. Check your email to confirm it, then log in.'**
+  String get authSignupCheckEmail;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pub_semver/pub_semver.dart';
+import '../../core/constants.dart';
 
 enum UpdateDownloadStatus {
   idle,
@@ -93,12 +94,14 @@ class UpdateDownloadNotifier extends StateNotifier<UpdateDownloadState> {
 
     state = const UpdateDownloadState(status: UpdateDownloadStatus.downloading);
 
+    final client = http.Client();
     try {
-      final client = http.Client();
       final request = http.Request('GET', Uri.parse(downloadUrl));
       request.followRedirects = true;
       request.maxRedirects = 5;
-      final response = await client.send(request);
+      final response = await client
+          .send(request)
+          .timeout(NetworkConstants.apiTimeout);
 
       if (response.statusCode != 200) {
         throw Exception('Download failed: Status ${response.statusCode}');
@@ -112,16 +115,21 @@ class UpdateDownloadNotifier extends StateNotifier<UpdateDownloadState> {
       final sink = file.openWrite();
       int received = 0;
 
-      await for (final chunk in response.stream) {
-        sink.add(chunk);
-        received += chunk.length;
-        if (totalBytes > 0) {
-          state = state.copyWith(progress: received / totalBytes);
+      try {
+        // Idle timeout: a stalled connection must not leave the banner stuck
+        // on "downloading" forever (which also blocks retrying).
+        await for (final chunk
+            in response.stream.timeout(NetworkConstants.downloadIdleTimeout)) {
+          sink.add(chunk);
+          received += chunk.length;
+          if (totalBytes > 0) {
+            state = state.copyWith(progress: received / totalBytes);
+          }
         }
+        await sink.flush();
+      } finally {
+        await sink.close();
       }
-      await sink.flush();
-      await sink.close();
-      client.close();
 
       // Save downloaded version info to shared preferences
       final prefs = await SharedPreferences.getInstance();
@@ -140,6 +148,8 @@ class UpdateDownloadNotifier extends StateNotifier<UpdateDownloadState> {
         status: UpdateDownloadStatus.error,
         error: e.toString(),
       );
+    } finally {
+      client.close();
     }
   }
 

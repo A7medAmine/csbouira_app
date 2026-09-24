@@ -1399,5 +1399,26 @@
   "forgotPasswordNewPasswordStepSubtitle": "Choose a new password for your account.",
   "@forgotPasswordNewPasswordStepSubtitle": {
     "description": "Subtitle on the new password step header"
+  },
+
+  "uploadErrorServer": "Server error. Please try again.",
+  "@uploadErrorServer": {
+    "description": "Upload failed because the server returned an error"
+  },
+  "uploadPartialFailure": "{failed} of {total} files failed to upload. Tap Retry to upload them again.",
+  "@uploadPartialFailure": {
+    "description": "Shown when some files in a batch upload failed",
+    "placeholders": {
+      "failed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "authSignupCheckEmail": "Account created. Check your email to confirm it, then log in.",
+  "@authSignupCheckEmail": {
+    "description": "Shown after signup when email confirmation is required"
   }
 }

@@ -1141,4 +1141,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get forgotPasswordNewPasswordStepSubtitle => 'Choose a new password for your account.';
+
+  @override
+  String get uploadErrorServer => 'Server error. Please try again.';
+
+  @override
+  String uploadPartialFailure(int failed, int total) {
+    return '$failed of $total files failed to upload. Tap Retry to upload them again.';
+  }
+
+  @override
+  String get authSignupCheckEmail => 'Account created. Check your email to confirm it, then log in.';
 }

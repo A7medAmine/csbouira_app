@@ -103,7 +103,6 @@ class UploadService {
         }
         return const UploadResult(
           success: false,
-          message: 'File exceeds 15MB limit.',
           errorType: UploadErrorType.unknown,
         );
       }
@@ -146,7 +145,6 @@ class UploadService {
         if (!kReleaseMode) { debugPrint('\x1B[31m[UPLOAD] Cancelled before attempt\x1B[0m'); }
         return const UploadResult(
           success: false,
-          message: 'Upload cancelled.',
           errorType: UploadErrorType.cancelled,
         );
       }
@@ -187,7 +185,6 @@ class UploadService {
         cancelToken?._detach();
         return const UploadResult(
           success: false,
-          message: 'Upload cancelled.',
           errorType: UploadErrorType.cancelled,
         );
       } catch (e) {
@@ -201,8 +198,7 @@ class UploadService {
           }
           return const UploadResult(
             success: false,
-            message: 'Upload cancelled.',
-            errorType: UploadErrorType.cancelled,
+              errorType: UploadErrorType.cancelled,
           );
         }
 
@@ -216,7 +212,6 @@ class UploadService {
         if (attempt == UploadConstants.maxRetries) {
           return UploadResult(
             success: false,
-            message: _classifyErrorMessage(e),
             errorType: _classifyErrorType(e),
           );
         }
@@ -224,7 +219,6 @@ class UploadService {
         if (!_isRetryable(e)) {
           return UploadResult(
             success: false,
-            message: _classifyErrorMessage(e),
             errorType: _classifyErrorType(e),
           );
         }
@@ -246,7 +240,6 @@ class UploadService {
     if (!kReleaseMode) { debugPrint('\x1B[31m[UPLOAD] All attempts exhausted\x1B[0m'); }
     return const UploadResult(
       success: false,
-      message: 'Upload failed after multiple attempts.',
       errorType: UploadErrorType.unknown,
     );
   }
@@ -405,7 +398,6 @@ class UploadService {
     if (!kReleaseMode) { debugPrint('\x1B[31m[UPLOAD] Too many redirects\x1B[0m'); }
     return const UploadResult(
       success: false,
-      message: 'Too many redirects. Try again.',
       errorType: UploadErrorType.serverError,
     );
   }
@@ -464,7 +456,8 @@ class UploadService {
           }
           return UploadResult(
             success: false,
-            message: responseJson['message'] as String? ?? 'Upload failed.',
+            // Server-provided detail, shown under the localized title.
+            message: responseJson['message'] as String?,
             errorType: UploadErrorType.serverError,
           );
         }
@@ -484,11 +477,8 @@ class UploadService {
         '\x1B[31m[UPLOAD] Non-200 status: $statusCode\x1B[0m',
       );
     }
-    return UploadResult(
+    return const UploadResult(
       success: false,
-      message: statusCode >= 500
-          ? 'Server error ($statusCode). Try again.'
-          : 'Client error ($statusCode).',
       errorType: UploadErrorType.serverError,
     );
   }
@@ -511,22 +501,6 @@ class UploadService {
     if (error is HttpException) return true;
     if (error is HandshakeException) return true;
     return false;
-  }
-
-  String _classifyErrorMessage(Object error) {
-    if (error is SocketException) {
-      return 'No internet connection. Check your Wi‑Fi and try again.';
-    }
-    if (error is HandshakeException) {
-      return 'Secure connection failed. Check your network.';
-    }
-    if (error is HttpException) {
-      return 'Server communication error. Try again.';
-    }
-    if (error is TimeoutException) {
-      return 'Request timed out. Try again on a stronger connection.';
-    }
-    return 'Network error. Check your connection.';
   }
 
   UploadErrorType _classifyErrorType(Object error) {

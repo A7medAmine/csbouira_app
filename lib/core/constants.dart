@@ -6,6 +6,16 @@ class ApiConstants {
       'https://script.google.com/macros/s/AKfycbxMikLNPWYBEWjYJ7FSLJAHV_dZ_5E6aSGarqtm7kubMsjzXFHXnW4s-eEM2RtFOaF3/exec';
 }
 
+class NetworkConstants {
+  NetworkConstants._();
+
+  /// Timeout for small JSON API calls (Drive tree, GitHub releases).
+  static const Duration apiTimeout = Duration(seconds: 20);
+
+  /// Max silence between chunks while streaming a file download.
+  static const Duration downloadIdleTimeout = Duration(seconds: 30);
+}
+
 class EnvKeys {
   EnvKeys._();
 
