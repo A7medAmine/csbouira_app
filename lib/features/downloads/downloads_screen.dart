@@ -52,18 +52,30 @@ class DownloadsScreen extends ConsumerWidget {
           message: AppLocalizations.of(context)!.downloadsLoadError,
         ),
         data: (downloads) {
-          if (downloads.isEmpty) {
-            return _EmptyState(theme: theme);
-          }
-          return ListView.builder(
-            padding: const EdgeInsets.fromLTRB(
-              AppSpacing.marginMobile,
-              AppSpacing.stackLg,
-              AppSpacing.marginMobile,
-              24,
-            ),
-            itemCount: downloads.length,
-            itemBuilder: (_, i) => _DownloadCard(item: downloads[i]),
+          return RefreshIndicator(
+            onRefresh: () => ref.refresh(downloadsListProvider.future),
+            child: downloads.isEmpty
+                // Empty state must still scroll so the pull gesture works.
+                ? LayoutBuilder(
+                    builder: (context, constraints) => SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                        child: _EmptyState(theme: theme),
+                      ),
+                    ),
+                  )
+                : ListView.builder(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.marginMobile,
+                      AppSpacing.stackLg,
+                      AppSpacing.marginMobile,
+                      24,
+                    ),
+                    itemCount: downloads.length,
+                    itemBuilder: (_, i) => _DownloadCard(item: downloads[i]),
+                  ),
           );
         },
       ),

@@ -712,14 +712,26 @@ class _LoggedInProfileShell extends ConsumerWidget {
          child: Stack(
            children: [
              const NetworkBanner(),
-             Center(
+             RefreshIndicator(
+               onRefresh: () async {
+                 ref.invalidate(profileProvider(user.id));
+                 ref.invalidate(uploadCountProvider);
+                 ref.invalidate(favoritesListProvider);
+                 await Future.wait([
+                   ref.read(profileProvider(user.id).future),
+                   ref.read(uploadCountProvider.future),
+                   ref.read(favoritesListProvider.future),
+                 ]);
+               },
                child: SingleChildScrollView(
+                 physics: const AlwaysScrollableScrollPhysics(),
                  padding: const EdgeInsets.fromLTRB(
                    AppSpacing.marginMobile,
                    24,
                    AppSpacing.marginMobile,
                    24,
                  ),
+                 child: Center(
                  child: ConstrainedBox(
                    constraints: const BoxConstraints(maxWidth: 440),
                    child: Column(
@@ -804,6 +816,7 @@ class _LoggedInProfileShell extends ConsumerWidget {
                       _LogOutButton(theme: theme, ref: ref),
                     ],
                   ),
+                ),
                 ),
               ),
             ),
