@@ -17,6 +17,10 @@ import '../../shared/widgets/user_avatar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:csbouira_app/l10n/app_localizations.dart';
 import 'package:csbouira_app/core/providers/locale_provider.dart';
+import 'package:csbouira_app/core/providers/theme_mode_provider.dart';
+import 'package:csbouira_app/core/providers/widget_cat_provider.dart';
+import '../../core/crash_reporting.dart';
+import '../../core/theme/app_surfaces.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -113,11 +117,9 @@ class _GlassCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.stackMd),
       decoration: BoxDecoration(
-        color: const Color(0x0D15151F),
+        color: context.surfaces.faint,
         borderRadius: BorderRadius.circular(AppRadius.xl),
-        border: Border.all(
-          color: const Color(0xFF1A1A26).withAlpha(128),
-        ),
+        border: Border.all(color: context.surfaces.cardBorder.withAlpha(128)),
       ),
       child: child,
     );
@@ -147,11 +149,9 @@ class _SettingsRow extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.all(AppSpacing.stackMd),
         decoration: BoxDecoration(
-          color: const Color(0x0D15151F),
+          color: context.surfaces.faint,
           borderRadius: BorderRadius.circular(AppRadius.xl),
-          border: Border.all(
-            color: const Color(0xFF1A1A26).withAlpha(128),
-          ),
+          border: Border.all(color: context.surfaces.cardBorder.withAlpha(128)),
         ),
         child: Row(
           children: [
@@ -173,11 +173,12 @@ class _SettingsRow extends StatelessWidget {
                 ),
               ),
             ),
-            trailing ?? Icon(
-              Icons.chevron_right,
-              color: theme.colorScheme.outline,
-              size: 24,
-            ),
+            trailing ??
+                Icon(
+                  Icons.chevron_right,
+                  color: theme.colorScheme.outline,
+                  size: 24,
+                ),
           ],
         ),
       ),
@@ -195,43 +196,47 @@ Future<void> _showLanguagePicker(BuildContext context, WidgetRef ref) async {
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
     ),
-    builder: (ctx) => SafeArea(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ListTile(
-            title: Text(AppLocalizations.of(ctx)!.profileLanguageEnglish),
-            trailing: locale.languageCode == 'en'
-                ? const Icon(Icons.check)
-                : null,
-            onTap: () {
-              ref.read(localeProvider.notifier).setLocale('en');
-              Navigator.of(ctx).pop();
-            },
+    builder:
+        (ctx) => SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: Text(AppLocalizations.of(ctx)!.profileLanguageEnglish),
+                trailing:
+                    locale.languageCode == 'en'
+                        ? const Icon(Icons.check)
+                        : null,
+                onTap: () {
+                  ref.read(localeProvider.notifier).setLocale('en');
+                  Navigator.of(ctx).pop();
+                },
+              ),
+              ListTile(
+                title: Text(AppLocalizations.of(ctx)!.profileLanguageArabic),
+                trailing:
+                    locale.languageCode == 'ar'
+                        ? const Icon(Icons.check)
+                        : null,
+                onTap: () {
+                  ref.read(localeProvider.notifier).setLocale('ar');
+                  Navigator.of(ctx).pop();
+                },
+              ),
+              ListTile(
+                title: Text(AppLocalizations.of(ctx)!.profileLanguageFrench),
+                trailing:
+                    locale.languageCode == 'fr'
+                        ? const Icon(Icons.check)
+                        : null,
+                onTap: () {
+                  ref.read(localeProvider.notifier).setLocale('fr');
+                  Navigator.of(ctx).pop();
+                },
+              ),
+            ],
           ),
-          ListTile(
-            title: Text(AppLocalizations.of(ctx)!.profileLanguageArabic),
-            trailing: locale.languageCode == 'ar'
-                ? const Icon(Icons.check)
-                : null,
-            onTap: () {
-              ref.read(localeProvider.notifier).setLocale('ar');
-              Navigator.of(ctx).pop();
-            },
-          ),
-          ListTile(
-            title: Text(AppLocalizations.of(ctx)!.profileLanguageFrench),
-            trailing: locale.languageCode == 'fr'
-                ? const Icon(Icons.check)
-                : null,
-            onTap: () {
-              ref.read(localeProvider.notifier).setLocale('fr');
-              Navigator.of(ctx).pop();
-            },
-          ),
-        ],
-      ),
-    ),
+        ),
   );
 }
 
@@ -248,14 +253,120 @@ class _LanguagePickerRow extends ConsumerWidget {
       icon: Icons.language,
       label: AppLocalizations.of(context)!.profileLanguage,
       trailing: Text(
-        locale.languageCode == 'ar'
-            ? AppLocalizations.of(context)!.profileLanguageArabic
-            : AppLocalizations.of(context)!.profileLanguageEnglish,
+        switch (locale.languageCode) {
+          'ar' => AppLocalizations.of(context)!.profileLanguageArabic,
+          'fr' => AppLocalizations.of(context)!.profileLanguageFrench,
+          _ => AppLocalizations.of(context)!.profileLanguageEnglish,
+        },
         style: theme.textTheme.bodyMedium?.copyWith(
           color: theme.colorScheme.onSurfaceVariant,
         ),
       ),
       onTap: () => _showLanguagePicker(context, ref),
+    );
+  }
+}
+
+// ── Theme picker ────────────────────────────────────────────────────────────
+
+class _ThemePickerRow extends ConsumerWidget {
+  final ThemeData theme;
+
+  const _ThemePickerRow({required this.theme});
+
+  String _label(AppLocalizations l10n, ThemeMode mode) => switch (mode) {
+    ThemeMode.dark => l10n.profileThemeDark,
+    ThemeMode.light => l10n.profileThemeLight,
+    ThemeMode.system => l10n.profileThemeSystem,
+  };
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final mode = ref.watch(themeModeProvider);
+    return _SettingsRow(
+      theme: theme,
+      icon: Icons.brightness_6_outlined,
+      label: l10n.profileTheme,
+      trailing: Text(
+        _label(l10n, mode),
+        style: theme.textTheme.bodyMedium?.copyWith(
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
+      ),
+      onTap:
+          () => showModalBottomSheet(
+            context: context,
+            backgroundColor: theme.colorScheme.surfaceContainer,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            ),
+            builder:
+                (ctx) => SafeArea(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      for (final option in const [
+                        ThemeMode.dark,
+                        ThemeMode.light,
+                        ThemeMode.system,
+                      ])
+                        ListTile(
+                          title: Text(_label(l10n, option)),
+                          trailing:
+                              option == mode ? const Icon(Icons.check) : null,
+                          onTap: () {
+                            ref.read(themeModeProvider.notifier).set(option);
+                            Navigator.of(ctx).pop();
+                          },
+                        ),
+                    ],
+                  ),
+                ),
+          ),
+    );
+  }
+}
+
+// ── Widget cat ──────────────────────────────────────────────────────────────
+
+class _WidgetCatRow extends ConsumerWidget {
+  final ThemeData theme;
+
+  const _WidgetCatRow({required this.theme});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final enabled = ref.watch(widgetCatEnabledProvider);
+    void toggle() => ref.read(widgetCatEnabledProvider.notifier).set(!enabled);
+    return _SettingsRow(
+      theme: theme,
+      icon: Icons.pets_outlined,
+      label: AppLocalizations.of(context)!.profileWidgetCat,
+      trailing: Switch(value: enabled, onChanged: (_) => toggle()),
+      onTap: toggle,
+    );
+  }
+}
+
+// ── Crash reports ───────────────────────────────────────────────────────────
+
+class _CrashReportsRow extends ConsumerWidget {
+  final ThemeData theme;
+
+  const _CrashReportsRow({required this.theme});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final enabled = ref.watch(crashReportsEnabledProvider);
+    void toggle() =>
+        ref.read(crashReportsEnabledProvider.notifier).set(!enabled);
+    return _SettingsRow(
+      theme: theme,
+      icon: Icons.bug_report_outlined,
+      label: AppLocalizations.of(context)!.profileCrashReports,
+      trailing: Switch(value: enabled, onChanged: (_) => toggle()),
+      onTap: toggle,
     );
   }
 }
@@ -269,8 +380,7 @@ class _GuestProfileShell extends ConsumerStatefulWidget {
   const _GuestProfileShell({required this.theme, required this.ref});
 
   @override
-  ConsumerState<_GuestProfileShell> createState() =>
-      _GuestProfileShellState();
+  ConsumerState<_GuestProfileShell> createState() => _GuestProfileShellState();
 }
 
 class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
@@ -320,58 +430,59 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
     final controller = TextEditingController(text: _name);
     final result = await showDialog<String>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: widget.theme.colorScheme.surfaceContainer,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadius.lg),
-        ),
-        title: Text(
-          AppLocalizations.of(context)!.profileEditNameTitle,
-          style: widget.theme.textTheme.headlineMedium?.copyWith(
-            color: widget.theme.colorScheme.onSurface,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          style: widget.theme.textTheme.bodyMedium?.copyWith(
-            color: widget.theme.colorScheme.onSurface,
-          ),
-          decoration: InputDecoration(
-            hintText: AppLocalizations.of(context)!.profileEditNameHint,
-            hintStyle: TextStyle(
-              color: widget.theme.colorScheme.onSurfaceVariant,
+      builder:
+          (ctx) => AlertDialog(
+            backgroundColor: widget.theme.colorScheme.surfaceContainer,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppRadius.lg),
             ),
-            filled: true,
-            fillColor: widget.theme.colorScheme.surfaceContainer,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppRadius.md),
-            ),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: Text(
-              AppLocalizations.of(context)!.profileEditNameCancel,
-              style: widget.theme.textTheme.labelMedium?.copyWith(
-                color: widget.theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(controller.text.trim()),
-            child: Text(
-              AppLocalizations.of(context)!.profileEditNameSave,
-              style: widget.theme.textTheme.labelMedium?.copyWith(
-                color: widget.theme.colorScheme.primary,
+            title: Text(
+              AppLocalizations.of(context)!.profileEditNameTitle,
+              style: widget.theme.textTheme.headlineMedium?.copyWith(
+                color: widget.theme.colorScheme.onSurface,
                 fontWeight: FontWeight.bold,
               ),
             ),
+            content: TextField(
+              controller: controller,
+              autofocus: true,
+              style: widget.theme.textTheme.bodyMedium?.copyWith(
+                color: widget.theme.colorScheme.onSurface,
+              ),
+              decoration: InputDecoration(
+                hintText: AppLocalizations.of(context)!.profileEditNameHint,
+                hintStyle: TextStyle(
+                  color: widget.theme.colorScheme.onSurfaceVariant,
+                ),
+                filled: true,
+                fillColor: widget.theme.colorScheme.surfaceContainer,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(AppRadius.md),
+                ),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(),
+                child: Text(
+                  AppLocalizations.of(context)!.profileEditNameCancel,
+                  style: widget.theme.textTheme.labelMedium?.copyWith(
+                    color: widget.theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(controller.text.trim()),
+                child: Text(
+                  AppLocalizations.of(context)!.profileEditNameSave,
+                  style: widget.theme.textTheme.labelMedium?.copyWith(
+                    color: widget.theme.colorScheme.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
     );
     if (result != null && result.isNotEmpty) {
       final cache = ref.read(localProfileCacheProvider);
@@ -387,59 +498,60 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
     final controller = TextEditingController(text: _email);
     final result = await showDialog<String>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: widget.theme.colorScheme.surfaceContainer,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadius.lg),
-        ),
-        title: Text(
-          AppLocalizations.of(context)!.profileEditEmailTitle,
-          style: widget.theme.textTheme.headlineMedium?.copyWith(
-            color: widget.theme.colorScheme.onSurface,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          keyboardType: TextInputType.emailAddress,
-          style: widget.theme.textTheme.bodyMedium?.copyWith(
-            color: widget.theme.colorScheme.onSurface,
-          ),
-          decoration: InputDecoration(
-            hintText: AppLocalizations.of(context)!.profileEditEmailHint,
-            hintStyle: TextStyle(
-              color: widget.theme.colorScheme.onSurfaceVariant,
+      builder:
+          (ctx) => AlertDialog(
+            backgroundColor: widget.theme.colorScheme.surfaceContainer,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppRadius.lg),
             ),
-            filled: true,
-            fillColor: widget.theme.colorScheme.surfaceContainer,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppRadius.md),
-            ),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: Text(
-              AppLocalizations.of(context)!.profileEditNameCancel,
-              style: widget.theme.textTheme.labelMedium?.copyWith(
-                color: widget.theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(controller.text.trim()),
-            child: Text(
-              AppLocalizations.of(context)!.profileEditNameSave,
-              style: widget.theme.textTheme.labelMedium?.copyWith(
-                color: widget.theme.colorScheme.primary,
+            title: Text(
+              AppLocalizations.of(context)!.profileEditEmailTitle,
+              style: widget.theme.textTheme.headlineMedium?.copyWith(
+                color: widget.theme.colorScheme.onSurface,
                 fontWeight: FontWeight.bold,
               ),
             ),
+            content: TextField(
+              controller: controller,
+              autofocus: true,
+              keyboardType: TextInputType.emailAddress,
+              style: widget.theme.textTheme.bodyMedium?.copyWith(
+                color: widget.theme.colorScheme.onSurface,
+              ),
+              decoration: InputDecoration(
+                hintText: AppLocalizations.of(context)!.profileEditEmailHint,
+                hintStyle: TextStyle(
+                  color: widget.theme.colorScheme.onSurfaceVariant,
+                ),
+                filled: true,
+                fillColor: widget.theme.colorScheme.surfaceContainer,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(AppRadius.md),
+                ),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(),
+                child: Text(
+                  AppLocalizations.of(context)!.profileEditNameCancel,
+                  style: widget.theme.textTheme.labelMedium?.copyWith(
+                    color: widget.theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(controller.text.trim()),
+                child: Text(
+                  AppLocalizations.of(context)!.profileEditNameSave,
+                  style: widget.theme.textTheme.labelMedium?.copyWith(
+                    color: widget.theme.colorScheme.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
     );
     if (result != null && result.isNotEmpty) {
       final cache = ref.read(localProfileCacheProvider);
@@ -455,7 +567,7 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
   Widget build(BuildContext context) {
     final theme = widget.theme;
     return Scaffold(
-      backgroundColor: const Color(0xFF0D0D14),
+      backgroundColor: context.surfaces.page,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -497,157 +609,195 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 440),
                   child: Column(
-                children: [
-                  AvatarWidget(
-                    size: 96,
-                    initials: userInitials(_name),
-                    avatarBase64: _avatarBase64,
-                    onEdit: _editAvatar,
-                    showEditButton: true,
-                    boxShadow: [
-                      BoxShadow(
-                        color: theme.colorScheme.primary.withAlpha(38),
-                        blurRadius: 20,
+                    children: [
+                      AvatarWidget(
+                        size: 96,
+                        initials: userInitials(_name),
+                        avatarBase64: _avatarBase64,
+                        onEdit: _editAvatar,
+                        showEditButton: true,
+                        boxShadow: [
+                          BoxShadow(
+                            color: theme.colorScheme.primary.withAlpha(38),
+                            blurRadius: 20,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: AppSpacing.stackMd),
+                      GestureDetector(
+                        onTap: _editName,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              _name.isNotEmpty
+                                  ? _name
+                                  : AppLocalizations.of(
+                                    context,
+                                  )!.profileGuestName,
+                              style: theme.textTheme.headlineLarge?.copyWith(
+                                color: theme.colorScheme.onSurface,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Icon(
+                              Icons.edit,
+                              color: theme.colorScheme.primary,
+                              size: 20,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      GestureDetector(
+                        onTap: _editEmail,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              _email.isNotEmpty
+                                  ? _email
+                                  : AppLocalizations.of(
+                                    context,
+                                  )!.profileEmailPlaceholder,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color:
+                                    _email.isNotEmpty
+                                        ? theme.colorScheme.onSurfaceVariant
+                                        : theme.colorScheme.onSurfaceVariant
+                                            .withAlpha(153),
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            Icon(
+                              Icons.edit,
+                              color: theme.colorScheme.primary,
+                              size: 16,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.primaryContainer.withAlpha(
+                            77,
+                          ),
+                          borderRadius: BorderRadius.circular(AppRadius.full),
+                        ),
+                        child: Text(
+                          AppLocalizations.of(context)!.profileGuestBadge,
+                          style: theme.textTheme.labelMedium?.copyWith(
+                            color: theme.colorScheme.primary,
+                            letterSpacing: 1.5,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.stackLg),
+                      _StatsGrid(
+                        theme: theme,
+                        favoriteCount: ref
+                            .watch(favoritesListProvider)
+                            .maybeWhen(
+                              data: (list) => list.length,
+                              orElse: () => 0,
+                            ),
+                      ),
+                      const SizedBox(height: AppSpacing.stackLg),
+                      _SettingsRow(
+                        theme: theme,
+                        icon: Icons.upload_file,
+                        label:
+                            AppLocalizations.of(
+                              context,
+                            )!.profileSettingMyUploads,
+                        onTap: () => context.push('/profile/my-uploads'),
+                      ),
+                      const SizedBox(height: AppSpacing.stackSm),
+                      _SettingsRow(
+                        theme: theme,
+                        icon: Icons.download_outlined,
+                        label:
+                            AppLocalizations.of(
+                              context,
+                            )!.profileSettingDownloads,
+                        onTap: () => context.push('/profile/my-downloads'),
+                      ),
+                      const SizedBox(height: AppSpacing.stackSm),
+                      _SettingsRow(
+                        theme: theme,
+                        icon: Icons.favorite,
+                        label:
+                            AppLocalizations.of(
+                              context,
+                            )!.profileSettingFavorites,
+                        onTap: () => context.push('/favorites'),
+                      ),
+                      const SizedBox(height: AppSpacing.stackSm),
+                      _SettingsRow(
+                        theme: theme,
+                        icon: Icons.leaderboard_outlined,
+                        label:
+                            AppLocalizations.of(
+                              context,
+                            )!.profileSettingLeaderboard,
+                        onTap: () => context.push('/profile/leaderboard'),
+                      ),
+                      const SizedBox(height: AppSpacing.stackSm),
+                      _SettingsRow(
+                        theme: theme,
+                        icon: Icons.info_outline,
+                        label:
+                            AppLocalizations.of(context)!.profileSettingAbout,
+                        onTap: () => context.push('/about'),
+                      ),
+                      const SizedBox(height: AppSpacing.stackSm),
+                      _LanguagePickerRow(theme: theme),
+                      const SizedBox(height: AppSpacing.stackSm),
+                      _ThemePickerRow(theme: theme),
+                      if (Platform.isAndroid) ...[
+                        const SizedBox(height: AppSpacing.stackSm),
+                        _WidgetCatRow(theme: theme),
+                      ],
+                      if (crashReportingAvailable) ...[
+                        const SizedBox(height: AppSpacing.stackSm),
+                        _CrashReportsRow(theme: theme),
+                      ],
+                      const SizedBox(height: AppSpacing.stackLg),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 52,
+                        child: ElevatedButton(
+                          onPressed: () => context.push('/login'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: theme.colorScheme.primaryContainer,
+                            foregroundColor:
+                                theme.colorScheme.onPrimaryContainer,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(AppRadius.md),
+                            ),
+                          ),
+                          child: Text(
+                            AppLocalizations.of(context)!.profileGuestButton,
+                            style: theme.textTheme.headlineMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: AppSpacing.stackMd),
-                  GestureDetector(
-                    onTap: _editName,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          _name.isNotEmpty ? _name : AppLocalizations.of(context)!.profileGuestName,
-                          style: theme.textTheme.headlineLarge?.copyWith(
-                            color: theme.colorScheme.onSurface,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Icon(
-                          Icons.edit,
-                          color: theme.colorScheme.primary,
-                          size: 20,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  GestureDetector(
-                    onTap: _editEmail,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          _email.isNotEmpty ? _email : AppLocalizations.of(context)!.profileEmailPlaceholder,
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: _email.isNotEmpty
-                                ? theme.colorScheme.onSurfaceVariant
-                                : theme.colorScheme.onSurfaceVariant
-                                    .withAlpha(153),
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        Icon(
-                          Icons.edit,
-                          color: theme.colorScheme.primary,
-                          size: 16,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.primaryContainer.withAlpha(77),
-                      borderRadius: BorderRadius.circular(AppRadius.full),
-                    ),
-                    child: Text(
-                      AppLocalizations.of(context)!.profileGuestBadge,
-                      style: theme.textTheme.labelMedium?.copyWith(
-                        color: theme.colorScheme.primary,
-                        letterSpacing: 1.5,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.stackLg),
-                  _StatsGrid(
-                    theme: theme,
-                    favoriteCount: ref.watch(favoritesListProvider).maybeWhen(
-                          data: (list) => list.length,
-                          orElse: () => 0,
-                        ),
-                  ),
-                  const SizedBox(height: AppSpacing.stackLg),
-                  _SettingsRow(
-                    theme: theme,
-                    icon: Icons.upload_file,
-                    label: AppLocalizations.of(context)!.profileSettingMyUploads,
-                    onTap: () => context.push('/profile/my-uploads'),
-                  ),
-                  const SizedBox(height: AppSpacing.stackSm),
-                  _SettingsRow(
-                    theme: theme,
-                    icon: Icons.download_outlined,
-                    label: AppLocalizations.of(context)!.profileSettingDownloads,
-                    onTap: () => context.push('/profile/my-downloads'),
-                  ),
-                  const SizedBox(height: AppSpacing.stackSm),
-                  _SettingsRow(
-                    theme: theme,
-                    icon: Icons.favorite,
-                    label: AppLocalizations.of(context)!.profileSettingFavorites,
-                    onTap: () => context.push('/favorites'),
-                  ),
-                  const SizedBox(height: AppSpacing.stackSm),
-                  _SettingsRow(
-                    theme: theme,
-                    icon: Icons.leaderboard_outlined,
-                    label: AppLocalizations.of(context)!.profileSettingLeaderboard,
-                    onTap: () => context.push('/profile/leaderboard'),
-                  ),
-                  const SizedBox(height: AppSpacing.stackSm),
-                  _SettingsRow(
-                    theme: theme,
-                    icon: Icons.info_outline,
-                    label: AppLocalizations.of(context)!.profileSettingAbout,
-                    onTap: () => context.push('/about'),
-                  ),
-                  const SizedBox(height: AppSpacing.stackSm),
-                  _LanguagePickerRow(theme: theme),
-                  const SizedBox(height: AppSpacing.stackLg),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 52,
-                    child: ElevatedButton(
-                      onPressed: () => context.push('/login'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: theme.colorScheme.primaryContainer,
-                        foregroundColor:
-                            theme.colorScheme.onPrimaryContainer,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppRadius.md),
-                        ),
-                      ),
-                      child: Text(
-                        AppLocalizations.of(context)!.profileGuestButton,
-                        style: theme.textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
-          ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
     );
   }
 }
@@ -658,10 +808,7 @@ class _LoggedInProfileShell extends ConsumerWidget {
   final ThemeData theme;
   final User user;
 
-  const _LoggedInProfileShell({
-    required this.theme,
-    required this.user,
-  });
+  const _LoggedInProfileShell({required this.theme, required this.user});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -670,18 +817,20 @@ class _LoggedInProfileShell extends ConsumerWidget {
 
     final meta = user.userMetadata;
     final emailName = user.email?.split('@').first;
-    final fullName = (profile?['full_name'] as String?) ??
+    final fullName =
+        (profile?['full_name'] as String?) ??
         meta?['full_name'] as String? ??
         meta?['name'] as String? ??
         emailName ??
         'User';
     final email = (profile?['email'] as String?) ?? user.email ?? '';
-    final avatarUrl = (profile?['avatar_url'] as String?) ??
+    final avatarUrl =
+        (profile?['avatar_url'] as String?) ??
         meta?['avatar_url'] as String? ??
         meta?['picture'] as String?;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0D0D14),
+      backgroundColor: context.surfaces.page,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -709,100 +858,140 @@ class _LoggedInProfileShell extends ConsumerWidget {
         ),
       ),
       body: SafeArea(
-         child: Stack(
-           children: [
-             const NetworkBanner(),
-             Center(
-               child: SingleChildScrollView(
-                 padding: const EdgeInsets.fromLTRB(
-                   AppSpacing.marginMobile,
-                   24,
-                   AppSpacing.marginMobile,
-                   24,
-                 ),
-                 child: ConstrainedBox(
-                   constraints: const BoxConstraints(maxWidth: 440),
-                   child: Column(
-                     children: [
+        child: Stack(
+          children: [
+            const NetworkBanner(),
+            RefreshIndicator(
+              onRefresh: () async {
+                ref.invalidate(profileProvider(user.id));
+                ref.invalidate(uploadCountProvider);
+                ref.invalidate(favoritesListProvider);
+                await Future.wait([
+                  ref.read(profileProvider(user.id).future),
+                  ref.read(uploadCountProvider.future),
+                  ref.read(favoritesListProvider.future),
+                ]);
+              },
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.marginMobile,
+                  24,
+                  AppSpacing.marginMobile,
+                  24,
+                ),
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 440),
+                    child: Column(
+                      children: [
                         AvatarWidget(
-                         size: 96,
-                         initials: userInitials(fullName),
-                        avatarUrl: avatarUrl,
-                        showEditButton: false,
-                        boxShadow: [
-                          BoxShadow(
-                            color: theme.colorScheme.primary.withAlpha(38),
-                            blurRadius: 20,
+                          size: 96,
+                          initials: userInitials(fullName),
+                          avatarUrl: avatarUrl,
+                          showEditButton: false,
+                          boxShadow: [
+                            BoxShadow(
+                              color: theme.colorScheme.primary.withAlpha(38),
+                              blurRadius: 20,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: AppSpacing.stackMd),
+                        Text(
+                          fullName,
+                          style: theme.textTheme.headlineLarge?.copyWith(
+                            color: theme.colorScheme.onSurface,
+                            fontWeight: FontWeight.bold,
                           ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          email,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.stackLg),
+                        _StatsGrid(
+                          theme: theme,
+                          uploadCount: ref
+                              .watch(uploadCountProvider)
+                              .maybeWhen(
+                                data: (count) => count,
+                                orElse: () => 0,
+                              ),
+                          favoriteCount: ref
+                              .watch(favoritesListProvider)
+                              .maybeWhen(
+                                data: (list) => list.length,
+                                orElse: () => 0,
+                              ),
+                        ),
+                        const SizedBox(height: AppSpacing.stackLg),
+                        _SettingsRow(
+                          theme: theme,
+                          icon: Icons.upload_file,
+                          label:
+                              AppLocalizations.of(
+                                context,
+                              )!.profileSettingMyUploads,
+                          onTap: () => context.push('/profile/my-uploads'),
+                        ),
+                        const SizedBox(height: AppSpacing.stackSm),
+                        _SettingsRow(
+                          theme: theme,
+                          icon: Icons.download_outlined,
+                          label:
+                              AppLocalizations.of(
+                                context,
+                              )!.profileSettingDownloads,
+                          onTap: () => context.push('/profile/my-downloads'),
+                        ),
+                        const SizedBox(height: AppSpacing.stackSm),
+                        _SettingsRow(
+                          theme: theme,
+                          icon: Icons.favorite,
+                          label:
+                              AppLocalizations.of(
+                                context,
+                              )!.profileSettingFavorites,
+                          onTap: () => context.push('/favorites'),
+                        ),
+                        const SizedBox(height: AppSpacing.stackSm),
+                        _SettingsRow(
+                          theme: theme,
+                          icon: Icons.leaderboard_outlined,
+                          label:
+                              AppLocalizations.of(
+                                context,
+                              )!.profileSettingLeaderboard,
+                          onTap: () => context.push('/profile/leaderboard'),
+                        ),
+                        const SizedBox(height: AppSpacing.stackSm),
+                        _SettingsRow(
+                          theme: theme,
+                          icon: Icons.info_outline,
+                          label:
+                              AppLocalizations.of(context)!.profileSettingAbout,
+                          onTap: () => context.push('/about'),
+                        ),
+                        const SizedBox(height: AppSpacing.stackSm),
+                        _LanguagePickerRow(theme: theme),
+                        const SizedBox(height: AppSpacing.stackSm),
+                        _ThemePickerRow(theme: theme),
+                        if (Platform.isAndroid) ...[
+                          const SizedBox(height: AppSpacing.stackSm),
+                          _WidgetCatRow(theme: theme),
                         ],
-                      ),
-                      const SizedBox(height: AppSpacing.stackMd),
-                      Text(
-                        fullName,
-                        style: theme.textTheme.headlineLarge?.copyWith(
-                          color: theme.colorScheme.onSurface,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        email,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.stackLg),
-                      _StatsGrid(
-                        theme: theme,
-                        uploadCount: ref.watch(uploadCountProvider).maybeWhen(
-                              data: (count) => count,
-                              orElse: () => 0,
-                            ),
-                        favoriteCount: ref.watch(favoritesListProvider).maybeWhen(
-                              data: (list) => list.length,
-                              orElse: () => 0,
-                            ),
-                      ),
-                      const SizedBox(height: AppSpacing.stackLg),
-                      _SettingsRow(
-                        theme: theme,
-                        icon: Icons.upload_file,
-                        label: AppLocalizations.of(context)!.profileSettingMyUploads,
-                        onTap: () => context.push('/profile/my-uploads'),
-                      ),
-                      const SizedBox(height: AppSpacing.stackSm),
-                      _SettingsRow(
-                        theme: theme,
-                        icon: Icons.download_outlined,
-                        label: AppLocalizations.of(context)!.profileSettingDownloads,
-                        onTap: () => context.push('/profile/my-downloads'),
-                      ),
-                      const SizedBox(height: AppSpacing.stackSm),
-                      _SettingsRow(
-                        theme: theme,
-                        icon: Icons.favorite,
-                        label: AppLocalizations.of(context)!.profileSettingFavorites,
-                        onTap: () => context.push('/favorites'),
-                      ),
-                      const SizedBox(height: AppSpacing.stackSm),
-                      _SettingsRow(
-                        theme: theme,
-                        icon: Icons.leaderboard_outlined,
-                        label: AppLocalizations.of(context)!.profileSettingLeaderboard,
-                        onTap: () => context.push('/profile/leaderboard'),
-                      ),
-                      const SizedBox(height: AppSpacing.stackSm),
-                      _SettingsRow(
-                        theme: theme,
-                        icon: Icons.info_outline,
-                        label: AppLocalizations.of(context)!.profileSettingAbout,
-                        onTap: () => context.push('/about'),
-                      ),
-                      const SizedBox(height: AppSpacing.stackSm),
-                      _LanguagePickerRow(theme: theme),
-                      const SizedBox(height: AppSpacing.stackLg),
-                      _LogOutButton(theme: theme, ref: ref),
-                    ],
+                        if (crashReportingAvailable) ...[
+                          const SizedBox(height: AppSpacing.stackSm),
+                          _CrashReportsRow(theme: theme),
+                        ],
+                        const SizedBox(height: AppSpacing.stackLg),
+                        _LogOutButton(theme: theme, ref: ref),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -813,8 +1002,6 @@ class _LoggedInProfileShell extends ConsumerWidget {
     );
   }
 }
-
-
 
 class _LogOutButton extends StatelessWidget {
   final ThemeData theme;
@@ -828,46 +1015,47 @@ class _LogOutButton extends StatelessWidget {
       onTap: () async {
         final confirmed = await showDialog<bool>(
           context: context,
-          builder: (ctx) => AlertDialog(
-            backgroundColor: theme.colorScheme.surfaceContainer,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(AppRadius.lg),
-            ),
-            title: Text(
-              AppLocalizations.of(context)!.profileLogoutTitle,
-              style: theme.textTheme.headlineMedium?.copyWith(
-                color: theme.colorScheme.onSurface,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            content: Text(
-              AppLocalizations.of(context)!.profileLogoutMessage,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(ctx).pop(false),
-                child: Text(
-                  AppLocalizations.of(context)!.profileEditNameCancel,
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
+          builder:
+              (ctx) => AlertDialog(
+                backgroundColor: theme.colorScheme.surfaceContainer,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppRadius.lg),
                 ),
-              ),
-              TextButton(
-                onPressed: () => Navigator.of(ctx).pop(true),
-                child: Text(
-                  AppLocalizations.of(context)!.profileLogoutConfirm,
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    color: theme.colorScheme.error,
+                title: Text(
+                  AppLocalizations.of(context)!.profileLogoutTitle,
+                  style: theme.textTheme.headlineMedium?.copyWith(
+                    color: theme.colorScheme.onSurface,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                content: Text(
+                  AppLocalizations.of(context)!.profileLogoutMessage,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(ctx).pop(false),
+                    child: Text(
+                      AppLocalizations.of(context)!.profileEditNameCancel,
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.of(ctx).pop(true),
+                    child: Text(
+                      AppLocalizations.of(context)!.profileLogoutConfirm,
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        color: theme.colorScheme.error,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
         );
 
         if (confirmed == true) {
@@ -893,18 +1081,12 @@ class _LogOutButton extends StatelessWidget {
         padding: const EdgeInsets.all(AppSpacing.stackMd),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(AppRadius.xl),
-          border: Border.all(
-            color: theme.colorScheme.error.withAlpha(77),
-          ),
+          border: Border.all(color: theme.colorScheme.error.withAlpha(77)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.logout,
-              color: theme.colorScheme.error,
-              size: 22,
-            ),
+            Icon(Icons.logout, color: theme.colorScheme.error, size: 22),
             const SizedBox(width: AppSpacing.stackSm),
             Text(
               AppLocalizations.of(context)!.profileLogoutConfirm,

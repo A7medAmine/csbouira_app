@@ -11,6 +11,7 @@ import '../../data/providers/favorites_providers.dart';
 import '../../shared/widgets/favorite_star.dart';
 import '../../shared/widgets/fetch_error_widget.dart';
 import '../preview/preview_args.dart';
+import '../../core/theme/app_surfaces.dart';
 
 class FileScreen extends StatefulWidget {
   final String year;
@@ -77,7 +78,7 @@ class _FileScreenState extends State<FileScreen> {
     final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
-      backgroundColor: const Color(0xFF1D1E2E),
+      backgroundColor: context.surfaces.sheet,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -219,7 +220,7 @@ class _FileScreenState extends State<FileScreen> {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0D0D14),
+      backgroundColor: context.surfaces.page,
       resizeToAvoidBottomInset: false,
       body: Center(
         child: ConstrainedBox(

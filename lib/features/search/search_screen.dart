@@ -1,12 +1,21 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:csbouira_app/l10n/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../core/text_search.dart';
 import '../../core/theme/app_spacing.dart';
+import '../../data/models/catalog_file.dart';
 import '../../data/models/drive_node.dart';
+import '../../data/providers/catalog_providers.dart';
 import '../../data/providers/drive_providers.dart';
+import '../../data/services/catalog_index.dart';
+import '../../shared/file_icons.dart';
 import '../../shared/widgets/fetch_error_widget.dart';
 import '../../shared/widgets/network_banner.dart';
+import '../preview/open_catalog_file.dart';
 
 
 enum SearchResultType { module, folder, file }
@@ -17,12 +26,47 @@ class SearchResult {
   final String subtitle;
   final List<String> pathSegments;
 
+  /// Set for file results.
+  final CatalogFile? file;
+  final int score;
+
   const SearchResult({
     required this.type,
     required this.name,
     required this.subtitle,
     required this.pathSegments,
+    this.file,
+    this.score = 0,
   });
+}
+
+/// The last few queries that led to a result being opened.
+class _RecentSearches {
+  static const _key = 'recent_searches';
+  static const _max = 8;
+
+  static Future<List<String>> load() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getStringList(_key) ?? const [];
+  }
+
+  static Future<List<String>> add(String query) async {
+    final q = query.trim();
+    final items = [...await load()];
+    if (q.isEmpty) return items;
+    items
+      ..removeWhere((e) => e.toLowerCase() == q.toLowerCase())
+      ..insert(0, q);
+    if (items.length > _max) items.removeRange(_max, items.length);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList(_key, items);
+    return items;
+  }
+
+  static Future<void> clear() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_key);
+  }
 }
 
 class SearchScreen extends StatefulWidget {
@@ -39,15 +83,34 @@ class _SearchScreenState extends State<SearchScreen> {
   String? _filterSemester;
   String? _filterModule;
   SearchResultType? _filterType;
+  ResourceCategory? _filterCategory;
+  List<String> _recentSearches = const [];
+  Timer? _debounce;
 
   @override
   void initState() {
     super.initState();
     _searchController = TextEditingController();
+    _RecentSearches.load().then((items) {
+      if (mounted) setState(() => _recentSearches = items);
+    });
+  }
+
+  void _useRecentSearch(String query) {
+    _searchController.text = query;
+    _searchController.selection =
+        TextSelection.collapsed(offset: query.length);
+    setState(() => _query = query);
+  }
+
+  Future<void> _rememberQuery() async {
+    final items = await _RecentSearches.add(_query);
+    if (mounted) setState(() => _recentSearches = items);
   }
 
   @override
   void dispose() {
+    _debounce?.cancel();
     _searchController.dispose();
     super.dispose();
   }
@@ -72,7 +135,18 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void _setFilterType(SearchResultType? v) {
-    setState(() => _filterType = v);
+    setState(() {
+      _filterType = v;
+      // Categories only apply to files.
+      if (v != SearchResultType.file) _filterCategory = null;
+    });
+  }
+
+  void _setFilterCategory(ResourceCategory? v) {
+    setState(() {
+      _filterCategory = v;
+      if (v != null) _filterType = SearchResultType.file;
+    });
   }
 
   void _clearFilters() {
@@ -81,6 +155,7 @@ class _SearchScreenState extends State<SearchScreen> {
       _filterSemester = null;
       _filterModule = null;
       _filterType = null;
+      _filterCategory = null;
     });
   }
 
@@ -90,7 +165,7 @@ class _SearchScreenState extends State<SearchScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0D0D14),
+      backgroundColor: theme.scaffoldBackgroundColor,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Stack(
@@ -99,9 +174,17 @@ class _SearchScreenState extends State<SearchScreen> {
               children: [
                 _SearchHeader(
                   controller: _searchController,
-                  hasText: _query.isNotEmpty,
-                  onChanged: (v) => setState(() => _query = v),
+                  hasText: _searchController.text.isNotEmpty,
+                  onChanged: (v) {
+                    // Searching thousands of files on every keystroke is
+                    // wasted work; wait for a short pause in typing.
+                    _debounce?.cancel();
+                    _debounce = Timer(const Duration(milliseconds: 250), () {
+                      if (mounted) setState(() => _query = v);
+                    });
+                  },
                   onClear: () {
+                    _debounce?.cancel();
                     _searchController.clear();
                     setState(() => _query = '');
                   },
@@ -113,6 +196,18 @@ class _SearchScreenState extends State<SearchScreen> {
                   selectedSemester: _filterSemester,
                   selectedModule: _filterModule,
                   selectedType: _filterType,
+                  selectedCategory: _filterCategory,
+                  onCategoryTap: () {
+                    _showFilterOptions<ResourceCategory>(
+                      title: l10n.searchFilterCategory,
+                      optionsBuilder: (_) => ResourceCategory.values
+                          .where((c) => c != ResourceCategory.other)
+                          .toList(),
+                      selected: _filterCategory,
+                      onSelect: _setFilterCategory,
+                      formatLabel: (v) => categoryLabel(l10n, v),
+                    );
+                  },
                   onYearTap: () =>
                       _showFilterOptions<String>(
                         title: l10n.searchFilterYear,
@@ -170,20 +265,31 @@ class _SearchScreenState extends State<SearchScreen> {
                   onClearFilters: _filterYear != null ||
                           _filterSemester != null ||
                           _filterModule != null ||
-                          _filterType != null
+                          _filterType != null ||
+                          _filterCategory != null
                       ? _clearFilters
                       : null,
                   theme: theme,
                 ),
                 Expanded(
-                  child: _query.isEmpty
-                      ? _EmptyState(theme: theme)
+                  child: _query.trim().isEmpty
+                      ? _EmptyState(
+                          theme: theme,
+                          recentSearches: _recentSearches,
+                          onRecentTap: _useRecentSearch,
+                          onClearRecent: () async {
+                            await _RecentSearches.clear();
+                            if (mounted) setState(() => _recentSearches = const []);
+                          },
+                        )
                       : _SearchResults(
                           query: _query,
                           filterYear: _filterYear,
                           filterSemester: _filterSemester,
                           filterModule: _filterModule,
                           filterType: _filterType,
+                          filterCategory: _filterCategory,
+                          onResultOpened: _rememberQuery,
                           theme: theme,
                         ),
                 ),
@@ -205,7 +311,7 @@ class _SearchScreenState extends State<SearchScreen> {
   ) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: const Color(0xFF1D1E2E),
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -434,6 +540,8 @@ class _FilterChips extends StatelessWidget {
   final String? selectedSemester;
   final String? selectedModule;
   final SearchResultType? selectedType;
+  final ResourceCategory? selectedCategory;
+  final VoidCallback onCategoryTap;
   final VoidCallback onYearTap;
   final VoidCallback onSemesterTap;
   final VoidCallback onModuleTap;
@@ -446,6 +554,8 @@ class _FilterChips extends StatelessWidget {
     required this.selectedSemester,
     required this.selectedModule,
     required this.selectedType,
+    required this.selectedCategory,
+    required this.onCategoryTap,
     required this.onYearTap,
     required this.onSemesterTap,
     required this.onModuleTap,
@@ -507,6 +617,15 @@ class _FilterChips extends StatelessWidget {
                   : l10n.searchFilterType,
               isActive: selectedType != null,
               onTap: onTypeTap,
+              theme: theme,
+            ),
+            const SizedBox(width: 8),
+            _FilterChip(
+              label: selectedCategory != null
+                  ? categoryLabel(l10n, selectedCategory!)
+                  : l10n.searchFilterCategory,
+              isActive: selectedCategory != null,
+              onTap: onCategoryTap,
               theme: theme,
             ),
             if (onClearFilters != null) ...[
@@ -637,12 +756,62 @@ class _FilterOption<T> extends StatelessWidget {
 
 class _EmptyState extends StatelessWidget {
   final ThemeData theme;
+  final List<String> recentSearches;
+  final ValueChanged<String> onRecentTap;
+  final VoidCallback onClearRecent;
 
-  const _EmptyState({required this.theme});
+  const _EmptyState({
+    required this.theme,
+    required this.recentSearches,
+    required this.onRecentTap,
+    required this.onClearRecent,
+  });
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    if (recentSearches.isNotEmpty) {
+      return ListView(
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.marginMobile,
+          AppSpacing.stackLg,
+          AppSpacing.marginMobile,
+          24,
+        ),
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  l10n.searchRecent,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: onClearRecent,
+                child: Text(l10n.searchFilterClear),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final q in recentSearches)
+                ActionChip(
+                  avatar: const Icon(Icons.history, size: 16),
+                  label: Text(q),
+                  onPressed: () => onRecentTap(q),
+                ),
+            ],
+          ),
+        ],
+      );
+    }
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -688,6 +857,8 @@ class _SearchResults extends ConsumerWidget {
   final String? filterSemester;
   final String? filterModule;
   final SearchResultType? filterType;
+  final ResourceCategory? filterCategory;
+  final VoidCallback onResultOpened;
   final ThemeData theme;
 
   const _SearchResults({
@@ -696,12 +867,15 @@ class _SearchResults extends ConsumerWidget {
     this.filterSemester,
     this.filterModule,
     this.filterType,
+    this.filterCategory,
+    required this.onResultOpened,
     required this.theme,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final rootAsync = ref.watch(driveRootDataProvider);
+    final index = ref.watch(catalogIndexProvider).valueOrNull;
     final l10n = AppLocalizations.of(context)!;
 
     return rootAsync.when(
@@ -711,15 +885,10 @@ class _SearchResults extends ConsumerWidget {
         message: l10n.failedToSearch,
       ),
       data: (root) {
-        final results = _performSearch(
-          query,
-          root.years,
-          filterYear: filterYear,
-          filterSemester: filterSemester,
-          filterModule: filterModule,
-          filterType: filterType,
-          l10n: l10n,
-        );
+        if (index == null) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        final results = _performSearch(query, root.years, index, l10n);
 
         if (results.isEmpty) {
           return Center(
@@ -743,105 +912,107 @@ class _SearchResults extends ConsumerWidget {
           );
         }
 
-        return ListView(
+        return ListView.builder(
           padding: const EdgeInsets.fromLTRB(
             AppSpacing.marginMobile,
             AppSpacing.stackLg,
             AppSpacing.marginMobile,
             24,
           ),
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  l10n.topResults,
-                  style: theme.textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: theme.colorScheme.onSurface,
-                  ),
+          itemCount: results.length + 1,
+          itemBuilder: (context, i) {
+            if (i == 0) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.stackMd),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      l10n.topResults,
+                      style: theme.textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: theme.colorScheme.onSurface,
+                      ),
+                    ),
+                    Text(
+                      l10n.itemsFound(results.length),
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        color: theme.colorScheme.primary,
+                      ),
+                    ),
+                  ],
                 ),
-                Text(
-                  l10n.itemsFound(results.length),
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    color: theme.colorScheme.primary,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.stackMd),
-            ...results.map(
-              (result) => _ResultCard(
-                result: result,
-                theme: theme,
-                onTap: () => _navigateToResult(context, result),
-              ),
-            ),
-          ],
+              );
+            }
+            final result = results[i - 1];
+            return _ResultCard(
+              result: result,
+              theme: theme,
+              onTap: () {
+                onResultOpened();
+                _navigateToResult(context, index, result);
+              },
+            );
+          },
         );
       },
     );
   }
 
+  /// Modules and category folders are matched by name; files come from the
+  /// catalogue index, which also covers nested folders and books.
   List<SearchResult> _performSearch(
     String query,
-    Map<String, DriveNode> years, {
-    String? filterYear,
-    String? filterSemester,
-    String? filterModule,
-    SearchResultType? filterType,
-    required AppLocalizations l10n,
-  }) {
-    final q = query.toLowerCase();
+    Map<String, DriveNode> years,
+    CatalogIndex index,
+    AppLocalizations l10n,
+  ) {
+    final q = normalizeForSearch(query);
+    if (q.isEmpty) return const [];
     final results = <SearchResult>[];
+    final wantsFolders = filterCategory == null;
 
-    for (final yearEntry in years.entries) {
-      final yearName = yearEntry.key;
-      if (filterYear != null && yearName != filterYear) continue;
-      final yearNode = yearEntry.value;
+    if (wantsFolders) {
+      for (final yearEntry in years.entries) {
+        final yearName = yearEntry.key;
+        if (filterYear != null && yearName != filterYear) continue;
 
-      for (final semEntry in yearNode.subfolders.entries) {
-        final semName = semEntry.key;
-        if (filterSemester != null && semName != filterSemester) continue;
-        final semNode = semEntry.value;
+        for (final semEntry in yearEntry.value.subfolders.entries) {
+          final semName = semEntry.key;
+          if (filterSemester != null && semName != filterSemester) continue;
 
-        for (final modEntry in semNode.subfolders.entries) {
-          final modName = modEntry.key;
-          if (filterModule != null && modName != filterModule) continue;
-          final modNode = modEntry.value;
+          for (final modEntry in semEntry.value.subfolders.entries) {
+            final modName = modEntry.key;
+            if (filterModule != null && modName != filterModule) continue;
 
-          if ((filterType == null || filterType == SearchResultType.module)
-              && modName.toLowerCase().contains(q)) {
-            results.add(SearchResult(
-              type: SearchResultType.module,
-              name: modName,
-              subtitle: '$yearName \u2022 $semName',
-              pathSegments: [yearName, semName, modName],
-            ));
-          }
-
-          for (final folderEntry in modNode.subfolders.entries) {
-            final folderName = folderEntry.key;
-            final folderNode = folderEntry.value;
-
-            if ((filterType == null || filterType == SearchResultType.folder)
-                && folderName.toLowerCase().contains(q)) {
-              results.add(SearchResult(
-                type: SearchResultType.folder,
-                name: folderName,
-                subtitle: '${l10n.fileCount(folderNode.totalFiles)} \u2022 $modName',
-                pathSegments: [yearName, semName, modName, folderName],
-              ));
+            if (filterType == null || filterType == SearchResultType.module) {
+              final score = matchScore(q, normalizeForSearch(modName));
+              if (score > 0) {
+                results.add(SearchResult(
+                  type: SearchResultType.module,
+                  name: modName,
+                  subtitle: '$yearName • $semName',
+                  pathSegments: [yearName, semName, modName],
+                  score: score + 20,
+                ));
+              }
             }
 
-            if (filterType == null || filterType == SearchResultType.file) {
-              for (final file in folderNode.files) {
-                if (file.name.toLowerCase().contains(q)) {
+            if (filterType == null || filterType == SearchResultType.folder) {
+              for (final folderEntry in modEntry.value.subfolders.entries) {
+                final folderName = folderEntry.key;
+                final score = matchScore(
+                  q,
+                  normalizeForSearch('$folderName $modName'),
+                );
+                if (score > 0) {
                   results.add(SearchResult(
-                    type: SearchResultType.file,
-                    name: file.name,
-                    subtitle: modName,
+                    type: SearchResultType.folder,
+                    name: folderName,
+                    subtitle:
+                        '${l10n.fileCount(folderEntry.value.totalFiles)} • $modName',
                     pathSegments: [yearName, semName, modName, folderName],
+                    score: score,
                   ));
                 }
               }
@@ -851,34 +1022,56 @@ class _SearchResults extends ConsumerWidget {
       }
     }
 
-    return results;
+    if (filterType == null || filterType == SearchResultType.file) {
+      final files = index.search(
+        query,
+        year: filterYear,
+        semester: filterSemester,
+        module: filterModule,
+        category: filterCategory,
+      );
+      for (var i = 0; i < files.length; i++) {
+        final f = files[i];
+        results.add(SearchResult(
+          type: SearchResultType.file,
+          name: f.name,
+          subtitle: '${f.module} • ${categoryLabel(l10n, f.category)}',
+          pathSegments: f.folderPath,
+          file: f,
+          // index.search is already ranked; keep its order.
+          score: files.length - i,
+        ));
+      }
+    }
+
+    // Modules and folders first when they match well, then files.
+    final folders = results.where((r) => r.file == null).toList()
+      ..sort((a, b) => b.score.compareTo(a.score));
+    return [...folders, ...results.where((r) => r.file != null)];
   }
 
-  void _navigateToResult(BuildContext context, SearchResult result) {
+  void _navigateToResult(
+    BuildContext context,
+    CatalogIndex index,
+    SearchResult result,
+  ) {
+    final file = result.file;
+    if (file != null) {
+      openCatalogFile(context, index, file);
+      return;
+    }
     final segments = result.pathSegments;
     final encodedName = Uri.encodeComponent(result.name);
+    final modulePath = '/year/${Uri.encodeComponent(segments[0])}'
+        '/semester/${Uri.encodeComponent(segments[1])}'
+        '/module/${Uri.encodeComponent(segments[2])}';
     switch (result.type) {
       case SearchResultType.module:
-        context.push(
-          '/year/${Uri.encodeComponent(segments[0])}'
-          '/semester/${Uri.encodeComponent(segments[1])}'
-          '/module/${Uri.encodeComponent(segments[2])}'
-          '?highlight=$encodedName',
-        );
+        context.push('$modulePath?highlight=$encodedName');
       case SearchResultType.folder:
-        context.push(
-          '/year/${Uri.encodeComponent(segments[0])}'
-          '/semester/${Uri.encodeComponent(segments[1])}'
-          '/module/${Uri.encodeComponent(segments[2])}'
-          '/folder/${Uri.encodeComponent(segments[3])}'
-          '?highlight=$encodedName',
-        );
       case SearchResultType.file:
         context.push(
-          '/year/${Uri.encodeComponent(segments[0])}'
-          '/semester/${Uri.encodeComponent(segments[1])}'
-          '/module/${Uri.encodeComponent(segments[2])}'
-          '/folder/${Uri.encodeComponent(segments[3])}'
+          '$modulePath/folder/${Uri.encodeComponent(segments[3])}'
           '?highlight=$encodedName',
         );
     }
@@ -911,8 +1104,8 @@ class _ResultCard extends StatelessWidget {
         l10n.searchResultFolder,
       ),
       SearchResultType.file => (
-        Icons.picture_as_pdf,
-        Colors.red,
+        fileIconFor(result.name),
+        fileIconColorFor(result.name, theme),
         l10n.searchResultFile,
       ),
     };
@@ -920,13 +1113,13 @@ class _ResultCard extends StatelessWidget {
     final bgColor = switch (result.type) {
       SearchResultType.module => theme.colorScheme.primary.withAlpha(51),
       SearchResultType.folder => theme.colorScheme.secondary.withAlpha(51),
-      SearchResultType.file => Colors.red.withAlpha(51),
+      SearchResultType.file => fileIconColorFor(result.name, theme).withAlpha(51),
     };
 
     final labelColor = switch (result.type) {
       SearchResultType.module => theme.colorScheme.primary,
       SearchResultType.folder => theme.colorScheme.secondary,
-      SearchResultType.file => Colors.red,
+      SearchResultType.file => fileIconColorFor(result.name, theme),
     };
 
     return Padding(
@@ -936,7 +1129,7 @@ class _ResultCard extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: const Color(0xFF15151F).withAlpha(180),
+            color: theme.colorScheme.surfaceContainerLow,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: theme.colorScheme.outlineVariant.withAlpha(26),

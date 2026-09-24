@@ -24,12 +24,16 @@ Grab the latest APK from the [Releases page](https://github.com/A7medAmine/csbou
 
 - **Browse** every year (Licence 1 → Master 2), semester, module and folder, plus books, exercises and curated online resources.
 - **Preview** PDFs, images and documents in-app, or open them in another app.
-- **Search** modules and files across the whole catalogue.
+- **Search** modules and files across the whole catalogue, ignoring accents and small typos, with year, module and category filters.
+- **Past exams**: every exam and test of a semester, grouped by module, with corrections flagged.
+- **What's new**: files added in the last two weeks; follow a module to get a notification when new files arrive.
 - **Favorites** for modules, files and online resources — works as a guest and syncs to your account when you sign in.
-- **Offline downloads** you can open without a connection.
+- **Offline downloads** you can open without a connection, one file at a time or a whole module at once.
 - **Upload** material from your device or scan paper documents with the camera.
 - **Leaderboard** of the top contributors.
-- **QR sharing**: share a file as a QR code and open it by scanning.
+- **Sharing**: share a file as a `csbouira://file/…` link or QR code; scanning it with the camera opens the app.
+- **Home screen widget** (Android) with your recently opened files.
+- **Light, dark or system theme.**
 - **Accounts** with email/password or Google Sign-In, including password reset by email code.
 - **Three languages**: العربية (RTL), Français, English.
 

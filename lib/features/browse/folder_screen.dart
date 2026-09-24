@@ -3,9 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:csbouira_app/l10n/app_localizations.dart';
 import '../../core/theme/app_spacing.dart';
+import '../../data/models/catalog_file.dart' show moduleKeyOf;
 import '../../data/navigation_data.dart';
 import '../../data/providers/drive_providers.dart';
 import '../../shared/widgets/favorite_star.dart';
+import 'widgets/module_actions.dart';
+import '../../core/theme/app_surfaces.dart';
 
 class FolderScreen extends ConsumerWidget {
   final String year;
@@ -36,7 +39,7 @@ class FolderScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFF111221),
+      backgroundColor: context.surfaces.shell,
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: AppSpacing.containerMax),
@@ -86,7 +89,7 @@ class FolderScreen extends ConsumerWidget {
                         vertical: 16,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF111221).withAlpha(204),
+                        color: context.surfaces.shell.withAlpha(204),
                         border: Border(
                           bottom: BorderSide(
                             color: theme.colorScheme.outlineVariant.withAlpha(
@@ -129,6 +132,14 @@ class FolderScreen extends ConsumerWidget {
                               ],
                             ),
                           ),
+                          OfflinePackButton(
+                            moduleKey: moduleKeyOf(year, semester, module),
+                            moduleName: module,
+                            moduleNode: moduleNode,
+                          ),
+                          FollowModuleButton(
+                            moduleKey: moduleKeyOf(year, semester, module),
+                          ),
                           FavoriteStar(
                             itemType: 'module',
                             itemPath:
@@ -152,6 +163,9 @@ class FolderScreen extends ConsumerWidget {
                             24,
                           ),
                           children: [
+                            OfflinePackBanner(
+                              moduleKey: moduleKeyOf(year, semester, module),
+                            ),
                             // Folder grid
                             _buildFolderGrid(context, theme, folderFileCounts),
                           ],
@@ -302,7 +316,7 @@ class _FolderCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: const Color(0xFF15151F).withAlpha(179),
+          color: context.surfaces.card.withAlpha(179),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color:
@@ -340,7 +354,7 @@ class _FolderCard extends StatelessWidget {
         Text(
           folder,
           style: theme.textTheme.titleMedium?.copyWith(
-            color: isEmpty ? theme.colorScheme.onSurfaceVariant : Colors.white,
+            color: isEmpty ? theme.colorScheme.onSurfaceVariant : theme.colorScheme.onSurface,
           ),
         ),
         const SizedBox(height: 2),
@@ -384,7 +398,7 @@ class _FolderCard extends StatelessWidget {
                   color:
                       isEmpty
                           ? theme.colorScheme.onSurfaceVariant
-                          : Colors.white,
+                          : theme.colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 2),

@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analyze-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.29.3"
+          channel: "stable"
+          cache: true
+
+      # .env is a bundled asset, so it must exist for the build and tests.
+      # CI uses placeholders; no test talks to Supabase.
+      - name: Write placeholder .env
+        run: |
+          cat <<EOF > .env
+          SUPABASE_URL=https://example.supabase.co
+          SUPABASE_ANON_KEY=ci-placeholder
+          EOF
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Check generated localizations are up to date
+        run: |
+          flutter gen-l10n
+          git diff --exit-code -- lib/l10n
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Test
+        run: flutter test

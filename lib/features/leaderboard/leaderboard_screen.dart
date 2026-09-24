@@ -8,6 +8,7 @@ import '../../data/providers/auth_providers.dart';
 import '../../data/providers/leaderboard_providers.dart';
 import '../../shared/widgets/user_avatar.dart';
 import 'package:csbouira_app/l10n/app_localizations.dart';
+import '../../core/theme/app_surfaces.dart';
 
 class LeaderboardScreen extends ConsumerWidget {
   const LeaderboardScreen({super.key});
@@ -20,7 +21,7 @@ class LeaderboardScreen extends ConsumerWidget {
     final rankAsync = ref.watch(currentUserRankProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0D0D14),
+      backgroundColor: context.surfaces.page,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -284,12 +285,12 @@ class _LeaderboardRow extends StatelessWidget {
       decoration: BoxDecoration(
         color: isCurrentUser
             ? theme.colorScheme.primaryContainer.withAlpha(26)
-            : const Color(0x0D15151F),
+            : context.surfaces.faint,
         borderRadius: BorderRadius.circular(AppRadius.xl),
         border: Border.all(
           color: isCurrentUser
               ? theme.colorScheme.primary.withAlpha(77)
-              : const Color(0xFF1A1A26).withAlpha(128),
+              : context.surfaces.cardBorder.withAlpha(128),
         ),
       ),
       child: Row(
@@ -412,10 +413,10 @@ class _GuestPrompt extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(AppSpacing.stackLg),
       decoration: BoxDecoration(
-        color: const Color(0x0D15151F),
+        color: context.surfaces.faint,
         borderRadius: BorderRadius.circular(AppRadius.xl),
         border: Border.all(
-          color: const Color(0xFF1A1A26).withAlpha(128),
+          color: context.surfaces.cardBorder.withAlpha(128),
         ),
       ),
       child: Column(

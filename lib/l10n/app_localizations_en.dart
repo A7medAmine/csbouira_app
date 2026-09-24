@@ -1152,4 +1152,186 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get authSignupCheckEmail => 'Account created. Check your email to confirm it, then log in.';
+
+  @override
+  String get linkFileNotFound => 'This file is no longer available. It may have been moved or removed.';
+
+  @override
+  String get linkGoHome => 'Go to home';
+
+  @override
+  String get categoryCourse => 'Course';
+
+  @override
+  String get categoryExam => 'Exams';
+
+  @override
+  String get categoryTest => 'Tests';
+
+  @override
+  String get categorySummary => 'Summary';
+
+  @override
+  String get categoryTdTp => 'TD & TP';
+
+  @override
+  String get categoryBook => 'Books';
+
+  @override
+  String get categoryOther => 'Other';
+
+  @override
+  String get correctionBadge => 'Correction';
+
+  @override
+  String get examsTitle => 'Past exams';
+
+  @override
+  String get examsEmpty => 'No exams or tests for this semester yet.';
+
+  @override
+  String get examsCorrectionsOnly => 'With corrections';
+
+  @override
+  String get examsKindAll => 'All';
+
+  @override
+  String get whatsNewTitle => 'What\'s new';
+
+  @override
+  String get whatsNewToday => 'Today';
+
+  @override
+  String get whatsNewYesterday => 'Yesterday';
+
+  @override
+  String whatsNewFollowingOnly(int count) {
+    return 'Followed modules ($count)';
+  }
+
+  @override
+  String get whatsNewEmpty => 'No new files in the last 14 days. New uploads appear here once the app has seen them.';
+
+  @override
+  String get followingManage => 'Followed modules';
+
+  @override
+  String get moduleFollow => 'Follow for new files';
+
+  @override
+  String get moduleUnfollow => 'Unfollow';
+
+  @override
+  String get moduleFollowedSnack => 'You\'ll be notified when new files are added to this module.';
+
+  @override
+  String get moduleUnfollowedSnack => 'Module unfollowed.';
+
+  @override
+  String shareLinkMessage(String name, String appLink, String driveLink) {
+    return '$name\nOpen in CS Bouira: $appLink\nGoogle Drive: $driveLink';
+  }
+
+  @override
+  String get shareLinkAction => 'Share link';
+
+  @override
+  String get copyLinkAction => 'Copy link';
+
+  @override
+  String get linkCopied => 'Link copied';
+
+  @override
+  String get homeActionExams => 'Past exams';
+
+  @override
+  String get homeActionWhatsNew => 'What\'s new';
+
+  @override
+  String get homeActionOffline => 'Offline';
+
+  @override
+  String get homeRecentFiles => 'Recently opened';
+
+  @override
+  String get homeRecentClear => 'Clear';
+
+  @override
+  String get offlinePackTitle => 'Download for offline';
+
+  @override
+  String get offlinePackHint => 'Files are saved to Downloads. Files you already have are skipped.';
+
+  @override
+  String get offlinePackAll => 'Whole module';
+
+  @override
+  String get offlinePackBusy => 'Another download is still running.';
+
+  @override
+  String offlinePackProgress(int done, int total) {
+    return '$done of $total files';
+  }
+
+  @override
+  String get offlinePackCancelled => 'Download stopped.';
+
+  @override
+  String offlinePackDone(int count) {
+    return '$count files ready offline.';
+  }
+
+  @override
+  String offlinePackDoneWithErrors(int done, int failed) {
+    return '$done files ready, $failed failed.';
+  }
+
+  @override
+  String get offlinePackCancel => 'Stop';
+
+  @override
+  String get offlinePackDismiss => 'Dismiss';
+
+  @override
+  String get searchFilterCategory => 'Category';
+
+  @override
+  String get searchRecent => 'Recent searches';
+
+  @override
+  String get newFilesChannelName => 'New files';
+
+  @override
+  String newFilesNotificationTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count new files in your modules',
+      one: '1 new file in your modules',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String newFilesNotificationLine(String module, int count) {
+    return '$module: $count new';
+  }
+
+  @override
+  String get profileTheme => 'Theme';
+
+  @override
+  String get profileThemeDark => 'Dark';
+
+  @override
+  String get profileThemeLight => 'Light';
+
+  @override
+  String get profileThemeSystem => 'System default';
+
+  @override
+  String get profileCrashReports => 'Send crash reports';
+
+  @override
+  String get profileWidgetCat => 'Cat on home screen widget';
 }

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_recent_files_title">الملفات الاخيرة</string>
+    <string name="widget_recent_files_empty">تظهر هنا الملفات التي تفتحها في CS Bouira.</string>
+    <string name="widget_recent_files_description">وصول سريع الى الملفات المفتوحة مؤخرا</string>
+</resources>

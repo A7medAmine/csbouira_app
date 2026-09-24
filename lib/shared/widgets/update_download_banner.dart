@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:csbouira_app/l10n/app_localizations.dart';
 import '../../data/providers/update_download_provider.dart';
+import '../../core/theme/app_surfaces.dart';
 
 class UpdateDownloadBanner extends ConsumerWidget {
   const UpdateDownloadBanner({super.key});
@@ -24,7 +25,8 @@ class UpdateDownloadBanner extends ConsumerWidget {
 
     switch (downloadState.status) {
       case UpdateDownloadStatus.downloading:
-        bannerColor = const Color(0xFF15151F);
+        // Always dark: the banner floats over any screen and uses white text.
+        bannerColor = AppSurfaces.dark.card;
         icon = Icons.cloud_download;
         final percentage = (downloadState.progress * 100).toStringAsFixed(0);
         text = l10n.updateBannerDownloading(percentage);

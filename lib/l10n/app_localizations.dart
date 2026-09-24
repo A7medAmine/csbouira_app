@@ -2070,6 +2070,330 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Account created. Check your email to confirm it, then log in.'**
   String get authSignupCheckEmail;
+
+  /// Shown when a shared link points to a file that is not in the catalogue
+  ///
+  /// In en, this message translates to:
+  /// **'This file is no longer available. It may have been moved or removed.'**
+  String get linkFileNotFound;
+
+  /// Button to leave a broken link screen
+  ///
+  /// In en, this message translates to:
+  /// **'Go to home'**
+  String get linkGoHome;
+
+  /// Resource category: lecture notes
+  ///
+  /// In en, this message translates to:
+  /// **'Course'**
+  String get categoryCourse;
+
+  /// Resource category: exams
+  ///
+  /// In en, this message translates to:
+  /// **'Exams'**
+  String get categoryExam;
+
+  /// Resource category: tests / quizzes
+  ///
+  /// In en, this message translates to:
+  /// **'Tests'**
+  String get categoryTest;
+
+  /// Resource category: summaries
+  ///
+  /// In en, this message translates to:
+  /// **'Summary'**
+  String get categorySummary;
+
+  /// Resource category: tutorials and labs
+  ///
+  /// In en, this message translates to:
+  /// **'TD & TP'**
+  String get categoryTdTp;
+
+  /// Resource category: books and exercises
+  ///
+  /// In en, this message translates to:
+  /// **'Books'**
+  String get categoryBook;
+
+  /// Resource category: anything else
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get categoryOther;
+
+  /// Badge on files that look like answer keys
+  ///
+  /// In en, this message translates to:
+  /// **'Correction'**
+  String get correctionBadge;
+
+  /// Title of the past exams screen
+  ///
+  /// In en, this message translates to:
+  /// **'Past exams'**
+  String get examsTitle;
+
+  /// Empty state of the past exams screen
+  ///
+  /// In en, this message translates to:
+  /// **'No exams or tests for this semester yet.'**
+  String get examsEmpty;
+
+  /// Filter chip: only show corrections
+  ///
+  /// In en, this message translates to:
+  /// **'With corrections'**
+  String get examsCorrectionsOnly;
+
+  /// Segment showing both exams and tests
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get examsKindAll;
+
+  /// Title of the new files screen
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s new'**
+  String get whatsNewTitle;
+
+  /// Date header
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get whatsNewToday;
+
+  /// Date header
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get whatsNewYesterday;
+
+  /// Filter chip on the new files screen
+  ///
+  /// In en, this message translates to:
+  /// **'Followed modules ({count})'**
+  String whatsNewFollowingOnly(int count);
+
+  /// Empty state of the new files screen
+  ///
+  /// In en, this message translates to:
+  /// **'No new files in the last 14 days. New uploads appear here once the app has seen them.'**
+  String get whatsNewEmpty;
+
+  /// Title of the followed modules sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Followed modules'**
+  String get followingManage;
+
+  /// Tooltip of the follow button
+  ///
+  /// In en, this message translates to:
+  /// **'Follow for new files'**
+  String get moduleFollow;
+
+  /// Tooltip of the unfollow button
+  ///
+  /// In en, this message translates to:
+  /// **'Unfollow'**
+  String get moduleUnfollow;
+
+  /// Snackbar after following a module
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll be notified when new files are added to this module.'**
+  String get moduleFollowedSnack;
+
+  /// Snackbar after unfollowing a module
+  ///
+  /// In en, this message translates to:
+  /// **'Module unfollowed.'**
+  String get moduleUnfollowedSnack;
+
+  /// Text shared when sharing a file link
+  ///
+  /// In en, this message translates to:
+  /// **'{name}\nOpen in CS Bouira: {appLink}\nGoogle Drive: {driveLink}'**
+  String shareLinkMessage(String name, String appLink, String driveLink);
+
+  /// Button that opens the system share sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Share link'**
+  String get shareLinkAction;
+
+  /// Button that copies the app link
+  ///
+  /// In en, this message translates to:
+  /// **'Copy link'**
+  String get copyLinkAction;
+
+  /// Snackbar after copying a link
+  ///
+  /// In en, this message translates to:
+  /// **'Link copied'**
+  String get linkCopied;
+
+  /// Home shortcut to the past exams screen
+  ///
+  /// In en, this message translates to:
+  /// **'Past exams'**
+  String get homeActionExams;
+
+  /// Home shortcut to the new files screen
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s new'**
+  String get homeActionWhatsNew;
+
+  /// Home shortcut to downloaded files
+  ///
+  /// In en, this message translates to:
+  /// **'Offline'**
+  String get homeActionOffline;
+
+  /// Home section with recently opened files
+  ///
+  /// In en, this message translates to:
+  /// **'Recently opened'**
+  String get homeRecentFiles;
+
+  /// Button that clears the recent files
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get homeRecentClear;
+
+  /// Title of the module download sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Download for offline'**
+  String get offlinePackTitle;
+
+  /// Explanation in the module download sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Files are saved to Downloads. Files you already have are skipped.'**
+  String get offlinePackHint;
+
+  /// Option to download every file of a module
+  ///
+  /// In en, this message translates to:
+  /// **'Whole module'**
+  String get offlinePackAll;
+
+  /// Shown when a module download is already running
+  ///
+  /// In en, this message translates to:
+  /// **'Another download is still running.'**
+  String get offlinePackBusy;
+
+  /// Progress of a module download
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total} files'**
+  String offlinePackProgress(int done, int total);
+
+  /// Module download was cancelled
+  ///
+  /// In en, this message translates to:
+  /// **'Download stopped.'**
+  String get offlinePackCancelled;
+
+  /// Module download finished
+  ///
+  /// In en, this message translates to:
+  /// **'{count} files ready offline.'**
+  String offlinePackDone(int count);
+
+  /// Module download finished with failures
+  ///
+  /// In en, this message translates to:
+  /// **'{done} files ready, {failed} failed.'**
+  String offlinePackDoneWithErrors(int done, int failed);
+
+  /// Button that stops a module download
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get offlinePackCancel;
+
+  /// Button that hides a finished module download
+  ///
+  /// In en, this message translates to:
+  /// **'Dismiss'**
+  String get offlinePackDismiss;
+
+  /// Search filter chip for resource category
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get searchFilterCategory;
+
+  /// Header of recent searches
+  ///
+  /// In en, this message translates to:
+  /// **'Recent searches'**
+  String get searchRecent;
+
+  /// Android notification channel name
+  ///
+  /// In en, this message translates to:
+  /// **'New files'**
+  String get newFilesChannelName;
+
+  /// Title of the new files notification
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 new file in your modules} other{{count} new files in your modules}}'**
+  String newFilesNotificationTitle(int count);
+
+  /// One line per module in the new files notification
+  ///
+  /// In en, this message translates to:
+  /// **'{module}: {count} new'**
+  String newFilesNotificationLine(String module, int count);
+
+  /// Settings row for the app theme
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get profileTheme;
+
+  /// Theme option
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get profileThemeDark;
+
+  /// Theme option
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get profileThemeLight;
+
+  /// Theme option
+  ///
+  /// In en, this message translates to:
+  /// **'System default'**
+  String get profileThemeSystem;
+
+  /// Settings switch for anonymous crash reports
+  ///
+  /// In en, this message translates to:
+  /// **'Send crash reports'**
+  String get profileCrashReports;
+
+  /// Settings switch for the blinking cat on the Android home screen widget
+  ///
+  /// In en, this message translates to:
+  /// **'Cat on home screen widget'**
+  String get profileWidgetCat;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

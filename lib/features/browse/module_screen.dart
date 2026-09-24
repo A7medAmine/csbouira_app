@@ -6,6 +6,7 @@ import '../../core/theme/app_spacing.dart';
 import '../../data/providers/drive_providers.dart';
 import '../../shared/widgets/favorite_star.dart';
 import '../../shared/widgets/fetch_error_widget.dart';
+import '../../core/theme/app_surfaces.dart';
 
 String _moduleInitials(String name) {
   final words = name.split(RegExp(r'[\s\-]+'));
@@ -46,7 +47,7 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF111221),
+      backgroundColor: context.surfaces.shell,
       resizeToAvoidBottomInset: false,
       body: Center(
         child: ConstrainedBox(
@@ -97,7 +98,7 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
                         vertical: 16,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF111221).withAlpha(204),
+                        color: context.surfaces.shell.withAlpha(204),
                         border: Border(
                           bottom: BorderSide(
                             color: theme.colorScheme.outlineVariant.withAlpha(
@@ -300,7 +301,7 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
                                               ? l10n.allModules
                                               : l10n.searchResults,
                                           style: theme.textTheme.headlineMedium
-                                              ?.copyWith(color: Colors.white),
+                                              ?.copyWith(color: theme.colorScheme.onSurface),
                                         ),
                                       ],
                                     ),
@@ -427,7 +428,7 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
                                                           .textTheme
                                                           .titleMedium
                                                           ?.copyWith(
-                                                            color: Colors.white,
+                                                            color: theme.colorScheme.onSurface,
                                                           ),
                                                     ),
                                                     const SizedBox(height: 4),
@@ -539,7 +540,7 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
                                                   .textTheme
                                                   .headlineMedium
                                                   ?.copyWith(
-                                                    color: Colors.white,
+                                                    color: theme.colorScheme.onSurface,
                                                     fontWeight: FontWeight.bold,
                                                   ),
                                             ),
@@ -591,7 +592,7 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
                                                   .textTheme
                                                   .headlineMedium
                                                   ?.copyWith(
-                                                    color: Colors.white,
+                                                    color: theme.colorScheme.onSurface,
                                                     fontWeight: FontWeight.bold,
                                                   ),
                                             ),

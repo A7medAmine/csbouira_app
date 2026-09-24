@@ -4,10 +4,14 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'core/deep_links.dart';
 import 'core/providers/locale_provider.dart';
+import 'core/providers/theme_mode_provider.dart';
 import 'core/theme/app_theme.dart';
 import 'data/providers/auth_providers.dart';
+import 'data/providers/catalog_providers.dart';
 import 'data/providers/favorites_providers.dart';
+import 'data/services/notification_service.dart';
 import 'features/about/about_screen.dart';
 import 'features/auth/forgot_password_screen.dart';
 import 'features/auth/login_screen.dart';
@@ -20,6 +24,8 @@ import 'features/browse/semester_screen.dart';
 import 'features/downloads/downloads_screen.dart';
 import 'features/favorites/favorites_screen.dart';
 import 'features/home/home_screen.dart';
+import 'features/exams/exams_screen.dart';
+import 'features/preview/open_file_screen.dart';
 import 'features/preview/preview_screen.dart';
 import 'features/scan/qr_scanner_screen.dart';
 import 'features/profile/my_uploads_screen.dart';
@@ -27,6 +33,7 @@ import 'features/profile/profile_screen.dart';
 import 'features/search/search_screen.dart';
 import 'features/splash/splash_screen.dart';
 import 'features/upload/upload_screen.dart';
+import 'features/whats_new/whats_new_screen.dart';
 import 'shared/widgets/app_bottom_nav.dart';
 import 'shared/widgets/update_download_banner.dart';
 import 'l10n/app_localizations.dart';
@@ -185,6 +192,30 @@ final _routerProvider = Provider<GoRouter>((ref) {
                     pageBuilder: (_, state) => _buildTransitionPage(
                       key: state.pageKey,
                       child: const QrScannerScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path: 'open/file/:id',
+                    name: 'openFile',
+                    pageBuilder: (_, state) => _buildTransitionPage(
+                      key: state.pageKey,
+                      child: OpenFileScreen(fileId: state.pathParameters['id']!),
+                    ),
+                  ),
+                  GoRoute(
+                    path: 'exams',
+                    name: 'exams',
+                    pageBuilder: (_, state) => _buildTransitionPage(
+                      key: state.pageKey,
+                      child: const ExamsScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path: 'whats-new',
+                    name: 'whatsNew',
+                    pageBuilder: (_, state) => _buildTransitionPage(
+                      key: state.pageKey,
+                      child: const WhatsNewScreen(),
                     ),
                   ),
                 ],
@@ -434,8 +465,13 @@ class _CSBouiraAppState extends ConsumerState<CSBouiraApp> {
   @override
   void initState() {
     super.initState();
+    DeepLinkService.instance.start();
+    NotificationService.init();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(localeProvider.notifier).loadSavedLocale();
+      ref.read(themeModeProvider.notifier).load();
+      // Schedules the background new-files check if any module is followed.
+      ref.read(followedModulesProvider);
     });
   }
 
@@ -443,6 +479,7 @@ class _CSBouiraAppState extends ConsumerState<CSBouiraApp> {
   Widget build(BuildContext context) {
     final router = ref.watch(_routerProvider);
     final locale = ref.watch(localeProvider);
+    final themeMode = ref.watch(themeModeProvider);
 
     return MaterialApp.router(
       title: 'CS Bouira',
@@ -450,7 +487,7 @@ class _CSBouiraAppState extends ConsumerState<CSBouiraApp> {
       locale: locale,
       theme: AppTheme.light(locale),
       darkTheme: AppTheme.dark(locale),
-      themeMode: ThemeMode.dark,
+      themeMode: themeMode,
       routerConfig: router,
       localizationsDelegates: const [
         AppLocalizations.delegate,

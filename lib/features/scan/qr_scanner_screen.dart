@@ -3,9 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
+import '../../core/deep_links.dart';
 import '../../core/theme/app_colors.dart';
+import '../../data/providers/catalog_providers.dart';
 import '../../data/providers/drive_providers.dart';
 import '../../data/services/qr_share_service.dart';
+import '../preview/open_catalog_file.dart';
 import '../preview/preview_args.dart';
 import 'package:csbouira_app/l10n/app_localizations.dart';
 
@@ -75,6 +78,14 @@ class _QrScannerScreenState extends ConsumerState<QrScannerScreen>
     final barcode = capture.barcodes.firstOrNull;
     if (barcode == null || barcode.rawValue == null) return;
 
+    final link = parseAppLink(Uri.tryParse(barcode.rawValue!) ?? Uri());
+    if (link is FileLink) {
+      setState(() => _state = _ScanState.resolving);
+      _controller.stop();
+      _resolveLink(link);
+      return;
+    }
+
     final data = parseFileShareData(barcode.rawValue!);
     if (data == null) {
       setState(() {
@@ -88,6 +99,23 @@ class _QrScannerScreenState extends ConsumerState<QrScannerScreen>
     _controller.stop();
 
     _resolveFile(data);
+  }
+
+  /// Resolves a `csbouira://file/<id>` code through the catalogue index.
+  Future<void> _resolveLink(FileLink link) async {
+    try {
+      final index = await ref.read(catalogIndexProvider.future);
+      final entry = index.byId(link.fileId);
+      if (entry == null) throw StateError('Unknown file ${link.fileId}');
+
+      setState(() => _state = _ScanState.success);
+      await Future.delayed(const Duration(milliseconds: 600));
+      if (!mounted) return;
+      openCatalogFile(context, index, entry, replace: true);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _state = _ScanState.fileNotFound);
+    }
   }
 
   Future<void> _resolveFile(ShareFileData data) async {

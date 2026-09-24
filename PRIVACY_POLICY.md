@@ -1,6 +1,6 @@
 # Privacy Policy — CS Bouira
 
-**Last updated:** 28/06/2026
+**Last updated:** 24/09/2026
 
 CS Bouira ("the App", "we", "us") is a free, non-commercial academic
 resource-sharing application built for Computer Science students at
@@ -48,10 +48,19 @@ We only collect what is needed to operate the App's features:
   files you've downloaded, stored only on your own device; your upload
   count, stored to show on the Leaderboard if you choose to upload while
   logged in).
+- Your recently opened files, recent searches and the modules you follow
+  for new-file notifications. These are stored only on your device and
+  are never sent to us.
+- **Crash reports:** if the App crashes or hits an unexpected error, a
+  technical report may be sent to our error-tracking provider (Sentry).
+  It contains the error message, the code location, the App version and
+  basic device information (model, Android version). It does not
+  contain your name, email address, files or IP address. You can turn
+  crash reports off at any time in Profile → Send crash reports.
 
 We do **not** collect: your location, your contacts, your device's
 advertising identifiers, or any data unrelated to the features described
-above. We do not use any analytics or tracking SDKs.
+above. We do not use any analytics, advertising or tracking SDKs.
 
 ## 3. Why we collect it
 
@@ -131,6 +140,7 @@ typically associated with university enrollment.
 | Google Sign-In             | Login                                     | Name, email, profile photo                     |
 | Google Drive / Apps Script | Hosting uploaded academic files           | Uploaded files, uploader name/email            |
 | GitHub Releases            | App update distribution                   | No personal data — only checks version numbers |
+| Sentry                     | Crash and error reports (can be turned off) | Error details, App version, device model and OS version |
 
 We do not control these third parties' own privacy practices beyond
 what's described here; we encourage you to review Google's and

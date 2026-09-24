@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../../app.dart';
+import '../../core/theme/app_surfaces.dart';
 
 const _imageExtensions = {'jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'};
 
@@ -59,11 +60,11 @@ class _LocalFileViewerScreenState extends State<LocalFileViewerScreen> {
       valueListenable: fullScreenNotifier,
       builder: (context, isFullScreen, _) {
         return Scaffold(
-          backgroundColor: const Color(0xFF111221),
+          backgroundColor: context.surfaces.shell,
           appBar: isFullScreen
               ? null
               : AppBar(
-                  backgroundColor: const Color(0xFF111221),
+                  backgroundColor: context.surfaces.shell,
                   leading: IconButton(
                     icon:
                         Icon(Icons.arrow_back, color: theme.colorScheme.primary),

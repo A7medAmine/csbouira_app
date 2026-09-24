@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'app_colors.dart';
 import 'app_radius.dart';
 import 'app_spacing.dart';
+import 'app_surfaces.dart';
 
 TextTheme _buildTextTheme(Locale locale) {
   final isArabic = locale.languageCode == 'ar';
@@ -126,6 +127,7 @@ ThemeData _buildDarkTheme(Locale locale) {
       displayColor: AppColorsDark.onSurface,
     ),
     scaffoldBackgroundColor: AppColorsDark.background,
+    extensions: const [AppSurfaces.dark],
     cardTheme: CardTheme(
       color: AppColorsDark.surfaceContainerLow,
       elevation: 0,
@@ -218,6 +220,7 @@ ThemeData _buildLightTheme(Locale locale) {
       displayColor: colorScheme.onSurface,
     ),
     scaffoldBackgroundColor: AppColorsLight.background,
+    extensions: const [AppSurfaces.light],
     cardTheme: CardTheme(
       color: AppColorsLight.surface,
       elevation: 0,
