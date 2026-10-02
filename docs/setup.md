@@ -109,6 +109,8 @@ The app uses native Google Sign-In (`google_sign_in` 7.x) and passes the ID toke
 
    Use the `debug` variant's SHA-1 for local development. Release builds need the SHA-1 of your release key as well.
 
+   Release signing reads `android/key.properties` (`storeFile`, `storePassword`, `keyAlias`, `keyPassword`; `storeFile` is relative to `android/`). The release workflow uses the `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS` and `ANDROID_KEY_PASSWORD` secrets instead. Without either, release builds are signed with the debug key and Google Sign-In fails in them.
+
 2. **Google Cloud Console → APIs & Services → Credentials**. Set up the OAuth consent screen, then create two OAuth client IDs:
    - **Android**: package name `com.csbouira.csbouira_app`, plus the SHA-1 from step 1.
    - **Web application**: no redirect URIs needed.

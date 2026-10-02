@@ -1,9 +1,24 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
+
+// Release signing comes from android/key.properties (local) or from
+// ANDROID_KEYSTORE_* environment variables (CI). Without either, release
+// builds fall back to the debug key, and Google Sign-In will not work in them.
+val keystoreProperties = Properties().apply {
+    val file = rootProject.file("key.properties")
+    if (file.exists()) file.inputStream().use { load(it) }
+}
+
+fun signingValue(property: String, env: String): String? =
+    keystoreProperties.getProperty(property) ?: System.getenv(env)
+
+val releaseStoreFile = signingValue("storeFile", "ANDROID_KEYSTORE_PATH")
 
 android {
     namespace = "com.csbouira.csbouira_app"
@@ -32,11 +47,21 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        if (releaseStoreFile != null) {
+            create("release") {
+                storeFile = rootProject.file(releaseStoreFile)
+                storePassword = signingValue("storePassword", "ANDROID_KEYSTORE_PASSWORD")
+                keyAlias = signingValue("keyAlias", "ANDROID_KEY_ALIAS")
+                keyPassword = signingValue("keyPassword", "ANDROID_KEY_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.findByName("release")
+                ?: signingConfigs.getByName("debug")
         }
     }
 }

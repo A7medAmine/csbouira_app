@@ -48,8 +48,21 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Decode release keystore
+        run: |
+          if [ -z "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" ]; then
+            echo "::error::ANDROID_KEYSTORE_BASE64 secret is missing; refusing to ship a debug-signed APK."
+            exit 1
+          fi
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > "$RUNNER_TEMP/release.jks"
+          echo "ANDROID_KEYSTORE_PATH=$RUNNER_TEMP/release.jks" >> "$GITHUB_ENV"
+
       - name: Build release APK
         run: flutter build apk --release
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
 
       - name: Determine version
         id: version
@@ -58,13 +71,18 @@ jobs:
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
       - name: Rename APK
-        run: cp build/app/outputs/flutter-apk/app-release.apk csbouira-${{ steps.version.outputs.tag }}.apk
+        run: |
+          cp build/app/outputs/flutter-apk/app-release.apk csbouira-${{ steps.version.outputs.tag }}.apk
+          # Fixed name so releases/latest/download/csbouira.apk always serves the newest build.
+          cp build/app/outputs/flutter-apk/app-release.apk csbouira.apk
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: android-apk
-          path: csbouira-${{ steps.version.outputs.tag }}.apk
+          path: |
+            csbouira-${{ steps.version.outputs.tag }}.apk
+            csbouira.apk
 
   release:
     needs: build-android
