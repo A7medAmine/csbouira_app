@@ -13,6 +13,7 @@ import '../../data/providers/upload_count_provider.dart';
 import '../../data/services/local_favorites_cache.dart';
 import '../../shared/widgets/avatar_widget.dart';
 import '../../shared/widgets/network_banner.dart';
+import '../../shared/widgets/share_app_modal.dart';
 import '../../shared/widgets/user_avatar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:csbouira_app/l10n/app_localizations.dart';
@@ -757,6 +758,14 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
                         onTap: () => context.push('/about'),
                       ),
                       const SizedBox(height: AppSpacing.stackSm),
+                      _SettingsRow(
+                        theme: theme,
+                        icon: Icons.qr_code_2,
+                        label:
+                            AppLocalizations.of(context)!.profileSettingShareApp,
+                        onTap: () => showShareAppModal(context),
+                      ),
+                      const SizedBox(height: AppSpacing.stackSm),
                       _LanguagePickerRow(theme: theme),
                       const SizedBox(height: AppSpacing.stackSm),
                       _ThemePickerRow(theme: theme),
@@ -975,6 +984,14 @@ class _LoggedInProfileShell extends ConsumerWidget {
                           label:
                               AppLocalizations.of(context)!.profileSettingAbout,
                           onTap: () => context.push('/about'),
+                        ),
+                        const SizedBox(height: AppSpacing.stackSm),
+                        _SettingsRow(
+                          theme: theme,
+                          icon: Icons.qr_code_2,
+                          label:
+                              AppLocalizations.of(context)!.profileSettingShareApp,
+                          onTap: () => showShareAppModal(context),
                         ),
                         const SizedBox(height: AppSpacing.stackSm),
                         _LanguagePickerRow(theme: theme),

@@ -1334,4 +1334,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileWidgetCat => 'Cat on home screen widget';
+
+  @override
+  String get shareAppTitle => 'Share CS Bouira';
+
+  @override
+  String get shareAppQrHint => 'Scan with any camera to download the app.';
+
+  @override
+  String shareAppMessage(String link) {
+    return 'CS Bouira: courses, TDs, TPs and past exams for CS students at the University of Bouira. Download the app: $link';
+  }
+
+  @override
+  String get shareAppAction => 'Share as message';
+
+  @override
+  String get shareAppQrAction => 'Share QR code';
+
+  @override
+  String get profileSettingShareApp => 'Share the app';
 }

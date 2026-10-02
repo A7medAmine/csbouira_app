@@ -2394,6 +2394,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cat on home screen widget'**
   String get profileWidgetCat;
+
+  /// Title of the share-the-app modal
+  ///
+  /// In en, this message translates to:
+  /// **'Share CS Bouira'**
+  String get shareAppTitle;
+
+  /// Hint under the app download QR code
+  ///
+  /// In en, this message translates to:
+  /// **'Scan with any camera to download the app.'**
+  String get shareAppQrHint;
+
+  /// Message shared when sharing the app download link
+  ///
+  /// In en, this message translates to:
+  /// **'CS Bouira: courses, TDs, TPs and past exams for CS students at the University of Bouira. Download the app: {link}'**
+  String shareAppMessage(String link);
+
+  /// Button that shares the app download link through the system share sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Share as message'**
+  String get shareAppAction;
+
+  /// Button that shares the QR code as an image
+  ///
+  /// In en, this message translates to:
+  /// **'Share QR code'**
+  String get shareAppQrAction;
+
+  /// Settings row that opens the share-the-app modal
+  ///
+  /// In en, this message translates to:
+  /// **'Share the app'**
+  String get profileSettingShareApp;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

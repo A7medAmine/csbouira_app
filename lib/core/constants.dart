@@ -6,6 +6,15 @@ class ApiConstants {
       'https://script.google.com/macros/s/AKfycbxMikLNPWYBEWjYJ7FSLJAHV_dZ_5E6aSGarqtm7kubMsjzXFHXnW4s-eEM2RtFOaF3/exec';
 }
 
+class AppLinks {
+  AppLinks._();
+
+  /// Always resolves to the newest release's APK. The release workflow
+  /// uploads a copy under this fixed name next to the versioned one.
+  static const String apkDownloadUrl =
+      'https://github.com/A7medAmine/csbouira_app/releases/latest/download/csbouira.apk';
+}
+
 class NetworkConstants {
   NetworkConstants._();
 

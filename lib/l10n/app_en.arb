@@ -1687,5 +1687,34 @@
   "profileWidgetCat": "Cat on home screen widget",
   "@profileWidgetCat": {
     "description": "Settings switch for the blinking cat on the Android home screen widget"
+  },
+  "shareAppTitle": "Share CS Bouira",
+  "@shareAppTitle": {
+    "description": "Title of the share-the-app modal"
+  },
+  "shareAppQrHint": "Scan with any camera to download the app.",
+  "@shareAppQrHint": {
+    "description": "Hint under the app download QR code"
+  },
+  "shareAppMessage": "CS Bouira: courses, TDs, TPs and past exams for CS students at the University of Bouira. Download the app: {link}",
+  "@shareAppMessage": {
+    "description": "Message shared when sharing the app download link",
+    "placeholders": {
+      "link": {
+        "type": "String"
+      }
+    }
+  },
+  "shareAppAction": "Share as message",
+  "@shareAppAction": {
+    "description": "Button that shares the app download link through the system share sheet"
+  },
+  "shareAppQrAction": "Share QR code",
+  "@shareAppQrAction": {
+    "description": "Button that shares the QR code as an image"
+  },
+  "profileSettingShareApp": "Share the app",
+  "@profileSettingShareApp": {
+    "description": "Settings row that opens the share-the-app modal"
   }
 }

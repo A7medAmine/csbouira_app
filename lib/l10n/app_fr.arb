@@ -1409,5 +1409,11 @@
   "profileThemeLight": "Clair",
   "profileThemeSystem": "Selon le système",
   "profileCrashReports": "Envoyer les rapports de plantage",
-  "profileWidgetCat": "Chat sur le widget d'accueil"
+  "profileWidgetCat": "Chat sur le widget d'accueil",
+  "shareAppTitle": "Partager CS Bouira",
+  "shareAppQrHint": "Scannez avec n'importe quel appareil photo pour télécharger l'application.",
+  "shareAppMessage": "CS Bouira : cours, TD, TP et examens des années précédentes pour les étudiants en informatique de l'Université de Bouira. Téléchargez l'application : {link}",
+  "shareAppAction": "Partager par message",
+  "shareAppQrAction": "Partager le code QR",
+  "profileSettingShareApp": "Partager l'application"
 }

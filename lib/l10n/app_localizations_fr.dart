@@ -1334,4 +1334,24 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get profileWidgetCat => 'Chat sur le widget d\'accueil';
+
+  @override
+  String get shareAppTitle => 'Partager CS Bouira';
+
+  @override
+  String get shareAppQrHint => 'Scannez avec n\'importe quel appareil photo pour télécharger l\'application.';
+
+  @override
+  String shareAppMessage(String link) {
+    return 'CS Bouira : cours, TD, TP et examens des années précédentes pour les étudiants en informatique de l\'Université de Bouira. Téléchargez l\'application : $link';
+  }
+
+  @override
+  String get shareAppAction => 'Partager par message';
+
+  @override
+  String get shareAppQrAction => 'Partager le code QR';
+
+  @override
+  String get profileSettingShareApp => 'Partager l\'application';
 }

@@ -561,5 +561,11 @@
   "profileThemeLight": "فاتح",
   "profileThemeSystem": "حسب النظام",
   "profileCrashReports": "ارسال تقارير الاعطال",
-  "profileWidgetCat": "القطة على ودجت الشاشة الرئيسية"
+  "profileWidgetCat": "القطة على ودجت الشاشة الرئيسية",
+  "shareAppTitle": "شارك CS Bouira",
+  "shareAppQrHint": "امسح الرمز باي كاميرا لتحميل التطبيق.",
+  "shareAppMessage": "CS Bouira: دروس، اعمال موجهة، اعمال تطبيقية وامتحانات سابقة لطلبة الاعلام الالي بجامعة البويرة. حمّل التطبيق: {link}",
+  "shareAppAction": "مشاركة كرسالة",
+  "shareAppQrAction": "مشاركة رمز QR",
+  "profileSettingShareApp": "شارك التطبيق"
 }

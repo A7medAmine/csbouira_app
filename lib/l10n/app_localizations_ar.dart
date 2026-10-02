@@ -1335,4 +1335,24 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get profileWidgetCat => 'القطة على ودجت الشاشة الرئيسية';
+
+  @override
+  String get shareAppTitle => 'شارك CS Bouira';
+
+  @override
+  String get shareAppQrHint => 'امسح الرمز باي كاميرا لتحميل التطبيق.';
+
+  @override
+  String shareAppMessage(String link) {
+    return 'CS Bouira: دروس، اعمال موجهة، اعمال تطبيقية وامتحانات سابقة لطلبة الاعلام الالي بجامعة البويرة. حمّل التطبيق: $link';
+  }
+
+  @override
+  String get shareAppAction => 'مشاركة كرسالة';
+
+  @override
+  String get shareAppQrAction => 'مشاركة رمز QR';
+
+  @override
+  String get profileSettingShareApp => 'شارك التطبيق';
 }
