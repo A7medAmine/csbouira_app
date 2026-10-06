@@ -20,14 +20,31 @@ class SemesterScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final semesters = kSemesters[year] ?? [];
     final nodeAsync = ref.watch(driveNodeProvider(drivePathKey([year])));
     final onlineAsync = ref.watch(onlineResourcesProvider);
 
-    Map<String, int> moduleCounts = {};
-    nodeAsync.asData?.value?.subfolders.forEach((key, node) {
-      moduleCounts[key] = node.subfolders.length;
-    });
+    // Semesters come from the Drive tree: some years are split into promo
+    // folders (2024-2025, 20XX-2024, ...). Empty promo semesters are hidden.
+    final yearNode = nodeAsync.asData?.value;
+    final semesterNodes = yearNode == null
+        ? <String, DriveNode>{}
+        : semesterNodesOf(yearNode, skipEmptyPromos: true);
+    final semesters = yearNode == null
+        ? (kSemesters[year] ?? const <String>[])
+        : semesterNodes.keys.toList();
+    final moduleCounts = {
+      for (final e in semesterNodes.entries) e.key: e.value.subfolders.length,
+    };
+
+    // Archive semesters (20XX-2024 promo) are tucked into a collapsible group
+    // so the current promo stays on top.
+    bool isArchived(String sem) {
+      final promo = semesterPromo(sem);
+      return promo != null && isArchivePromo(promo);
+    }
+
+    final currentSemesters = semesters.where((s) => !isArchived(s)).toList();
+    final archivedSemesters = semesters.where(isArchived).toList();
 
     final yearResources = onlineAsync.asData?.value[year];
 
@@ -172,7 +189,7 @@ class SemesterScreen extends ConsumerWidget {
                             const SizedBox(height: AppSpacing.stackLg),
 
                             // Semester cards
-                            ...semesters.asMap().entries.map((entry) {
+                            ...currentSemesters.asMap().entries.map((entry) {
                               final idx = entry.key;
                               final sem = entry.value;
                               final count = moduleCounts[sem] ?? 0;
@@ -180,7 +197,7 @@ class SemesterScreen extends ConsumerWidget {
                               return Padding(
                                 padding: EdgeInsets.only(
                                   bottom:
-                                      idx < semesters.length - 1
+                                      idx < currentSemesters.length - 1
                                           ? AppSpacing.stackMd
                                           : 0,
                                 ),
@@ -191,6 +208,16 @@ class SemesterScreen extends ConsumerWidget {
                                 ),
                               );
                             }),
+
+                            if (archivedSemesters.isNotEmpty) ...[
+                              if (currentSemesters.isNotEmpty)
+                                const SizedBox(height: AppSpacing.stackMd),
+                              _ArchiveGroup(
+                                semesters: archivedSemesters,
+                                moduleCounts: moduleCounts,
+                                year: year,
+                              ),
+                            ],
 
                             const SizedBox(height: AppSpacing.stackMd),
 
@@ -246,18 +273,22 @@ class _SemesterCard extends StatelessWidget {
   final int moduleCount;
   final String year;
 
+  /// Hidden inside the archive group, whose header already says "Archive".
+  final bool showPromo;
+
   const _SemesterCard({
     required this.semester,
     required this.moduleCount,
     required this.year,
+    this.showPromo = true,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final semNum =
-        int.tryParse(semester.replaceAll(RegExp(r'[^0-9]'), '')) ?? 0;
-    final label = semester;
+    final label = semesterName(semester);
+    final semNum = int.tryParse(label.replaceAll(RegExp(r'[^0-9]'), '')) ?? 0;
+    final promo = showPromo ? semesterPromo(semester) : null;
     final icon = _semesterIcon(semNum);
     final iconColor = theme.colorScheme.primary;
     final iconBg = theme.colorScheme.primaryContainer.withAlpha(51);
@@ -315,13 +346,30 @@ class _SemesterCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
                 // Title
-                Text(
-                  label,
-                  style: theme.textTheme.headlineLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.onSurface,
-                    fontSize: 24,
-                  ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
+                    Text(
+                      label,
+                      style: theme.textTheme.headlineLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.onSurface,
+                        fontSize: 24,
+                      ),
+                    ),
+                    if (promo != null) ...[
+                      const SizedBox(width: 12),
+                      Text(
+                        isArchivePromo(promo)
+                            ? AppLocalizations.of(context)!.promoArchive
+                            : promo,
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
                 const SizedBox(height: 4),
                 // Module count
@@ -363,6 +411,128 @@ class _SemesterCard extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// Collapsible folder holding the archive promo's semesters. Collapsed by
+/// default; tapping the header reveals the regular semester cards.
+class _ArchiveGroup extends StatefulWidget {
+  final List<String> semesters;
+  final Map<String, int> moduleCounts;
+  final String year;
+
+  const _ArchiveGroup({
+    required this.semesters,
+    required this.moduleCounts,
+    required this.year,
+  });
+
+  @override
+  State<_ArchiveGroup> createState() => _ArchiveGroupState();
+}
+
+class _ArchiveGroupState extends State<_ArchiveGroup> {
+  bool _expanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: context.surfaces.card.withAlpha(204),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: theme.colorScheme.outlineVariant.withAlpha(77),
+        ),
+      ),
+      child: Column(
+        children: [
+          InkWell(
+            borderRadius: BorderRadius.circular(16),
+            onTap: () => setState(() => _expanded = !_expanded),
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                children: [
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.primaryContainer.withAlpha(51),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      _expanded ? Icons.folder_open : Icons.folder,
+                      color: theme.colorScheme.primary,
+                      size: 24,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.promoArchive,
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: theme.colorScheme.onSurface,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          l10n.semesterCount(widget.semesters.length),
+                          style: theme.textTheme.labelMedium?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  AnimatedRotation(
+                    turns: _expanded ? 0.5 : 0,
+                    duration: const Duration(milliseconds: 200),
+                    child: Icon(
+                      Icons.expand_more,
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          AnimatedSize(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeInOut,
+            alignment: Alignment.topCenter,
+            child:
+                _expanded
+                    ? Padding(
+                      padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+                      child: Column(
+                        children: [
+                          for (final sem in widget.semesters)
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                top: AppSpacing.stackMd,
+                              ),
+                              child: _SemesterCard(
+                                semester: sem,
+                                moduleCount: widget.moduleCounts[sem] ?? 0,
+                                year: widget.year,
+                                showPromo: false,
+                              ),
+                            ),
+                        ],
+                      ),
+                    )
+                    : const SizedBox(width: double.infinity),
+          ),
+        ],
       ),
     );
   }

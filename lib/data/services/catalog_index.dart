@@ -1,9 +1,8 @@
 import '../../core/text_search.dart';
 import '../models/catalog_file.dart';
 import '../models/drive_node.dart';
+import '../navigation_data.dart';
 import 'file_cache_service.dart' show extractDriveFileId;
-
-const _booksFolder = 'Books & Exercices';
 
 /// A flat, searchable list of every file in the Drive tree.
 ///
@@ -38,26 +37,32 @@ class CatalogIndex {
   }
 
   static CatalogFile _entryFor(DriveFile file, String id, List<String> path) {
-    final isBook = path.length > 1 && path[1] == _booksFolder;
-    // Regular layout:  year / semester / module / category / ...
+    final isBook = path.length > 1 && path[1] == kBooksFolder;
+    // Regular layout:  year / [promo /] semester / module / category / ...
     // Books layout:    year / Books & Exercices / semester / module / ...
-    final offset = isBook ? 1 : 0;
-    String at(int i) => i < path.length ? path[i] : '';
+    final String semester;
+    final List<String> rest;
+    if (isBook) {
+      semester = path.length > 2 ? path[2] : '';
+      rest = path.length > 3 ? path.sublist(3) : const [];
+    } else {
+      final parts = DrivePathParts.parse(path);
+      semester = parts.semester;
+      rest = parts.rest;
+    }
     return CatalogFile(
       file: file,
       id: id,
       folderPath: List.unmodifiable(path),
-      year: at(0),
-      semester: at(1 + offset),
-      module: at(2 + offset),
+      year: path.first,
+      semester: semester,
+      module: rest.isNotEmpty ? rest.first : '',
       category: isBook
           ? ResourceCategory.book
-          : categoryFromFolder(at(3)),
+          : categoryFromFolder(rest.length > 1 ? rest[1] : ''),
       isCorrection: looksLikeCorrection(file.name),
       normalizedName: normalizeForSearch(file.name),
-      normalizedContext: normalizeForSearch(
-        path.skip(2 + offset).join(' '),
-      ),
+      normalizedContext: normalizeForSearch(rest.join(' ')),
     );
   }
 

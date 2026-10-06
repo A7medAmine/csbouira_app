@@ -16,6 +16,7 @@ import '../../core/theme/app_spacing.dart';
 import '../../data/models/selected_upload_file.dart';
 import '../../data/models/upload_result.dart';
 import '../../data/providers/auth_providers.dart';
+import '../../data/navigation_data.dart';
 import '../../data/providers/drive_providers.dart';
 import '../../data/providers/my_uploads_provider.dart';
 import '../../data/providers/upload_count_provider.dart';
@@ -574,9 +575,8 @@ class _UploadScreenState extends ConsumerState<UploadScreen> {
     if (driveData != null && _allModules.isEmpty) {
       final modules = <String>{};
       for (final yearNode in driveData.years.entries) {
-        for (final semesterNode in yearNode.value.subfolders.entries) {
-          if (semesterNode.key == 'Books & Exercices') continue;
-          for (final moduleNode in semesterNode.value.subfolders.entries) {
+        for (final semesterNode in semesterNodesOf(yearNode.value).values) {
+          for (final moduleNode in semesterNode.subfolders.entries) {
             modules.add(moduleNode.key);
           }
         }

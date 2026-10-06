@@ -55,6 +55,8 @@
   "moduleCount": "{count, plural, =1{{count} مقياس} other{{count} مقاييس}}",
   "exploreResources": "استكشف الموارد",
   "booksAndExercices": "الكتب والتمارين",
+  "promoArchive": "الأرشيف",
+  "semesterCount": "{count, plural, =1{فصل واحد} =2{فصلان} few{{count} فصول} other{{count} فصلاً}}",
   "semesterEmpty": "فارغ",
   "onlineResourcesSubtitle": "الوصول الى المكتبة الرقمية وحلول التمارين",
   "onlineResources": "الموارد الالكترونية",

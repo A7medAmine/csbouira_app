@@ -199,6 +199,17 @@
   "@booksAndExercices": {
     "description": "Label for books and exercises section"
   },
+  "promoArchive": "Archive",
+  "@promoArchive": {
+    "description": "Label for semesters from the archived (older) academic years"
+  },
+  "semesterCount": "{count, plural, =1{{count} semester} other{{count} semesters}}",
+  "@semesterCount": {
+    "description": "Number of semesters in the collapsible archive group",
+    "placeholders": {
+      "count": {}
+    }
+  },
   "semesterEmpty": "Empty",
   "@semesterEmpty": {
     "description": "Empty state on semester screen"

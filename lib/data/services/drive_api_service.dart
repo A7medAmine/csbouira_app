@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/drive_node.dart';
+import '../navigation_data.dart';
 import '../../core/constants.dart';
 
 class DriveApiException implements Exception {
@@ -154,7 +155,8 @@ class DriveApiService {
 
   /// Navigate through the cached tree given a list of path segments.
   /// Does NOT make API calls — returns null if the path is not cached.
-  DriveNode? getCachedNode(List<String> segments) {
+  DriveNode? getCachedNode(List<String> pathSegments) {
+    final segments = rawDriveSegments(pathSegments);
     if (segments.isEmpty) return null;
 
     DriveNode? current = _cache[segments.first];

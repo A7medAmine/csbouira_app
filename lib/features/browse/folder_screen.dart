@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:csbouira_app/l10n/app_localizations.dart';
 import '../../core/theme/app_spacing.dart';
-import '../../data/models/catalog_file.dart' show moduleKeyOf;
+import '../../data/models/catalog_file.dart'
+    show ResourceCategory, categoryFromFolder, moduleKeyOf;
 import '../../data/navigation_data.dart';
 import '../../data/providers/drive_providers.dart';
 import '../../shared/widgets/favorite_star.dart';
@@ -32,8 +33,14 @@ class FolderScreen extends ConsumerWidget {
 
     final folderFileCounts = <String, int>{};
     final moduleNode = moduleNodeAsync.asData?.value;
+    // Older modules share the standard category folders; newer ones (e.g.
+    // Licence 1 2024-2025) name theirs freely, so show what Drive has.
+    final actualFolders = moduleNode?.subfolders.keys.toList() ?? const [];
+    final folders = actualFolders.every(kFolderTypes.contains)
+        ? kFolderTypes
+        : actualFolders;
     if (moduleNode != null) {
-      for (final f in kFolderTypes) {
+      for (final f in folders) {
         folderFileCounts[f] = moduleNode.subfolders[f]?.totalFiles ?? 0;
       }
     }
@@ -116,7 +123,10 @@ class FolderScreen extends ConsumerWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  l10n.moduleBreadcrumb(year, semester),
+                                  l10n.moduleBreadcrumb(
+                                    year,
+                                    semesterLabel(semester, l10n.promoArchive),
+                                  ),
                                   style: theme.textTheme.labelMedium?.copyWith(
                                     color: theme.colorScheme.onSurfaceVariant,
                                   ),
@@ -167,7 +177,12 @@ class FolderScreen extends ConsumerWidget {
                               moduleKey: moduleKeyOf(year, semester, module),
                             ),
                             // Folder grid
-                            _buildFolderGrid(context, theme, folderFileCounts),
+                            _buildFolderGrid(
+                              context,
+                              theme,
+                              folders,
+                              folderFileCounts,
+                            ),
                           ],
                         ),
                       ),
@@ -185,6 +200,7 @@ class FolderScreen extends ConsumerWidget {
   Widget _buildFolderGrid(
     BuildContext context,
     ThemeData theme,
+    List<String> folders,
     Map<String, int> counts,
   ) {
     return LayoutBuilder(
@@ -196,14 +212,17 @@ class FolderScreen extends ConsumerWidget {
           spacing: gap,
           runSpacing: gap,
           children:
-              kFolderTypes.map((folder) {
+              folders.asMap().entries.map((entry) {
+                final folder = entry.value;
                 final fCount = counts[folder] ?? 0;
                 final isEmpty = fCount == 0;
-                final isTests = folder == 'Tests';
+                // An odd last card (Tests in the standard layout) spans the
+                // full width.
+                final isTests = folders.length.isOdd &&
+                    entry.key == folders.length - 1;
                 final iconColor = _folderIconColor(folder, theme);
                 final iconData = _folderIconData(folder);
 
-                // Tests spans full width with horizontal layout
                 if (isTests) {
                   return SizedBox(
                     width: constraints.maxWidth,
@@ -254,15 +273,12 @@ class FolderScreen extends ConsumerWidget {
   }
 
   Color _folderIconColor(String folder, ThemeData theme) {
-    switch (folder) {
-      case 'Cours':
-      case 'TDs & TPs':
-        return theme.colorScheme.primary;
-      case 'Exams':
+    switch (categoryFromFolder(folder)) {
+      case ResourceCategory.exam:
         return theme.colorScheme.secondary;
-      case 'Résumé':
+      case ResourceCategory.summary:
         return theme.colorScheme.tertiary;
-      case 'Tests':
+      case ResourceCategory.test:
         return theme.colorScheme.error;
       default:
         return theme.colorScheme.primary;
@@ -270,16 +286,16 @@ class FolderScreen extends ConsumerWidget {
   }
 
   IconData _folderIconData(String folder) {
-    switch (folder) {
-      case 'Cours':
+    switch (categoryFromFolder(folder)) {
+      case ResourceCategory.course:
         return Icons.menu_book;
-      case 'Exams':
+      case ResourceCategory.exam:
         return Icons.description;
-      case 'Résumé':
+      case ResourceCategory.summary:
         return Icons.article;
-      case 'TDs & TPs':
+      case ResourceCategory.tdTp:
         return Icons.build;
-      case 'Tests':
+      case ResourceCategory.test:
         return Icons.fact_check;
       default:
         return Icons.folder;

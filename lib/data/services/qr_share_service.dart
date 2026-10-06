@@ -1,3 +1,5 @@
+import '../navigation_data.dart';
+
 class ShareFileData {
   final String grade;
   final String semester;
@@ -17,7 +19,7 @@ class ShareFileData {
 
   List<String> toPathSegments() {
     final segments = <String>[grade];
-    if (semester.isNotEmpty) segments.add(semester);
+    segments.addAll(semesterSegments(semester));
     if (module.isNotEmpty) segments.add(module);
     segments.add(folder);
     if (subpath != null && subpath!.isNotEmpty) {

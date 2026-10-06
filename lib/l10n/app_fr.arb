@@ -199,6 +199,8 @@
   "@booksAndExercices": {
     "description": "Label for books and exercises section"
   },
+  "promoArchive": "Archives",
+  "semesterCount": "{count, plural, =1{{count} semestre} other{{count} semestres}}",
   "semesterEmpty": "Vide",
   "@semesterEmpty": {
     "description": "Empty state on semester screen"

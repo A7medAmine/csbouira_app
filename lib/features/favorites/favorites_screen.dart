@@ -8,6 +8,7 @@ import 'package:csbouira_app/l10n/app_localizations.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_radius.dart';
 import '../../data/models/drive_node.dart';
+import '../../data/navigation_data.dart';
 import '../../data/providers/drive_providers.dart';
 import '../../data/providers/favorites_providers.dart';
 import '../../data/providers/thumbnail_providers.dart';
@@ -34,7 +35,9 @@ String _shortSemester(String sem) {
 
 String _badgeFromSegments(List<String> segments) {
   if (segments.length < 2) return '';
-  return '${_shortYear(segments[0])} - ${_shortSemester(segments[1])}';
+  final parts = DrivePathParts.parse(segments);
+  return '${_shortYear(parts.year)} - '
+      '${_shortSemester(semesterName(parts.semester))}';
 }
 
 String _moduleInitials(String name) {
@@ -131,12 +134,12 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
 
   void _navigateTo(FavoriteItem item) {
     if (item.itemType == 'module') {
-      final segments = item.pathSegments;
-      if (segments.length >= 3) {
+      final parts = DrivePathParts.parse(item.pathSegments);
+      if (parts.module.isNotEmpty) {
         context.push(
-          '/year/${Uri.encodeComponent(segments[0])}'
-          '/semester/${Uri.encodeComponent(segments[1])}'
-          '/module/${Uri.encodeComponent(segments[2])}',
+          '/year/${Uri.encodeComponent(parts.year)}'
+          '/semester/${Uri.encodeComponent(parts.semester)}'
+          '/module/${Uri.encodeComponent(parts.module)}',
         );
       }
     } else if (item.itemType == 'file') {
@@ -612,10 +615,12 @@ class _ModuleFavoriteCard extends StatelessWidget {
     String? folderCountStr;
 
     final rootData = rootAsync.asData?.value;
-    if (rootData != null && segments.length >= 3) {
-      final yearNode = rootData.years[segments[0]];
-      final semNode = yearNode?.subfolders[segments[1]];
-      final modNode = semNode?.subfolders[segments[2]];
+    final parts = DrivePathParts.parse(segments);
+    if (rootData != null && parts.module.isNotEmpty) {
+      final yearNode = rootData.years[parts.year];
+      final semNode =
+          yearNode == null ? null : semesterNodesOf(yearNode)[parts.semester];
+      final modNode = semNode?.subfolders[parts.module];
       if (modNode != null) {
         final fc = modNode.totalFiles;
         final folC = modNode.subfolders.length;
@@ -718,7 +723,8 @@ class _ModuleFavoriteCard extends StatelessWidget {
               // Module context
               if (segments.length >= 2)
                 Text(
-                  '${segments[0]} \u2022 ${segments[1]}',
+                  '${parts.year} \u2022 '
+                  '${semesterLabel(parts.semester, l10n.promoArchive)}',
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),

@@ -2,16 +2,18 @@ import '../../core/text_search.dart';
 import 'drive_node.dart';
 
 /// What kind of material a file is, taken from the category folder it lives
-/// in (`Cours`, `Exams`, `Tests`, `Résumé`, `TDs & TPs`).
+/// in (`Cours`, `Exams`/`EMD`, `Tests`, `Résumé`, `TDs & TPs`).
 enum ResourceCategory { course, exam, test, summary, tdTp, book, other }
 
 ResourceCategory categoryFromFolder(String folderName) {
   final n = normalizeForSearch(folderName);
   if (n.startsWith('cours')) return ResourceCategory.course;
-  if (n.startsWith('exam')) return ResourceCategory.exam;
+  if (n.startsWith('exam') || n.startsWith('emd')) return ResourceCategory.exam;
   if (n.startsWith('test')) return ResourceCategory.test;
   if (n.startsWith('resume')) return ResourceCategory.summary;
-  if (n.startsWith('td') || n.startsWith('tp')) return ResourceCategory.tdTp;
+  if (n.startsWith('td') || n.startsWith('tp') || n.startsWith('serie')) {
+    return ResourceCategory.tdTp;
+  }
   return ResourceCategory.other;
 }
 

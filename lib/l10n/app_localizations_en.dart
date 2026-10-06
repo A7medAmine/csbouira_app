@@ -171,6 +171,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get booksAndExercices => 'Books & Exercices';
 
   @override
+  String get promoArchive => 'Archive';
+
+  @override
+  String semesterCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count semesters',
+      one: '$count semester',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get semesterEmpty => 'Empty';
 
   @override

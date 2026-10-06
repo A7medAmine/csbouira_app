@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../navigation_data.dart';
+
 /// A file the user opened in the previewer.
 class RecentFile {
   final String fileId;
@@ -20,9 +22,12 @@ class RecentFile {
 
   /// Module name for a subtitle, or the year when the path is short.
   String get subtitle {
-    final isBook = folderPath.length > 1 && folderPath[1] == 'Books & Exercices';
-    final moduleIndex = isBook ? 3 : 2;
-    if (folderPath.length > moduleIndex) return folderPath[moduleIndex];
+    final isBook = folderPath.length > 1 && folderPath[1] == kBooksFolder;
+    if (isBook) {
+      return folderPath.length > 3 ? folderPath[3] : folderPath.first;
+    }
+    final module = DrivePathParts.parse(folderPath).module;
+    if (module.isNotEmpty) return module;
     return folderPath.isNotEmpty ? folderPath.first : '';
   }
 

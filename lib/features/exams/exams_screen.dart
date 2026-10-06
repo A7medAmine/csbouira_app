@@ -8,6 +8,7 @@ import '../../core/theme/app_spacing.dart';
 import '../../data/models/catalog_file.dart';
 import '../../data/navigation_data.dart';
 import '../../data/providers/catalog_providers.dart';
+import '../../data/providers/drive_providers.dart';
 import '../../shared/widgets/catalog_file_tile.dart';
 import '../../shared/widgets/fetch_error_widget.dart';
 import '../preview/open_catalog_file.dart';
@@ -25,7 +26,9 @@ class ExamsScreen extends ConsumerStatefulWidget {
 
 class _ExamsScreenState extends ConsumerState<ExamsScreen> {
   String _year = kYears.first.name;
-  String _semester = kSemesters[kYears.first.name]!.first;
+
+  /// Empty or stale values fall back to the year's first semester.
+  String _semester = '';
 
   /// null shows both exams and tests.
   ResourceCategory? _kind;
@@ -44,8 +47,7 @@ class _ExamsScreenState extends ConsumerState<ExamsScreen> {
     if (!mounted || year == null || !kSemesters.containsKey(year)) return;
     setState(() {
       _year = year;
-      final semesters = kSemesters[year]!;
-      _semester = semesters.contains(semester) ? semester! : semesters.first;
+      _semester = semester ?? '';
     });
   }
 
@@ -53,7 +55,7 @@ class _ExamsScreenState extends ConsumerState<ExamsScreen> {
     setState(() {
       if (year != null) {
         _year = year;
-        _semester = kSemesters[year]!.first;
+        _semester = '';
       }
       if (semester != null) _semester = semester;
     });
@@ -67,6 +69,15 @@ class _ExamsScreenState extends ConsumerState<ExamsScreen> {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
     final indexAsync = ref.watch(catalogIndexProvider);
+    // Semesters come from the Drive tree since some years are split into
+    // promo folders; the static list covers the time before it loads.
+    final yearNode = ref.watch(driveRootDataProvider).valueOrNull?.years[_year];
+    final semesters = yearNode == null
+        ? (kSemesters[_year] ?? const <String>[])
+        : semesterNodesOf(yearNode, skipEmptyPromos: true).keys.toList();
+    final semester = semesters.contains(_semester)
+        ? _semester
+        : (semesters.isEmpty ? '' : semesters.first);
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -79,7 +90,8 @@ class _ExamsScreenState extends ConsumerState<ExamsScreen> {
         children: [
           _Filters(
             year: _year,
-            semester: _semester,
+            semesters: semesters,
+            semester: semester,
             kind: _kind,
             correctionsOnly: _correctionsOnly,
             onYear: (y) => _select(year: y),
@@ -94,7 +106,7 @@ class _ExamsScreenState extends ConsumerState<ExamsScreen> {
               data: (index) {
                 final byModule = <String, List<CatalogFile>>{};
                 for (final f in index.files) {
-                  if (f.year != _year || f.semester != _semester) continue;
+                  if (f.year != _year || f.semester != semester) continue;
                   if (f.category != ResourceCategory.exam &&
                       f.category != ResourceCategory.test) {
                     continue;
@@ -168,6 +180,7 @@ class _ExamsScreenState extends ConsumerState<ExamsScreen> {
 
 class _Filters extends StatelessWidget {
   final String year;
+  final List<String> semesters;
   final String semester;
   final ResourceCategory? kind;
   final bool correctionsOnly;
@@ -178,6 +191,7 @@ class _Filters extends StatelessWidget {
 
   const _Filters({
     required this.year,
+    required this.semesters,
     required this.semester,
     required this.kind,
     required this.correctionsOnly,
@@ -217,9 +231,9 @@ class _Filters extends StatelessWidget {
             runSpacing: 8,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              for (final s in kSemesters[year]!)
+              for (final s in semesters)
                 ChoiceChip(
-                  label: Text(s),
+                  label: Text(semesterLabel(s, l10n.promoArchive)),
                   selected: s == semester,
                   onSelected: (_) => onSemester(s),
                 ),

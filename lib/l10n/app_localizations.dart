@@ -361,6 +361,18 @@ abstract class AppLocalizations {
   /// **'Books & Exercices'**
   String get booksAndExercices;
 
+  /// Label for semesters from the archived (older) academic years
+  ///
+  /// In en, this message translates to:
+  /// **'Archive'**
+  String get promoArchive;
+
+  /// Number of semesters in the collapsible archive group
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{{count} semester} other{{count} semesters}}'**
+  String semesterCount(num count);
+
   /// Empty state on semester screen
   ///
   /// In en, this message translates to:

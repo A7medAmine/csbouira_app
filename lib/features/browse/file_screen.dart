@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:csbouira_app/l10n/app_localizations.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../data/models/drive_node.dart';
+import '../../data/navigation_data.dart';
 import '../../data/providers/auth_providers.dart';
 import '../../data/providers/drive_providers.dart';
 import '../../data/providers/favorites_providers.dart';
@@ -46,7 +47,7 @@ class _FileScreenState extends State<FileScreen> {
 
   List<String> get _segments {
     final parts = <String>[widget.year];
-    if (widget.semester.isNotEmpty) parts.add(widget.semester);
+    parts.addAll(semesterSegments(widget.semester));
     if (widget.module.isNotEmpty) parts.add(widget.module);
     parts.add(widget.folder);
     if (widget.subpath.isNotEmpty) {

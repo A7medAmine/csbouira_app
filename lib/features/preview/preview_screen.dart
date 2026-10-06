@@ -9,6 +9,7 @@ import '../../app.dart';
 import '../../core/error_messages.dart';
 import '../../core/theme/app_colors.dart';
 import '../../data/models/drive_node.dart';
+import '../../data/navigation_data.dart';
 import '../../data/providers/catalog_providers.dart';
 import '../../data/providers/downloads_providers.dart';
 import '../../data/services/download_service.dart';
@@ -208,13 +209,15 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
         subpath: folderPath.length > 2 ? folderPath.sublist(2).join('>') : null,
       );
     }
+    final parts = DrivePathParts.parse(folderPath);
+    final rest = parts.rest;
     return ShareFileData(
-      grade: folderPath[0],
-      semester: folderPath[1],
-      module: folderPath[2],
-      folder: folderPath.length >= 4 ? folderPath[3] : '',
+      grade: parts.year,
+      semester: parts.semester,
+      module: parts.module,
+      folder: rest.length >= 2 ? rest[1] : '',
       fileIndex: _currentIndex,
-      subpath: folderPath.length > 4 ? folderPath.sublist(4).join('>') : null,
+      subpath: rest.length > 2 ? rest.sublist(2).join('>') : null,
     );
   }
 

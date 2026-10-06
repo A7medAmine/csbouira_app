@@ -9,6 +9,7 @@ import '../../core/text_search.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../data/models/catalog_file.dart';
 import '../../data/models/drive_node.dart';
+import '../../data/navigation_data.dart';
 import '../../data/providers/catalog_providers.dart';
 import '../../data/providers/drive_providers.dart';
 import '../../data/services/catalog_index.dart';
@@ -224,11 +225,11 @@ class _SearchScreenState extends State<SearchScreen> {
                       optionsBuilder: (root) {
                         final yearNode = root.years[_filterYear!];
                         if (yearNode == null) return [];
-                        return yearNode.subfolders.keys.toList()..sort();
+                        return semesterNodesOf(yearNode).keys.toList();
                       },
                       selected: _filterSemester,
                       onSelect: _setFilterSemester,
-                      formatLabel: (v) => v,
+                      formatLabel: (v) => semesterLabel(v, l10n.promoArchive),
                     );
                   },
                   onModuleTap: () {
@@ -237,8 +238,9 @@ class _SearchScreenState extends State<SearchScreen> {
                       title: l10n.searchFilterModule,
                       optionsBuilder: (root) {
                         final yearNode = root.years[_filterYear!];
-                        final semNode =
-                            yearNode?.subfolders[_filterSemester!];
+                        final semNode = yearNode == null
+                            ? null
+                            : semesterNodesOf(yearNode)[_filterSemester!];
                         if (semNode == null) return [];
                         return semNode.subfolders.keys.toList()..sort();
                       },
@@ -977,7 +979,7 @@ class _SearchResults extends ConsumerWidget {
         final yearName = yearEntry.key;
         if (filterYear != null && yearName != filterYear) continue;
 
-        for (final semEntry in yearEntry.value.subfolders.entries) {
+        for (final semEntry in semesterNodesOf(yearEntry.value).entries) {
           final semName = semEntry.key;
           if (filterSemester != null && semName != filterSemester) continue;
 
@@ -991,7 +993,8 @@ class _SearchResults extends ConsumerWidget {
                 results.add(SearchResult(
                   type: SearchResultType.module,
                   name: modName,
-                  subtitle: '$yearName • $semName',
+                  subtitle:
+                      '$yearName • ${semesterLabel(semName, l10n.promoArchive)}',
                   pathSegments: [yearName, semName, modName],
                   score: score + 20,
                 ));

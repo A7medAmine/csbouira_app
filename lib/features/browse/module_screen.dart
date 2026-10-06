@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:csbouira_app/l10n/app_localizations.dart';
 import '../../core/theme/app_spacing.dart';
+import '../../data/navigation_data.dart';
 import '../../data/providers/drive_providers.dart';
 import '../../shared/widgets/favorite_star.dart';
 import '../../shared/widgets/fetch_error_widget.dart';
@@ -124,7 +125,10 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
                             child: Text(
                               l10n.moduleBreadcrumb(
                                 widget.year,
-                                widget.semester,
+                                semesterLabel(
+                                  widget.semester,
+                                  l10n.promoArchive,
+                                ),
                               ),
                               style: theme.textTheme.headlineMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
