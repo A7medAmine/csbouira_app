@@ -98,28 +98,47 @@ The built-in Supabase email service is heavily rate-limited. For anything beyond
 
 ## 5. Google Sign-In (optional)
 
-The app uses native Google Sign-In (`google_sign_in` 7.x) and passes the ID token to Supabase (`signInWithIdToken`).
+The app uses native Google Sign-In (`google_sign_in` 7.x, Android Credential Manager) and passes the ID token to Supabase (`signInWithIdToken`).
 
-1. **Get your signing certificate's SHA-1.**
+> **Rule that matters most:** the **Web** client (used as `serverClientId`) and the **Android** client must live in the **same Google Cloud project**. If they are split across projects, Google returns no ID token and sign-in fails, even though every value looks correct.
+
+1. **Get your signing certificates' SHA-1.**
 
    ```bash
    cd android
    ./gradlew signingReport
+   # or directly from a keystore:
+   keytool -list -v -keystore <keystore.jks> -alias <alias>
    ```
 
-   Use the `debug` variant's SHA-1 for local development. Release builds need the SHA-1 of your release key as well.
+   You need the SHA-1 of every key that signs a build you want sign-in to work in: the debug key for `flutter run`, the release key for release APKs.
 
-   Release signing reads `android/key.properties` (`storeFile`, `storePassword`, `keyAlias`, `keyPassword`; `storeFile` is relative to `android/`). The release workflow uses the `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS` and `ANDROID_KEY_PASSWORD` secrets instead. Without either, release builds are signed with the debug key and Google Sign-In fails in them.
+   Release signing reads `android/key.properties` (`storeFile`, `storePassword`, `keyAlias`, `keyPassword`; `storeFile` is relative to `android/`), or the `ANDROID_KEYSTORE_PATH` (absolute path), `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS` and `ANDROID_KEY_PASSWORD` environment variables. The release workflow decodes `ANDROID_KEYSTORE_BASE64` into that path. Without either, release builds are signed with the debug key and Google Sign-In fails in them.
 
-2. **Google Cloud Console → APIs & Services → Credentials**. Set up the OAuth consent screen, then create two OAuth client IDs:
-   - **Android**: package name `com.csbouira.csbouira_app`, plus the SHA-1 from step 1.
-   - **Web application**: no redirect URIs needed.
+2. **Google Cloud Console → Google Auth Platform.**
+   - **Branding:** app name, support email, home page, privacy policy and terms links, and their domains under *Authorized domains*.
+   - **Audience:** user type **External**, then **Publish app** so the status is **In production**. In *Testing*, only listed test users can sign in. The app requests only `openid`, email and profile, so no verification is needed.
+   - **Clients**, in that same project:
+     - **Web application:** optionally add `https://<project-ref>.supabase.co/auth/v1/callback` as a redirect URI. Copy the client ID and secret.
+     - **Android:** one client per SHA-1, each with package name `com.csbouira.csbouira_app`.
 
-3. **Supabase → Authentication → Sign In / Providers → Google**: enable it, paste the **Web** client ID and secret, and turn on **Skip nonce checks** (needed for native sign-in on Android).
+   A package name + SHA-1 pair can be registered in only **one** Android client across all of Google Cloud. If creating the client fails with *"package name and fingerprint are already in use"*, delete the old Android client in the other project first (deleted clients can be restored for 30 days).
 
-4. **`.env`**: set `GOOGLE_SERVER_CLIENT_ID` to the **Web** client ID. Optionally set `GOOGLE_ANDROID_CLIENT_ID` to the Android client ID.
+3. **Supabase → Authentication → Sign In / Providers → Google:** enable it and paste the **Web** client ID and secret. *Client IDs* accepts a comma-separated list, which helps when moving between projects. **Skip nonce checks** can stay off: the app does not send a nonce.
 
-**Troubleshooting:** `ID token is null` or error code `10` / `DEVELOPER_ERROR` almost always means a SHA-1 or package-name mismatch in the Android client, or that `GOOGLE_SERVER_CLIENT_ID` is not the **Web** client ID.
+4. **`.env`:** set `GOOGLE_SERVER_CLIENT_ID` to the **Web** client ID. `GOOGLE_ANDROID_CLIENT_ID` is optional and ignored on Android (the Android client is matched by package name and SHA-1). For releases, update the `GOOGLE_SERVER_CLIENT_ID` and `GOOGLE_ANDROID_CLIENT_ID` GitHub secrets too, because CI writes `.env` from them.
+
+**Troubleshooting:**
+
+| Symptom | Likely cause |
+| --- | --- |
+| `DEVELOPER_ERROR`, code `10`, or "No credentials available" | SHA-1 or package name not registered, or registered in a different project than the Web client |
+| `ID token is null` | `GOOGLE_SERVER_CLIENT_ID` is not the **Web** client ID |
+| Supabase `Unacceptable audience in id_token` | The Web client ID is missing from Supabase's *Client IDs* |
+| Works for you but not for other users | Consent screen still in **Testing** |
+| Works in debug but not in the release APK | Release key's SHA-1 not registered, or the APK is debug-signed |
+
+New clients can take from a few minutes to a few hours to take effect.
 
 ## 6. Uploads
 

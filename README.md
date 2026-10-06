@@ -22,7 +22,7 @@ Grab the latest APK from the [Releases page](https://github.com/A7medAmine/csbou
 
 ## Features
 
-- **Browse** every year (Licence 1 → Master 2), semester, module and folder, plus books, exercises and curated online resources.
+- **Browse** every year (Licence 1 → Master 2), semester, module and folder, plus books, exercises and curated online resources. Licence 1 and 2 show the current promo's semesters first, with older promos grouped in a collapsible **Archive** folder.
 - **Preview** PDFs, images and documents in-app, or open them in another app.
 - **Search** modules and files across the whole catalogue, ignoring accents and small typos, with year, module and category filters.
 - **Past exams**: every exam and test of a semester, grouped by module, with corrections flagged.

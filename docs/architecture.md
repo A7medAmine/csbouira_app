@@ -92,7 +92,15 @@ All providers are plain Riverpod 2 (no code generation). The important ones:
 
 ### Browsing
 
-`splash_screen` preloads `driveRootDataProvider`, which fetches the whole tree in one request. The browse screens (`semester_screen`, `module_screen`, `folder_screen`, `file_screen`) watch `driveNodeProvider` with a path key. Paths are joined with `>subfolders>`, matching the Drive API's path syntax.
+`splash_screen` preloads `driveRootDataProvider`, which fetches the whole tree in one request. The browse screens (`semester_screen`, `module_screen`, `folder_screen`, `file_screen`) watch `driveNodeProvider` with a path key. Paths are joined with `>subfolders>` (`kDrivePathSep`), matching the Drive API's path syntax.
+
+**Promo folders.** Licence 1 and 2 have an academic-year folder between the year and its semesters (`2024-2025/S1`, and the archive `20XX-2024/S01`; see [api.md](../api.md#promo-folders-licence-1-and-licence-2)). The helpers in `data/navigation_data.dart` hide this from the rest of the app:
+
+- A **semester id** is the path from the year to the semester folder: `S05` for most years, `2024-2025>subfolders>S1` for promo years. Joining ids with `kDrivePathSep` still yields a valid API path, so routes and `driveNodeProvider` keys need no special cases.
+- `semesterNodesOf(yearNode, skipEmptyPromos: true)` lists a year's semesters, flattening promos and dropping promos with no content yet.
+- `semesterName` / `semesterPromo` split an id for display, `isPromoFolder` / `isArchivePromo` recognize promo folders, and `DrivePathParts.parse` splits raw folder names into year, semester id and the rest (used by `CatalogIndex`).
+
+`semester_screen` shows the current promo's semesters as cards, followed by a collapsible **Archive** group (`_ArchiveGroup`, collapsed by default) holding the archive promo's semesters.
 
 ### Catalogue index, search and exams
 

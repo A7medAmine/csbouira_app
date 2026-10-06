@@ -23,8 +23,8 @@ The API has **9 root levels** representing different academic years:
 
 | Root Name     | Semesters |
 | ------------- | --------- |
-| Licence 1     | S01, S02  |
-| Licence 2     | S03, S04  |
+| Licence 1     | Split into promo folders (see below) |
+| Licence 2     | Split into promo folders (see below) |
 | Licence 3 SI  | S05, S06  |
 | Master 1 GSI  | S07, S08  |
 | Master 1 ISIL | S07, S08  |
@@ -48,6 +48,28 @@ Root Year
 │       └── Tests
 └── Books & Exercices (Optional)
     └── Subject folders
+```
+
+### Promo folders (Licence 1 and Licence 2)
+
+Licence 1 and Licence 2 add one level between the year and its semesters: an
+**academic-year (promo) folder**, because the curriculum changed between promos.
+
+```
+Licence 1
+├── 2024-2025          current promo
+│   ├── S1
+│   └── S2
+├── 20XX-2024          archive: every promo up to 2024, old semester names
+│   ├── S01
+│   └── S02
+└── Books & Exercices
+```
+
+- A promo folder name matches `^\d{2}(\d{2}|XX)-\d{4}$`. The one containing `XX` is the archive.
+- A promo can exist before it has content (for example `2026-2027`); clients should hide empty ones.
+- Paths simply include the promo segment, e.g.
+  `Licence 1>subfolders>2024-2025>subfolders>S1>subfolders><Module>`.
         └── Files
 ```
 
