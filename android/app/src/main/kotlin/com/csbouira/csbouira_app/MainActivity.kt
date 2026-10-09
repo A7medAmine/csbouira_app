@@ -10,6 +10,7 @@ import io.flutter.plugin.common.MethodChannel
 class MainActivity : FlutterActivity() {
     private val CHANNEL = "csbouira_app/file_utils"
     private val LINKS_CHANNEL = "csbouira_app/deep_links"
+    private val AI_SHARE_CHANNEL = "csbouira_app/ai_share"
 
     private var initialLink: String? = null
     private var linksChannel: MethodChannel? = null
@@ -46,6 +47,9 @@ class MainActivity : FlutterActivity() {
                 }
             }
         }
+
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, AI_SHARE_CHANNEL)
+            .setMethodCallHandler(AiShareChannel(this))
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
             if (call.method == "readContentUri") {

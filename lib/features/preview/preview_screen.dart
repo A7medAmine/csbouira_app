@@ -17,6 +17,7 @@ import '../../data/services/file_cache_service.dart' show extractDriveFileId;
 import '../../data/services/recent_files_store.dart';
 import '../../data/services/qr_share_service.dart';
 import '../../shared/widgets/favorite_star.dart';
+import 'ask_ai_sheet.dart';
 import 'preview_args.dart';
 import 'share_modal.dart';
 import 'widgets/pdf_viewer.dart';
@@ -37,7 +38,7 @@ String _getExtension(String name) {
   return name.substring(dotIndex + 1).toLowerCase();
 }
 
-enum _OverflowAction { download, share, openInDrive }
+enum _OverflowAction { askAi, download, share, openInDrive }
 
 class PreviewScreen extends ConsumerStatefulWidget {
   const PreviewScreen({super.key});
@@ -319,6 +320,14 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
                         padding: EdgeInsets.zero,
                       onSelected: (action) {
                         switch (action) {
+                          case _OverflowAction.askAi:
+                            showAskAiSheet(
+                              context,
+                              file: _currentFile,
+                              folderPath: _folderPath,
+                              currentPage: _pdfPage,
+                              totalPages: _isPdf ? _pdfTotalPages : 0,
+                            );
                           case _OverflowAction.download:
                             _downloadFile();
                           case _OverflowAction.share:
@@ -328,6 +337,19 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen> {
                         }
                       },
                       itemBuilder: (_) => [
+                        PopupMenuItem(
+                          value: _OverflowAction.askAi,
+                          child: SizedBox(
+                            width: 160,
+                            child: Row(
+                              children: [
+                                const Icon(Icons.auto_awesome, size: 20),
+                                const SizedBox(width: 12),
+                                Expanded(child: Text(l10n.previewMenuAskAi)),
+                              ],
+                            ),
+                          ),
+                        ),
                         PopupMenuItem(
                           value: _OverflowAction.download,
                           child: SizedBox(

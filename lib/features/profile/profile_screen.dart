@@ -827,6 +827,13 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
                       _LanguagePickerRow(theme: theme),
                       const SizedBox(height: AppSpacing.stackSm),
                       _ThemePickerRow(theme: theme),
+                      const SizedBox(height: AppSpacing.stackSm),
+                      _SettingsRow(
+                        theme: theme,
+                        icon: Icons.auto_awesome_outlined,
+                        label: AppLocalizations.of(context)!.profileAiPrompts,
+                        onTap: () => context.push('/profile/ai-prompts'),
+                      ),
                       if (Platform.isAndroid) ...[
                         const SizedBox(height: AppSpacing.stackSm),
                         _WidgetSourceRow(theme: theme),
@@ -1057,6 +1064,13 @@ class _LoggedInProfileShell extends ConsumerWidget {
                         _LanguagePickerRow(theme: theme),
                         const SizedBox(height: AppSpacing.stackSm),
                         _ThemePickerRow(theme: theme),
+                        const SizedBox(height: AppSpacing.stackSm),
+                        _SettingsRow(
+                          theme: theme,
+                          icon: Icons.auto_awesome_outlined,
+                          label: AppLocalizations.of(context)!.profileAiPrompts,
+                          onTap: () => context.push('/profile/ai-prompts'),
+                        ),
                         if (Platform.isAndroid) ...[
                           const SizedBox(height: AppSpacing.stackSm),
                           _WidgetSourceRow(theme: theme),

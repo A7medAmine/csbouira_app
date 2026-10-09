@@ -1402,4 +1402,145 @@ class AppLocalizationsAr extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get previewMenuAskAi => 'اسأل الذكاء الاصطناعي';
+
+  @override
+  String get askAiTitle => 'اسأل الذكاء الاصطناعي';
+
+  @override
+  String get askAiScopeFile => 'الملف كاملًا';
+
+  @override
+  String askAiScopePage(int page) {
+    return 'الصفحة $page';
+  }
+
+  @override
+  String get askAiPromptLabel => 'الطلب';
+
+  @override
+  String get askAiEditPrompts => 'تعديل الطلبات';
+
+  @override
+  String get askAiSendTo => 'إرسال إلى';
+
+  @override
+  String get askAiOtherApps => 'تطبيقات أخرى';
+
+  @override
+  String get askAiCopyPrompt => 'نسخ الطلب';
+
+  @override
+  String get askAiPromptCopied => 'تم نسخ الطلب';
+
+  @override
+  String get askAiPasteHint => 'تم نسخ الطلب. الصقه في المحادثة إن لم يظهر تلقائيًا.';
+
+  @override
+  String get askAiNoApps => 'لم يُعثر على أي تطبيق ذكاء اصطناعي في هاتفك. ثبّت ChatGPT أو Gemini أو Claude، أو استخدم تطبيقات أخرى.';
+
+  @override
+  String get askAiPreparing => 'جارٍ تجهيز الملف…';
+
+  @override
+  String askAiFailed(String error) {
+    return 'تعذّر تجهيز الملف: $error';
+  }
+
+  @override
+  String get askAiAnswerLanguage => 'العربية';
+
+  @override
+  String askAiPromptContext(String module, String file, String page, String language) {
+    return 'المقياس: $module\nالملف: $file\nالصفحة: $page\nأجب باللغة $language.';
+  }
+
+  @override
+  String get aiPresetExplainTitle => 'اشرح';
+
+  @override
+  String get aiPresetExplainBody => 'اشرح هذا المستند بوضوح وخطوة بخطوة، كما يشرحه أستاذ لطالب في الإعلام الآلي. عرّف المصطلحات الأساسية وأعطِ مثالًا بسيطًا لكل فكرة رئيسية.';
+
+  @override
+  String get aiPresetSummarizeTitle => 'لخّص';
+
+  @override
+  String get aiPresetSummarizeBody => 'لخّص هذا المستند. اذكر الأفكار الرئيسية في نقاط قصيرة، ثم التعاريف والقوانين التي يجب حفظها للامتحان.';
+
+  @override
+  String get aiPresetQuizTitle => 'اختبرني';
+
+  @override
+  String get aiPresetQuizBody => 'أنشئ اختبارًا من هذا المستند: 10 أسئلة متعددة الخيارات، لكل سؤال أربعة خيارات. ضع الإجابات في النهاية مع شرح قصير لكل منها.';
+
+  @override
+  String get aiPresetSolveTitle => 'حلّ التمارين';
+
+  @override
+  String get aiPresetSolveBody => 'حلّ تمارين هذا المستند خطوة بخطوة. اشرح سبب كل خطوة واذكر الإجابة النهائية بوضوح.';
+
+  @override
+  String get profileAiPrompts => 'طلبات الذكاء الاصطناعي';
+
+  @override
+  String get aiPromptsTitle => 'طلبات الذكاء الاصطناعي';
+
+  @override
+  String get aiPromptsIntro => 'تُملأ هذه الطلبات تلقائيًا عند إرسال ملف إلى تطبيق ذكاء اصطناعي، ويمكنك تعديل النص قبل الإرسال.';
+
+  @override
+  String get aiPromptsAdd => 'طلب جديد';
+
+  @override
+  String get aiPromptsRestore => 'استعادة الطلبات الافتراضية';
+
+  @override
+  String get aiPromptsRestoreConfirm => 'هل تريد استبدال طلباتك بالطلبات الافتراضية؟ ستفقد تعديلاتك.';
+
+  @override
+  String get aiPromptsRestoreAction => 'استعادة';
+
+  @override
+  String get aiPromptsEmpty => 'لا توجد طلبات. أضف طلبًا لتستعمله في كل مرة تسأل فيها الذكاء الاصطناعي.';
+
+  @override
+  String get aiPromptEditTitle => 'تعديل الطلب';
+
+  @override
+  String get aiPromptNameLabel => 'الاسم';
+
+  @override
+  String get aiPromptBodyLabel => 'الطلب';
+
+  @override
+  String get aiPromptInsertLabel => 'إدراج';
+
+  @override
+  String get aiPromptPlaceholderHint => 'تُملأ عند الإرسال. يُحذف السطر إذا كانت قيمته غير معروفة، مثل رقم الصفحة عند إرسال الملف كاملًا.';
+
+  @override
+  String get aiPlaceholderFile => 'اسم الملف';
+
+  @override
+  String get aiPlaceholderModule => 'المقياس';
+
+  @override
+  String get aiPlaceholderPage => 'الصفحة';
+
+  @override
+  String get aiPlaceholderLanguage => 'لغة التطبيق';
+
+  @override
+  String get aiPromptSave => 'حفظ';
+
+  @override
+  String get aiPromptDelete => 'حذف';
+
+  @override
+  String get aiPromptDeleted => 'تم حذف الطلب';
+
+  @override
+  String get aiPromptUndo => 'تراجع';
 }

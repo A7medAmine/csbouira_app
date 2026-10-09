@@ -1399,4 +1399,145 @@ class AppLocalizationsFr extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get previewMenuAskAi => 'Demander à l\'IA';
+
+  @override
+  String get askAiTitle => 'Demander à l\'IA';
+
+  @override
+  String get askAiScopeFile => 'Fichier entier';
+
+  @override
+  String askAiScopePage(int page) {
+    return 'Page $page';
+  }
+
+  @override
+  String get askAiPromptLabel => 'Consigne';
+
+  @override
+  String get askAiEditPrompts => 'Modifier les consignes';
+
+  @override
+  String get askAiSendTo => 'Envoyer à';
+
+  @override
+  String get askAiOtherApps => 'Autres applis';
+
+  @override
+  String get askAiCopyPrompt => 'Copier la consigne';
+
+  @override
+  String get askAiPromptCopied => 'Consigne copiée';
+
+  @override
+  String get askAiPasteHint => 'Consigne copiée. Collez-la dans la discussion si l\'appli ne l\'a pas remplie.';
+
+  @override
+  String get askAiNoApps => 'Aucune appli d\'IA trouvée sur ce téléphone. Installez ChatGPT, Gemini ou Claude, ou utilisez Autres applis.';
+
+  @override
+  String get askAiPreparing => 'Préparation du fichier…';
+
+  @override
+  String askAiFailed(String error) {
+    return 'Impossible de préparer le fichier : $error';
+  }
+
+  @override
+  String get askAiAnswerLanguage => 'français';
+
+  @override
+  String askAiPromptContext(String module, String file, String page, String language) {
+    return 'Module : $module\nFichier : $file\nPage : $page\nRéponds en $language.';
+  }
+
+  @override
+  String get aiPresetExplainTitle => 'Expliquer';
+
+  @override
+  String get aiPresetExplainBody => 'Explique ce document clairement, étape par étape, comme un enseignant le ferait pour un étudiant en informatique. Définis les termes clés et donne un exemple simple pour chaque idée principale.';
+
+  @override
+  String get aiPresetSummarizeTitle => 'Résumer';
+
+  @override
+  String get aiPresetSummarizeBody => 'Résume ce document. Liste les idées principales en points courts, puis les définitions et formules à retenir pour l\'examen.';
+
+  @override
+  String get aiPresetQuizTitle => 'Me tester';
+
+  @override
+  String get aiPresetQuizBody => 'Crée un quiz à partir de ce document : 10 questions à choix multiples avec 4 options chacune. Mets les réponses à la fin, chacune avec une courte explication.';
+
+  @override
+  String get aiPresetSolveTitle => 'Résoudre les exercices';
+
+  @override
+  String get aiPresetSolveBody => 'Résous les exercices de ce document étape par étape. Explique le raisonnement de chaque étape et donne clairement la réponse finale.';
+
+  @override
+  String get profileAiPrompts => 'Consignes IA';
+
+  @override
+  String get aiPromptsTitle => 'Consignes IA';
+
+  @override
+  String get aiPromptsIntro => 'Ces consignes sont préremplies quand vous envoyez un fichier à une appli d\'IA. Vous pouvez toujours modifier le texte avant l\'envoi.';
+
+  @override
+  String get aiPromptsAdd => 'Nouvelle consigne';
+
+  @override
+  String get aiPromptsRestore => 'Rétablir par défaut';
+
+  @override
+  String get aiPromptsRestoreConfirm => 'Remplacer vos consignes par celles par défaut ? Vos modifications seront perdues.';
+
+  @override
+  String get aiPromptsRestoreAction => 'Rétablir';
+
+  @override
+  String get aiPromptsEmpty => 'Aucune consigne. Ajoutez-en une pour la réutiliser à chaque demande.';
+
+  @override
+  String get aiPromptEditTitle => 'Modifier la consigne';
+
+  @override
+  String get aiPromptNameLabel => 'Nom';
+
+  @override
+  String get aiPromptBodyLabel => 'Consigne';
+
+  @override
+  String get aiPromptInsertLabel => 'Insérer';
+
+  @override
+  String get aiPromptPlaceholderHint => 'Rempli à l\'envoi. Une ligne est retirée si sa valeur est inconnue, par exemple la page quand vous envoyez tout le fichier.';
+
+  @override
+  String get aiPlaceholderFile => 'Nom du fichier';
+
+  @override
+  String get aiPlaceholderModule => 'Module';
+
+  @override
+  String get aiPlaceholderPage => 'Page';
+
+  @override
+  String get aiPlaceholderLanguage => 'Langue de l\'appli';
+
+  @override
+  String get aiPromptSave => 'Enregistrer';
+
+  @override
+  String get aiPromptDelete => 'Supprimer';
+
+  @override
+  String get aiPromptDeleted => 'Consigne supprimée';
+
+  @override
+  String get aiPromptUndo => 'Annuler';
 }

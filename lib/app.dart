@@ -13,6 +13,7 @@ import 'data/providers/auth_providers.dart';
 import 'data/providers/catalog_providers.dart';
 import 'data/providers/favorites_providers.dart';
 import 'data/services/notification_service.dart';
+import 'features/ai_prompts/ai_prompts_screen.dart';
 import 'features/about/about_screen.dart';
 import 'features/auth/forgot_password_screen.dart';
 import 'features/auth/login_screen.dart';
@@ -283,6 +284,14 @@ final _routerProvider = Provider<GoRouter>((ref) {
                     pageBuilder: (_, state) => _buildTransitionPage(
                       key: state.pageKey,
                       child: const DownloadsScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path: 'ai-prompts',
+                    name: 'aiPrompts',
+                    pageBuilder: (_, state) => _buildTransitionPage(
+                      key: state.pageKey,
+                      child: const AiPromptsScreen(),
                     ),
                   ),
                   GoRoute(

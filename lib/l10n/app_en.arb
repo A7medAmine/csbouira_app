@@ -1753,5 +1753,209 @@
     "placeholders": {
       "count": {}
     }
+  },
+  "previewMenuAskAi": "Ask AI",
+  "@previewMenuAskAi": {
+    "description": "Previewer menu item that sends the file to an AI chat app"
+  },
+  "askAiTitle": "Ask AI",
+  "@askAiTitle": {
+    "description": "Title of the Ask AI sheet"
+  },
+  "askAiScopeFile": "Whole file",
+  "@askAiScopeFile": {
+    "description": "Ask AI option: send the whole file"
+  },
+  "askAiScopePage": "Page {page}",
+  "@askAiScopePage": {
+    "description": "Ask AI option: send only the PDF page being viewed",
+    "placeholders": {
+      "page": {
+        "type": "int"
+      }
+    }
+  },
+  "askAiPromptLabel": "Prompt",
+  "@askAiPromptLabel": {
+    "description": "Label above the prompt text in the Ask AI sheet"
+  },
+  "askAiEditPrompts": "Edit prompts",
+  "@askAiEditPrompts": {
+    "description": "Chip in the Ask AI sheet that opens the prompts settings"
+  },
+  "askAiSendTo": "Send to",
+  "@askAiSendTo": {
+    "description": "Heading above the list of AI apps"
+  },
+  "askAiOtherApps": "Other apps",
+  "@askAiOtherApps": {
+    "description": "Opens the system share sheet"
+  },
+  "askAiCopyPrompt": "Copy prompt",
+  "@askAiCopyPrompt": {
+    "description": "Copies the prompt text only"
+  },
+  "askAiPromptCopied": "Prompt copied",
+  "@askAiPromptCopied": {
+    "description": "Snackbar after copying the prompt"
+  },
+  "askAiPasteHint": "Prompt copied. Paste it into the chat if the app didn't fill it in.",
+  "@askAiPasteHint": {
+    "description": "Snackbar after sending a file to an AI app"
+  },
+  "askAiNoApps": "No AI app found on this phone. Install ChatGPT, Gemini or Claude, or use Other apps.",
+  "@askAiNoApps": {
+    "description": "Shown when no known AI app is installed"
+  },
+  "askAiPreparing": "Preparing file…",
+  "@askAiPreparing": {
+    "description": "Shown while the file is downloaded or the page extracted"
+  },
+  "askAiFailed": "Couldn't prepare the file: {error}",
+  "@askAiFailed": {
+    "description": "Snackbar when preparing the file fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "askAiAnswerLanguage": "English",
+  "@askAiAnswerLanguage": {
+    "description": "Name of the app language, filled into the language placeholder of AI prompts"
+  },
+  "askAiPromptContext": "Module: {module}\nFile: {file}\nPage: {page}\nAnswer in {language}.",
+  "@askAiPromptContext": {
+    "description": "Context lines appended to the built-in AI prompts. The placeholders are passed back literally and filled when the prompt is sent; a line is dropped when its value is unknown",
+    "placeholders": {
+      "module": {
+        "type": "String"
+      },
+      "file": {
+        "type": "String"
+      },
+      "page": {
+        "type": "String"
+      },
+      "language": {
+        "type": "String"
+      }
+    }
+  },
+  "aiPresetExplainTitle": "Explain",
+  "@aiPresetExplainTitle": {
+    "description": "Built-in AI prompt name"
+  },
+  "aiPresetExplainBody": "Explain this document clearly and step by step, as a teacher would for a computer science student. Define the key terms and give a simple example for each main idea.",
+  "@aiPresetExplainBody": {
+    "description": "Built-in AI prompt text"
+  },
+  "aiPresetSummarizeTitle": "Summarize",
+  "@aiPresetSummarizeTitle": {
+    "description": "Built-in AI prompt name"
+  },
+  "aiPresetSummarizeBody": "Summarize this document. List the main ideas as short bullet points, then the definitions and formulas to remember for the exam.",
+  "@aiPresetSummarizeBody": {
+    "description": "Built-in AI prompt text"
+  },
+  "aiPresetQuizTitle": "Quiz me",
+  "@aiPresetQuizTitle": {
+    "description": "Built-in AI prompt name"
+  },
+  "aiPresetQuizBody": "Make a quiz from this document: 10 multiple-choice questions with 4 options each. Put the answers at the end, each with a short explanation.",
+  "@aiPresetQuizBody": {
+    "description": "Built-in AI prompt text"
+  },
+  "aiPresetSolveTitle": "Solve exercises",
+  "@aiPresetSolveTitle": {
+    "description": "Built-in AI prompt name"
+  },
+  "aiPresetSolveBody": "Solve the exercises in this document step by step. Explain the reasoning behind each step and state the final answer clearly.",
+  "@aiPresetSolveBody": {
+    "description": "Built-in AI prompt text"
+  },
+  "profileAiPrompts": "AI prompts",
+  "@profileAiPrompts": {
+    "description": "Settings row that opens the AI prompts screen"
+  },
+  "aiPromptsTitle": "AI prompts",
+  "@aiPromptsTitle": {
+    "description": "Title of the AI prompts screen"
+  },
+  "aiPromptsIntro": "These prompts are filled in when you send a file to an AI app. You can still change the text before sending.",
+  "@aiPromptsIntro": {
+    "description": "Intro text on the AI prompts screen"
+  },
+  "aiPromptsAdd": "New prompt",
+  "@aiPromptsAdd": {
+    "description": "Button that adds an AI prompt"
+  },
+  "aiPromptsRestore": "Restore defaults",
+  "@aiPromptsRestore": {
+    "description": "Menu item that resets the AI prompts"
+  },
+  "aiPromptsRestoreConfirm": "Replace your prompts with the default ones? Your changes will be lost.",
+  "@aiPromptsRestoreConfirm": {
+    "description": "Confirmation before resetting the AI prompts"
+  },
+  "aiPromptsRestoreAction": "Restore",
+  "@aiPromptsRestoreAction": {
+    "description": "Confirm button for resetting the AI prompts"
+  },
+  "aiPromptsEmpty": "No prompts. Add one to reuse it each time you ask AI.",
+  "@aiPromptsEmpty": {
+    "description": "Empty state of the AI prompts screen"
+  },
+  "aiPromptEditTitle": "Edit prompt",
+  "@aiPromptEditTitle": {
+    "description": "Title of the AI prompt editor"
+  },
+  "aiPromptNameLabel": "Name",
+  "@aiPromptNameLabel": {
+    "description": "AI prompt name field"
+  },
+  "aiPromptBodyLabel": "Prompt",
+  "@aiPromptBodyLabel": {
+    "description": "AI prompt text field"
+  },
+  "aiPromptInsertLabel": "Insert",
+  "@aiPromptInsertLabel": {
+    "description": "Heading above the placeholder chips in the AI prompt editor"
+  },
+  "aiPromptPlaceholderHint": "Filled in when you send. A line is left out when its value isn't known, such as the page when you send the whole file.",
+  "@aiPromptPlaceholderHint": {
+    "description": "Help text under the placeholder chips"
+  },
+  "aiPlaceholderFile": "File name",
+  "@aiPlaceholderFile": {
+    "description": "Placeholder chip: file name"
+  },
+  "aiPlaceholderModule": "Module",
+  "@aiPlaceholderModule": {
+    "description": "Placeholder chip: module name"
+  },
+  "aiPlaceholderPage": "Page",
+  "@aiPlaceholderPage": {
+    "description": "Placeholder chip: page number"
+  },
+  "aiPlaceholderLanguage": "App language",
+  "@aiPlaceholderLanguage": {
+    "description": "Placeholder chip: app language"
+  },
+  "aiPromptSave": "Save",
+  "@aiPromptSave": {
+    "description": "Save button in the AI prompt editor"
+  },
+  "aiPromptDelete": "Delete",
+  "@aiPromptDelete": {
+    "description": "Delete button tooltip for an AI prompt"
+  },
+  "aiPromptDeleted": "Prompt deleted",
+  "@aiPromptDeleted": {
+    "description": "Snackbar after deleting an AI prompt"
+  },
+  "aiPromptUndo": "Undo",
+  "@aiPromptUndo": {
+    "description": "Undo action in the prompt-deleted snackbar"
   }
 }

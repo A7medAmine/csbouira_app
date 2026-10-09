@@ -1399,4 +1399,145 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get previewMenuAskAi => 'Ask AI';
+
+  @override
+  String get askAiTitle => 'Ask AI';
+
+  @override
+  String get askAiScopeFile => 'Whole file';
+
+  @override
+  String askAiScopePage(int page) {
+    return 'Page $page';
+  }
+
+  @override
+  String get askAiPromptLabel => 'Prompt';
+
+  @override
+  String get askAiEditPrompts => 'Edit prompts';
+
+  @override
+  String get askAiSendTo => 'Send to';
+
+  @override
+  String get askAiOtherApps => 'Other apps';
+
+  @override
+  String get askAiCopyPrompt => 'Copy prompt';
+
+  @override
+  String get askAiPromptCopied => 'Prompt copied';
+
+  @override
+  String get askAiPasteHint => 'Prompt copied. Paste it into the chat if the app didn\'t fill it in.';
+
+  @override
+  String get askAiNoApps => 'No AI app found on this phone. Install ChatGPT, Gemini or Claude, or use Other apps.';
+
+  @override
+  String get askAiPreparing => 'Preparing file…';
+
+  @override
+  String askAiFailed(String error) {
+    return 'Couldn\'t prepare the file: $error';
+  }
+
+  @override
+  String get askAiAnswerLanguage => 'English';
+
+  @override
+  String askAiPromptContext(String module, String file, String page, String language) {
+    return 'Module: $module\nFile: $file\nPage: $page\nAnswer in $language.';
+  }
+
+  @override
+  String get aiPresetExplainTitle => 'Explain';
+
+  @override
+  String get aiPresetExplainBody => 'Explain this document clearly and step by step, as a teacher would for a computer science student. Define the key terms and give a simple example for each main idea.';
+
+  @override
+  String get aiPresetSummarizeTitle => 'Summarize';
+
+  @override
+  String get aiPresetSummarizeBody => 'Summarize this document. List the main ideas as short bullet points, then the definitions and formulas to remember for the exam.';
+
+  @override
+  String get aiPresetQuizTitle => 'Quiz me';
+
+  @override
+  String get aiPresetQuizBody => 'Make a quiz from this document: 10 multiple-choice questions with 4 options each. Put the answers at the end, each with a short explanation.';
+
+  @override
+  String get aiPresetSolveTitle => 'Solve exercises';
+
+  @override
+  String get aiPresetSolveBody => 'Solve the exercises in this document step by step. Explain the reasoning behind each step and state the final answer clearly.';
+
+  @override
+  String get profileAiPrompts => 'AI prompts';
+
+  @override
+  String get aiPromptsTitle => 'AI prompts';
+
+  @override
+  String get aiPromptsIntro => 'These prompts are filled in when you send a file to an AI app. You can still change the text before sending.';
+
+  @override
+  String get aiPromptsAdd => 'New prompt';
+
+  @override
+  String get aiPromptsRestore => 'Restore defaults';
+
+  @override
+  String get aiPromptsRestoreConfirm => 'Replace your prompts with the default ones? Your changes will be lost.';
+
+  @override
+  String get aiPromptsRestoreAction => 'Restore';
+
+  @override
+  String get aiPromptsEmpty => 'No prompts. Add one to reuse it each time you ask AI.';
+
+  @override
+  String get aiPromptEditTitle => 'Edit prompt';
+
+  @override
+  String get aiPromptNameLabel => 'Name';
+
+  @override
+  String get aiPromptBodyLabel => 'Prompt';
+
+  @override
+  String get aiPromptInsertLabel => 'Insert';
+
+  @override
+  String get aiPromptPlaceholderHint => 'Filled in when you send. A line is left out when its value isn\'t known, such as the page when you send the whole file.';
+
+  @override
+  String get aiPlaceholderFile => 'File name';
+
+  @override
+  String get aiPlaceholderModule => 'Module';
+
+  @override
+  String get aiPlaceholderPage => 'Page';
+
+  @override
+  String get aiPlaceholderLanguage => 'App language';
+
+  @override
+  String get aiPromptSave => 'Save';
+
+  @override
+  String get aiPromptDelete => 'Delete';
+
+  @override
+  String get aiPromptDeleted => 'Prompt deleted';
+
+  @override
+  String get aiPromptUndo => 'Undo';
 }

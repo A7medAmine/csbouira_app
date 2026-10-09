@@ -2472,6 +2472,276 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{{count} module} other{{count} modules}}'**
   String favoritesModuleCount(num count);
+
+  /// Previewer menu item that sends the file to an AI chat app
+  ///
+  /// In en, this message translates to:
+  /// **'Ask AI'**
+  String get previewMenuAskAi;
+
+  /// Title of the Ask AI sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Ask AI'**
+  String get askAiTitle;
+
+  /// Ask AI option: send the whole file
+  ///
+  /// In en, this message translates to:
+  /// **'Whole file'**
+  String get askAiScopeFile;
+
+  /// Ask AI option: send only the PDF page being viewed
+  ///
+  /// In en, this message translates to:
+  /// **'Page {page}'**
+  String askAiScopePage(int page);
+
+  /// Label above the prompt text in the Ask AI sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Prompt'**
+  String get askAiPromptLabel;
+
+  /// Chip in the Ask AI sheet that opens the prompts settings
+  ///
+  /// In en, this message translates to:
+  /// **'Edit prompts'**
+  String get askAiEditPrompts;
+
+  /// Heading above the list of AI apps
+  ///
+  /// In en, this message translates to:
+  /// **'Send to'**
+  String get askAiSendTo;
+
+  /// Opens the system share sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Other apps'**
+  String get askAiOtherApps;
+
+  /// Copies the prompt text only
+  ///
+  /// In en, this message translates to:
+  /// **'Copy prompt'**
+  String get askAiCopyPrompt;
+
+  /// Snackbar after copying the prompt
+  ///
+  /// In en, this message translates to:
+  /// **'Prompt copied'**
+  String get askAiPromptCopied;
+
+  /// Snackbar after sending a file to an AI app
+  ///
+  /// In en, this message translates to:
+  /// **'Prompt copied. Paste it into the chat if the app didn\'t fill it in.'**
+  String get askAiPasteHint;
+
+  /// Shown when no known AI app is installed
+  ///
+  /// In en, this message translates to:
+  /// **'No AI app found on this phone. Install ChatGPT, Gemini or Claude, or use Other apps.'**
+  String get askAiNoApps;
+
+  /// Shown while the file is downloaded or the page extracted
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing file…'**
+  String get askAiPreparing;
+
+  /// Snackbar when preparing the file fails
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t prepare the file: {error}'**
+  String askAiFailed(String error);
+
+  /// Name of the app language, filled into the language placeholder of AI prompts
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get askAiAnswerLanguage;
+
+  /// Context lines appended to the built-in AI prompts. The placeholders are passed back literally and filled when the prompt is sent; a line is dropped when its value is unknown
+  ///
+  /// In en, this message translates to:
+  /// **'Module: {module}\nFile: {file}\nPage: {page}\nAnswer in {language}.'**
+  String askAiPromptContext(String module, String file, String page, String language);
+
+  /// Built-in AI prompt name
+  ///
+  /// In en, this message translates to:
+  /// **'Explain'**
+  String get aiPresetExplainTitle;
+
+  /// Built-in AI prompt text
+  ///
+  /// In en, this message translates to:
+  /// **'Explain this document clearly and step by step, as a teacher would for a computer science student. Define the key terms and give a simple example for each main idea.'**
+  String get aiPresetExplainBody;
+
+  /// Built-in AI prompt name
+  ///
+  /// In en, this message translates to:
+  /// **'Summarize'**
+  String get aiPresetSummarizeTitle;
+
+  /// Built-in AI prompt text
+  ///
+  /// In en, this message translates to:
+  /// **'Summarize this document. List the main ideas as short bullet points, then the definitions and formulas to remember for the exam.'**
+  String get aiPresetSummarizeBody;
+
+  /// Built-in AI prompt name
+  ///
+  /// In en, this message translates to:
+  /// **'Quiz me'**
+  String get aiPresetQuizTitle;
+
+  /// Built-in AI prompt text
+  ///
+  /// In en, this message translates to:
+  /// **'Make a quiz from this document: 10 multiple-choice questions with 4 options each. Put the answers at the end, each with a short explanation.'**
+  String get aiPresetQuizBody;
+
+  /// Built-in AI prompt name
+  ///
+  /// In en, this message translates to:
+  /// **'Solve exercises'**
+  String get aiPresetSolveTitle;
+
+  /// Built-in AI prompt text
+  ///
+  /// In en, this message translates to:
+  /// **'Solve the exercises in this document step by step. Explain the reasoning behind each step and state the final answer clearly.'**
+  String get aiPresetSolveBody;
+
+  /// Settings row that opens the AI prompts screen
+  ///
+  /// In en, this message translates to:
+  /// **'AI prompts'**
+  String get profileAiPrompts;
+
+  /// Title of the AI prompts screen
+  ///
+  /// In en, this message translates to:
+  /// **'AI prompts'**
+  String get aiPromptsTitle;
+
+  /// Intro text on the AI prompts screen
+  ///
+  /// In en, this message translates to:
+  /// **'These prompts are filled in when you send a file to an AI app. You can still change the text before sending.'**
+  String get aiPromptsIntro;
+
+  /// Button that adds an AI prompt
+  ///
+  /// In en, this message translates to:
+  /// **'New prompt'**
+  String get aiPromptsAdd;
+
+  /// Menu item that resets the AI prompts
+  ///
+  /// In en, this message translates to:
+  /// **'Restore defaults'**
+  String get aiPromptsRestore;
+
+  /// Confirmation before resetting the AI prompts
+  ///
+  /// In en, this message translates to:
+  /// **'Replace your prompts with the default ones? Your changes will be lost.'**
+  String get aiPromptsRestoreConfirm;
+
+  /// Confirm button for resetting the AI prompts
+  ///
+  /// In en, this message translates to:
+  /// **'Restore'**
+  String get aiPromptsRestoreAction;
+
+  /// Empty state of the AI prompts screen
+  ///
+  /// In en, this message translates to:
+  /// **'No prompts. Add one to reuse it each time you ask AI.'**
+  String get aiPromptsEmpty;
+
+  /// Title of the AI prompt editor
+  ///
+  /// In en, this message translates to:
+  /// **'Edit prompt'**
+  String get aiPromptEditTitle;
+
+  /// AI prompt name field
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get aiPromptNameLabel;
+
+  /// AI prompt text field
+  ///
+  /// In en, this message translates to:
+  /// **'Prompt'**
+  String get aiPromptBodyLabel;
+
+  /// Heading above the placeholder chips in the AI prompt editor
+  ///
+  /// In en, this message translates to:
+  /// **'Insert'**
+  String get aiPromptInsertLabel;
+
+  /// Help text under the placeholder chips
+  ///
+  /// In en, this message translates to:
+  /// **'Filled in when you send. A line is left out when its value isn\'t known, such as the page when you send the whole file.'**
+  String get aiPromptPlaceholderHint;
+
+  /// Placeholder chip: file name
+  ///
+  /// In en, this message translates to:
+  /// **'File name'**
+  String get aiPlaceholderFile;
+
+  /// Placeholder chip: module name
+  ///
+  /// In en, this message translates to:
+  /// **'Module'**
+  String get aiPlaceholderModule;
+
+  /// Placeholder chip: page number
+  ///
+  /// In en, this message translates to:
+  /// **'Page'**
+  String get aiPlaceholderPage;
+
+  /// Placeholder chip: app language
+  ///
+  /// In en, this message translates to:
+  /// **'App language'**
+  String get aiPlaceholderLanguage;
+
+  /// Save button in the AI prompt editor
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get aiPromptSave;
+
+  /// Delete button tooltip for an AI prompt
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get aiPromptDelete;
+
+  /// Snackbar after deleting an AI prompt
+  ///
+  /// In en, this message translates to:
+  /// **'Prompt deleted'**
+  String get aiPromptDeleted;
+
+  /// Undo action in the prompt-deleted snackbar
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get aiPromptUndo;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

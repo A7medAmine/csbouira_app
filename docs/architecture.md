@@ -81,6 +81,7 @@ All providers are plain Riverpod 2 (no code generation). The important ones:
 | `recentFilesProvider` | `AsyncNotifierProvider` | Recently opened files (home screen and widget) |
 | `widgetSourceProvider` | `StateNotifierProvider` | Whether the home screen widget lists recent files or favorites |
 | `modulePackProvider` | `StateNotifierProvider` | "Download for offline" job for a module |
+| `aiPromptsProvider` | `AsyncNotifierProvider` | Saved "Ask AI" prompts (built-in ones follow the app language until edited) |
 | `themeModeProvider` | `StateNotifierProvider` | Light / dark / system theme |
 | `favoritesRepositoryProvider` | `Provider` | Rebuilt whenever the signed-in user changes |
 | `favoritesListProvider` | `AsyncNotifierProvider` | Favorites list with optimistic add and remove |
@@ -156,6 +157,7 @@ Writes are optimistic: `FavoritesNotifier.add` and `remove` update the UI immedi
 - **Preview** (`preview/`) uses `FileCacheService`: files are streamed into `temp/file_cache/`, keyed by Drive file ID, and the least recently used files are evicted above 200 MB.
 - **Downloads** (`downloads/`) use `DownloadService`: files are streamed into the app documents folder, and download records are kept in SharedPreferences.
 - Both use `http_download.dart`, which streams to a `.part` file, renames it when complete, applies an idle timeout, and rejects HTML error pages.
+- **Ask AI** (`preview/ask_ai_sheet.dart`) sends the file, or only the PDF page being viewed, to an AI chat app with a prompt. `AiShareService` takes the file from `FileCacheService`, copies it to `temp/ai_share/` under its real name (or builds a one-page PDF with `syncfusion_flutter_pdf`), and either opens one installed AI app directly or the system share sheet. The prompt is also copied to the clipboard, because some apps drop the text that comes with a file. Prompts are edited in Profile → AI prompts (`features/ai_prompts/`). Their `{file}`, `{module}`, `{page}` and `{language}` placeholders are filled by `fillAiPrompt` (`core/ai_prompt_template.dart`), which leaves out a line when its value is unknown.
 
 ### In-app updates
 
@@ -186,4 +188,5 @@ The leaderboard is computed by `get_leaderboard` and `get_user_rank`: security d
 ## Android-specific code
 
 - `MainActivity.kt` implements the `csbouira_app/file_utils` method channel, which reads `content://` URIs that `file_picker` sometimes returns and Dart cannot open directly, and the `csbouira_app/deep_links` channel described above.
+- `AiShareChannel.kt` implements `csbouira_app/ai_share`: it lists which known AI apps are installed and accept a MIME type, and sends a file to one of them through `AiShareFileProvider` (`res/xml/ai_share_paths.xml`). The apps must be listed under `<queries>` in the manifest and in `AiShareService.knownPackages`.
 - `RecentFilesWidgetProvider.kt` with `res/layout/recent_files_widget.xml` is the home screen widget.
