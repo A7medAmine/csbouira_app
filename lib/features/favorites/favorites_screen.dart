@@ -133,7 +133,17 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
   }
 
   void _navigateTo(FavoriteItem item) {
-    if (item.itemType == 'module') {
+    if (item.itemType == 'year') {
+      context.push('/year/${Uri.encodeComponent(item.itemPath)}');
+    } else if (item.itemType == 'semester') {
+      final parts = DrivePathParts.parse(item.pathSegments);
+      if (parts.semester.isNotEmpty) {
+        context.push(
+          '/year/${Uri.encodeComponent(parts.year)}'
+          '/semester/${Uri.encodeComponent(parts.semester)}',
+        );
+      }
+    } else if (item.itemType == 'module') {
       final parts = DrivePathParts.parse(item.pathSegments);
       if (parts.module.isNotEmpty) {
         context.push(
@@ -228,6 +238,15 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
           final isRemoving = _removingIds.contains(key);
           Widget card;
           switch (tabIndex) {
+            case 0 when item.itemType != 'module':
+              card = _FolderFavoriteCard(
+                item: item,
+                rootAsync: rootAsync,
+                theme: theme,
+                l10n: l10n,
+                onRemove: () => _removeFavorite(item),
+                onTap: () => _navigateTo(item),
+              );
             case 0:
               card = _ModuleFavoriteCard(
                 item: item,
@@ -390,16 +409,18 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                       final displayFavorites = favorites.where((f) {
                         return !_removingIds.contains('${f.itemType}:${f.itemPath}');
                       }).toList();
-                      final modules = displayFavorites
-                          .where((f) => f.itemType == 'module')
-                          .toList();
+                      // Years, then semesters, then modules.
+                      final folders = [
+                        for (final type in const ['year', 'semester', 'module'])
+                          ...displayFavorites.where((f) => f.itemType == type),
+                      ];
                       final files = displayFavorites
                           .where((f) => f.itemType == 'file')
                           .toList();
                       final onlineResources = displayFavorites
                           .where((f) => f.itemType == 'online_resource')
                           .toList();
-                      final counts = [modules.length, files.length, onlineResources.length];
+                      final counts = [folders.length, files.length, onlineResources.length];
 
                       return Column(
                         children: [
@@ -425,7 +446,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                                   setState(() => _selectedTab = i),
                               children: [
                                 _buildTabPage(
-                                  items: modules,
+                                  items: folders,
                                   tabIndex: 0,
                                   theme: theme,
                                   rootAsync: rootAsync,
@@ -785,6 +806,126 @@ class _ModuleFavoriteCard extends StatelessWidget {
                   ],
                 ),
               ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Year / Semester Card ───────────────────────────────────────────────────
+
+class _FolderFavoriteCard extends StatelessWidget {
+  final FavoriteItem item;
+  final AsyncValue<DriveRootData> rootAsync;
+  final ThemeData theme;
+  final AppLocalizations l10n;
+  final VoidCallback onRemove;
+  final VoidCallback onTap;
+
+  const _FolderFavoriteCard({
+    required this.item,
+    required this.rootAsync,
+    required this.theme,
+    required this.l10n,
+    required this.onRemove,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isYear = item.itemType == 'year';
+    final parts = DrivePathParts.parse(item.pathSegments);
+    final title =
+        isYear ? item.itemPath : semesterLabel(parts.semester, l10n.promoArchive);
+
+    final yearNode = rootAsync.asData?.value.years[parts.year];
+    final details = <String>[if (!isYear) parts.year];
+    if (yearNode != null) {
+      if (isYear) {
+        final semesters = semesterNodesOf(yearNode, skipEmptyPromos: true);
+        details.add(l10n.favoritesSemesterCount(semesters.length));
+        if (yearNode.totalFiles > 0) {
+          details.add(l10n.favoritesFileCount(yearNode.totalFiles));
+        }
+      } else {
+        final semNode = semesterNodesOf(yearNode)[parts.semester];
+        if (semNode != null) {
+          details.add(l10n.favoritesModuleCount(semNode.subfolders.length));
+          if (semNode.totalFiles > 0) {
+            details.add(l10n.favoritesFileCount(semNode.totalFiles));
+          }
+        }
+      }
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.stackMd),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: context.surfaces.card.withAlpha(179),
+            borderRadius: BorderRadius.circular(AppRadius.lg),
+            border: Border.all(
+              color: theme.colorScheme.outlineVariant.withAlpha(77),
+            ),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primaryContainer.withAlpha(51),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: theme.colorScheme.primary.withAlpha(51),
+                  ),
+                ),
+                child: Icon(
+                  isYear ? Icons.school_outlined : Icons.calendar_month_outlined,
+                  color: theme.colorScheme.primary,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: theme.colorScheme.onSurface,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    if (details.isNotEmpty) ...[
+                      const SizedBox(height: 2),
+                      Text(
+                        details.join(' \u2022 '),
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              GestureDetector(
+                onTap: onRemove,
+                child: Icon(
+                  Icons.star,
+                  color: theme.colorScheme.primary,
+                  size: 22,
+                ),
+              ),
             ],
           ),
         ),

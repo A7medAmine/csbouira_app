@@ -16,20 +16,27 @@ import es.antonborri.home_widget.HomeWidgetProvider
 import org.json.JSONArray
 
 /**
- * Home screen widget listing recently opened files. The Flutter side writes
- * the list as JSON under "recent_files" (lib/data/services/home_widget_service.dart);
- * each row opens csbouira://file/<id> in MainActivity. Tapping the peeking cat
- * plays its full animation once (see [playCat]).
+ * Home screen widget listing recently opened files or favorites. The Flutter
+ * side writes the rows as JSON under "widget_items" and the chosen list under
+ * "widget_source" (lib/data/services/home_widget_service.dart); each row opens
+ * its link, a csbouira:// deep link in MainActivity or an https URL in the
+ * browser. Tapping the peeking cat plays its full animation once (see [playCat]).
  */
 class RecentFilesWidgetProvider : HomeWidgetProvider() {
 
-    private data class Row(val container: Int, val tile: Int, val name: Int, val subtitle: Int)
+    private data class Row(
+        val container: Int,
+        val tile: Int,
+        val icon: Int,
+        val name: Int,
+        val subtitle: Int,
+    )
 
     private val rows = listOf(
-        Row(R.id.widget_row_0, R.id.widget_row_0_tile, R.id.widget_row_0_name, R.id.widget_row_0_subtitle),
-        Row(R.id.widget_row_1, R.id.widget_row_1_tile, R.id.widget_row_1_name, R.id.widget_row_1_subtitle),
-        Row(R.id.widget_row_2, R.id.widget_row_2_tile, R.id.widget_row_2_name, R.id.widget_row_2_subtitle),
-        Row(R.id.widget_row_3, R.id.widget_row_3_tile, R.id.widget_row_3_name, R.id.widget_row_3_subtitle),
+        Row(R.id.widget_row_0, R.id.widget_row_0_tile, R.id.widget_row_0_icon, R.id.widget_row_0_name, R.id.widget_row_0_subtitle),
+        Row(R.id.widget_row_1, R.id.widget_row_1_tile, R.id.widget_row_1_icon, R.id.widget_row_1_name, R.id.widget_row_1_subtitle),
+        Row(R.id.widget_row_2, R.id.widget_row_2_tile, R.id.widget_row_2_icon, R.id.widget_row_2_name, R.id.widget_row_2_subtitle),
+        Row(R.id.widget_row_3, R.id.widget_row_3_tile, R.id.widget_row_3_icon, R.id.widget_row_3_name, R.id.widget_row_3_subtitle),
     )
 
     // Pastel icon tile per row: blue, pink, mint, peach.
@@ -40,7 +47,12 @@ class RecentFilesWidgetProvider : HomeWidgetProvider() {
         0xFFFFD59E.toInt(),
     )
 
-    private data class Item(val id: String, val name: String, val subtitle: String)
+    private data class Item(
+        val link: String,
+        val name: String,
+        val subtitle: String,
+        val kind: String,
+    )
 
     override fun onUpdate(
         context: Context,
@@ -48,7 +60,14 @@ class RecentFilesWidgetProvider : HomeWidgetProvider() {
         appWidgetIds: IntArray,
         widgetData: SharedPreferences,
     ) {
-        val items = parse(widgetData.getString("recent_files", null))
+        val items = parse(widgetData)
+        val favorites = widgetData.getString("widget_source", null) == "favorites"
+        val title = context.getString(
+            if (favorites) R.string.widget_favorites_title else R.string.widget_recent_files_title,
+        )
+        val empty = context.getString(
+            if (favorites) R.string.widget_favorites_empty else R.string.widget_recent_files_empty,
+        )
         val showCat = widgetData.getBoolean("show_cat", true)
         val density = context.resources.displayMetrics.density
         val pad = (PADDING_DP * density).toInt()
@@ -60,6 +79,8 @@ class RecentFilesWidgetProvider : HomeWidgetProvider() {
             views.removeAllViews(R.id.widget_cat_play_slot)
             views.setOnClickPendingIntent(R.id.widget_cat, catTap(context, widgetId))
             views.setViewPadding(R.id.widget_content, pad, pad, pad, bottomPad)
+            views.setTextViewText(R.id.widget_title, title)
+            views.setTextViewText(R.id.widget_empty, empty)
             views.setOnClickPendingIntent(R.id.widget_header, openApp(context, null, 0))
             rows.forEachIndexed { i, row ->
                 val item = items.getOrNull(i)
@@ -70,9 +91,10 @@ class RecentFilesWidgetProvider : HomeWidgetProvider() {
                     views.setTextViewText(row.name, item.name)
                     views.setTextViewText(row.subtitle, item.subtitle)
                     views.setInt(row.tile, "setColorFilter", tileColors[i % tileColors.size])
+                    views.setImageViewResource(row.icon, iconFor(item.kind))
                     views.setOnClickPendingIntent(
                         row.container,
-                        openApp(context, "csbouira://file/${Uri.encode(item.id)}", i + 1),
+                        openApp(context, item.link, i + 1),
                     )
                 }
             }
@@ -167,28 +189,65 @@ class RecentFilesWidgetProvider : HomeWidgetProvider() {
         return (available / ROW_DP).coerceIn(1, rows.size)
     }
 
-    private fun parse(json: String?): List<Item> {
-        if (json.isNullOrEmpty()) return emptyList()
+    private fun iconFor(kind: String): Int = when (kind) {
+        "folder" -> R.drawable.widget_ic_folder
+        "link" -> R.drawable.widget_ic_link
+        else -> R.drawable.widget_ic_file
+    }
+
+    /**
+     * Reads "widget_items". Falls back to "recent_files", written by app
+     * versions before favorites could be shown, until the app runs once.
+     */
+    private fun parse(widgetData: SharedPreferences): List<Item> {
+        widgetData.getString("widget_items", null)?.let { return parseItems(it) }
+        val legacy = widgetData.getString("recent_files", null) ?: return emptyList()
         return try {
-            val array = JSONArray(json)
+            val array = JSONArray(legacy)
             (0 until array.length()).map { i ->
                 val o = array.getJSONObject(i)
-                Item(o.getString("id"), o.optString("name"), o.optString("subtitle"))
+                Item(
+                    "csbouira://file/${Uri.encode(o.getString("id"))}",
+                    o.optString("name"),
+                    o.optString("subtitle"),
+                    "file",
+                )
             }
         } catch (e: Exception) {
             emptyList()
         }
     }
 
+    private fun parseItems(json: String): List<Item> = try {
+        val array = JSONArray(json)
+        (0 until array.length()).map { i ->
+            val o = array.getJSONObject(i)
+            Item(
+                o.getString("link"),
+                o.optString("name"),
+                o.optString("subtitle"),
+                o.optString("kind", "file"),
+            )
+        }
+    } catch (e: Exception) {
+        emptyList()
+    }
+
     private fun openApp(context: Context, link: String?, requestCode: Int): PendingIntent {
-        val intent = Intent(context, MainActivity::class.java).apply {
-            if (link != null) {
-                action = Intent.ACTION_VIEW
-                data = Uri.parse(link)
-            } else {
-                action = Intent.ACTION_MAIN
+        val uri = link?.let(Uri::parse)
+        val intent = if (uri != null && uri.scheme != "csbouira") {
+            // Online resources open in the browser, not in the app.
+            Intent(Intent.ACTION_VIEW, uri).apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK }
+        } else {
+            Intent(context, MainActivity::class.java).apply {
+                if (uri != null) {
+                    action = Intent.ACTION_VIEW
+                    data = uri
+                } else {
+                    action = Intent.ACTION_MAIN
+                }
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
             }
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
         }
         return PendingIntent.getActivity(
             context,

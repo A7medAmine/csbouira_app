@@ -352,7 +352,7 @@
   "@favoritesTitle": {
     "description": "Screen title for favorites"
   },
-  "favoritesSavedModules": "Modules enregistrés",
+  "favoritesSavedModules": "Dossiers enregistrés",
   "@favoritesSavedModules": {
     "description": "Tab label for saved modules in favorites"
   },
@@ -371,7 +371,7 @@
       "count": {}
     }
   },
-  "favoritesTabModules": "Modules",
+  "favoritesTabModules": "Dossiers",
   "@favoritesTabModules": {
     "description": "Compact tab label for modules"
   },
@@ -387,11 +387,11 @@
   "@removedFromFavorites": {
     "description": "Snackbar when an item is removed from favorites"
   },
-  "noModulesSaved": "Aucun module enregistré",
+  "noModulesSaved": "Aucun dossier enregistré",
   "@noModulesSaved": {
     "description": "Empty state for saved modules tab"
   },
-  "noModulesSavedHint": "Ajoutez un module à vos favoris pour le retrouver\nrapidement ici.",
+  "noModulesSavedHint": "Ajoutez une année, un semestre ou un module à vos\nfavoris pour le retrouver rapidement ici.",
   "@noModulesSavedHint": {
     "description": "Hint text for empty saved modules"
   },
@@ -1417,5 +1417,10 @@
   "shareAppMessage": "CS Bouira : cours, TD, TP et examens des années précédentes pour les étudiants en informatique de l'Université de Bouira. Téléchargez l'application : {link}",
   "shareAppAction": "Partager par message",
   "shareAppQrAction": "Partager le code QR",
-  "profileSettingShareApp": "Partager l'application"
+  "profileSettingShareApp": "Partager l'application",
+  "profileWidgetSource": "Le widget d'accueil affiche",
+  "widgetSourceRecent": "Fichiers récents",
+  "widgetSourceFavorites": "Favoris",
+  "favoritesSemesterCount": "{count, plural, =1{{count} semestre} other{{count} semestres}}",
+  "favoritesModuleCount": "{count, plural, =1{{count} module} other{{count} modules}}"
 }

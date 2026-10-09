@@ -92,16 +92,16 @@
   "noResultsForQuery": "لا توجد نتائج لـ \"{query}\"",
 
   "favoritesTitle": "المفضلة",
-  "favoritesSavedModules": "المقاييس المحفوظة",
+  "favoritesSavedModules": "المجلدات المحفوظة",
   "favoritesSavedFiles": "الملفات المحفوظة",
   "favoritesOnlineResources": "الموارد الالكترونية",
   "favoritesTotal": "{count, plural, =1{{count} اجمالي} other{{count} اجمالي}}",
-  "favoritesTabModules": "المقاييس",
+  "favoritesTabModules": "المجلدات",
   "favoritesTabFiles": "الملفات",
   "favoritesTabResources": "الموارد",
   "removedFromFavorites": "تمت الازالة من المفضلة",
-  "noModulesSaved": "لا توجد مقاييس محفوظة",
-  "noModulesSavedHint": "قم بتمييز مقياس بنجمة لحفظه هنا\nللوصول السريع.",
+  "noModulesSaved": "لا توجد مجلدات محفوظة",
+  "noModulesSavedHint": "قم بتمييز سنة او سداسي او مقياس بنجمة\nلحفظه هنا للوصول السريع.",
   "noFilesSaved": "لا توجد ملفات محفوظة",
   "noFilesSavedHint": "قم بتمييز ملف بنجمة لحفظه هنا\nللوصول السريع.",
   "noResourcesSaved": "لا توجد موارد محفوظة",
@@ -569,5 +569,10 @@
   "shareAppMessage": "CS Bouira: دروس، اعمال موجهة، اعمال تطبيقية وامتحانات سابقة لطلبة الاعلام الالي بجامعة البويرة. حمّل التطبيق: {link}",
   "shareAppAction": "مشاركة كرسالة",
   "shareAppQrAction": "مشاركة رمز QR",
-  "profileSettingShareApp": "شارك التطبيق"
+  "profileSettingShareApp": "شارك التطبيق",
+  "profileWidgetSource": "محتوى ودجت الشاشة الرئيسية",
+  "widgetSourceRecent": "الملفات الاخيرة",
+  "widgetSourceFavorites": "المفضلة",
+  "favoritesSemesterCount": "{count, plural, =1{{count} سداسي} other{{count} سداسيات}}",
+  "favoritesModuleCount": "{count, plural, =1{{count} مقياس} other{{count} مقاييس}}"
 }

@@ -79,6 +79,7 @@ All providers are plain Riverpod 2 (no code generation). The important ones:
 | `whatsNewProvider` | `FutureProvider` | Files first seen on this device in the last 14 days |
 | `followedModulesProvider` | `AsyncNotifierProvider` | Modules followed for new-file notifications |
 | `recentFilesProvider` | `AsyncNotifierProvider` | Recently opened files (home screen and widget) |
+| `widgetSourceProvider` | `StateNotifierProvider` | Whether the home screen widget lists recent files or favorites |
 | `modulePackProvider` | `StateNotifierProvider` | "Download for offline" job for a module |
 | `themeModeProvider` | `StateNotifierProvider` | Light / dark / system theme |
 | `favoritesRepositoryProvider` | `Provider` | Rebuilt whenever the signed-in user changes |
@@ -118,11 +119,11 @@ Following a module (bell on the module screen) stores its `year>semester>module`
 
 ### Deep links and the home screen widget
 
-Links look like `csbouira://file/<driveFileId>` (and `csbouira://new`). They come from shared links, QR codes (the share dialog now encodes the link, so the camera app can open it too), notifications and the Android widget.
+Links look like `csbouira://file/<driveFileId>`, `csbouira://browse/<year>[/<semester>[/<module>]]` (each segment URL-encoded) and `csbouira://new`. They come from shared links, QR codes (the share dialog now encodes the link, so the camera app can open it too), notifications and the Android widget.
 
 - `MainActivity.kt` receives the intent and passes the URI over the `csbouira_app/deep_links` channel. Flutter's built-in deep linking is disabled in the manifest because it drops the URI host.
 - `DeepLinkService` (`core/deep_links.dart`) parses the link and queues it until the home screen attaches the router, then pushes `/open/file/<id>`. `OpenFileScreen` looks the ID up in the catalogue index and replaces itself with the previewer.
-- The previewer records each opened file in `RecentFilesStore`. `HomeWidgetService` writes the list for `RecentFilesWidgetProvider.kt`, whose rows open `csbouira://file/<id>`.
+- The previewer records each opened file in `RecentFilesStore`. The widget lists either those recent files or favorites, picked in the profile settings (`widgetSourceProvider`). `homeWidgetSyncProvider`, watched by the app root, turns the chosen list into rows and `HomeWidgetService` writes them for `RecentFilesWidgetProvider.kt`. File rows open `csbouira://file/<id>`, year/semester/module rows open `csbouira://browse/...` and online resources open in the browser.
 
 ### Favorites: guest vs. signed in
 

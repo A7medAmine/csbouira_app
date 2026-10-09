@@ -3,4 +3,6 @@
     <string name="widget_recent_files_title">Recent files</string>
     <string name="widget_recent_files_empty">Files you open in CS Bouira appear here.</string>
     <string name="widget_recent_files_description">Quick access to the files you opened recently</string>
+    <string name="widget_favorites_title">Favorites</string>
+    <string name="widget_favorites_empty">Items you star in CS Bouira appear here.</string>
 </resources>

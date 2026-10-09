@@ -361,7 +361,7 @@
   "@favoritesTitle": {
     "description": "Screen title for favorites"
   },
-  "favoritesSavedModules": "Saved Modules",
+  "favoritesSavedModules": "Saved Folders",
   "@favoritesSavedModules": {
     "description": "Tab label for saved modules in favorites"
   },
@@ -380,7 +380,7 @@
       "count": {}
     }
   },
-  "favoritesTabModules": "Modules",
+  "favoritesTabModules": "Folders",
   "@favoritesTabModules": {
     "description": "Compact tab label for modules"
   },
@@ -396,11 +396,11 @@
   "@removedFromFavorites": {
     "description": "Snackbar when an item is removed from favorites"
   },
-  "noModulesSaved": "No modules saved",
+  "noModulesSaved": "No folders saved",
   "@noModulesSaved": {
     "description": "Empty state for saved modules tab"
   },
-  "noModulesSavedHint": "Star a module to save it here\nfor quick access.",
+  "noModulesSavedHint": "Star a year, semester or module\nto save it here for quick access.",
   "@noModulesSavedHint": {
     "description": "Hint text for empty saved modules"
   },
@@ -1727,5 +1727,31 @@
   "profileSettingShareApp": "Share the app",
   "@profileSettingShareApp": {
     "description": "Settings row that opens the share-the-app modal"
+  },
+  "profileWidgetSource": "Home screen widget shows",
+  "@profileWidgetSource": {
+    "description": "Settings row choosing what the Android home screen widget lists"
+  },
+  "widgetSourceRecent": "Recent files",
+  "@widgetSourceRecent": {
+    "description": "Home screen widget option: recently opened files"
+  },
+  "widgetSourceFavorites": "Favorites",
+  "@widgetSourceFavorites": {
+    "description": "Home screen widget option: favorites"
+  },
+  "favoritesSemesterCount": "{count, plural, =1{{count} semester} other{{count} semesters}}",
+  "@favoritesSemesterCount": {
+    "description": "Semester count on a favorited year card",
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "favoritesModuleCount": "{count, plural, =1{{count} module} other{{count} modules}}",
+  "@favoritesModuleCount": {
+    "description": "Module count on a favorited semester card",
+    "placeholders": {
+      "count": {}
+    }
   }
 }

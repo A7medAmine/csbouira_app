@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'core/deep_links.dart';
+import 'core/providers/home_widget_provider.dart';
 import 'core/providers/locale_provider.dart';
 import 'core/providers/theme_mode_provider.dart';
 import 'core/theme/app_theme.dart';
@@ -478,6 +479,7 @@ class _CSBouiraAppState extends ConsumerState<CSBouiraApp> {
   @override
   Widget build(BuildContext context) {
     final router = ref.watch(_routerProvider);
+    ref.watch(homeWidgetSyncProvider);
     final locale = ref.watch(localeProvider);
     final themeMode = ref.watch(themeModeProvider);
 

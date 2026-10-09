@@ -328,7 +328,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get favoritesTitle => 'Favoris';
 
   @override
-  String get favoritesSavedModules => 'Modules enregistrés';
+  String get favoritesSavedModules => 'Dossiers enregistrés';
 
   @override
   String get favoritesSavedFiles => 'Fichiers enregistrés';
@@ -348,7 +348,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get favoritesTabModules => 'Modules';
+  String get favoritesTabModules => 'Dossiers';
 
   @override
   String get favoritesTabFiles => 'Fichiers';
@@ -360,10 +360,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get removedFromFavorites => 'Retiré des favoris';
 
   @override
-  String get noModulesSaved => 'Aucun module enregistré';
+  String get noModulesSaved => 'Aucun dossier enregistré';
 
   @override
-  String get noModulesSavedHint => 'Ajoutez un module à vos favoris pour le retrouver\nrapidement ici.';
+  String get noModulesSavedHint => 'Ajoutez une année, un semestre ou un module à vos\nfavoris pour le retrouver rapidement ici.';
 
   @override
   String get noFilesSaved => 'Aucun fichier enregistré';
@@ -1368,4 +1368,35 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get profileSettingShareApp => 'Partager l\'application';
+
+  @override
+  String get profileWidgetSource => 'Le widget d\'accueil affiche';
+
+  @override
+  String get widgetSourceRecent => 'Fichiers récents';
+
+  @override
+  String get widgetSourceFavorites => 'Favoris';
+
+  @override
+  String favoritesSemesterCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count semestres',
+      one: '$count semestre',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String favoritesModuleCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count modules',
+      one: '$count module',
+    );
+    return '$_temp0';
+  }
 }

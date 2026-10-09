@@ -136,6 +136,12 @@ class _ModuleScreenState extends ConsumerState<ModuleScreen> {
                               ),
                             ),
                           ),
+                          FavoriteStar(
+                            itemType: 'semester',
+                            itemPath:
+                                '${widget.year}$kDrivePathSep${widget.semester}',
+                            displayName: semesterName(widget.semester),
+                          ),
                         ],
                       ),
                     ),

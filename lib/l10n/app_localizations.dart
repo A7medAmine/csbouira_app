@@ -562,7 +562,7 @@ abstract class AppLocalizations {
   /// Tab label for saved modules in favorites
   ///
   /// In en, this message translates to:
-  /// **'Saved Modules'**
+  /// **'Saved Folders'**
   String get favoritesSavedModules;
 
   /// Tab label for saved files in favorites
@@ -586,7 +586,7 @@ abstract class AppLocalizations {
   /// Compact tab label for modules
   ///
   /// In en, this message translates to:
-  /// **'Modules'**
+  /// **'Folders'**
   String get favoritesTabModules;
 
   /// Compact tab label for files
@@ -610,13 +610,13 @@ abstract class AppLocalizations {
   /// Empty state for saved modules tab
   ///
   /// In en, this message translates to:
-  /// **'No modules saved'**
+  /// **'No folders saved'**
   String get noModulesSaved;
 
   /// Hint text for empty saved modules
   ///
   /// In en, this message translates to:
-  /// **'Star a module to save it here\nfor quick access.'**
+  /// **'Star a year, semester or module\nto save it here for quick access.'**
   String get noModulesSavedHint;
 
   /// Empty state for saved files tab
@@ -2442,6 +2442,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Share the app'**
   String get profileSettingShareApp;
+
+  /// Settings row choosing what the Android home screen widget lists
+  ///
+  /// In en, this message translates to:
+  /// **'Home screen widget shows'**
+  String get profileWidgetSource;
+
+  /// Home screen widget option: recently opened files
+  ///
+  /// In en, this message translates to:
+  /// **'Recent files'**
+  String get widgetSourceRecent;
+
+  /// Home screen widget option: favorites
+  ///
+  /// In en, this message translates to:
+  /// **'Favorites'**
+  String get widgetSourceFavorites;
+
+  /// Semester count on a favorited year card
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{{count} semester} other{{count} semesters}}'**
+  String favoritesSemesterCount(num count);
+
+  /// Module count on a favorited semester card
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{{count} module} other{{count} modules}}'**
+  String favoritesModuleCount(num count);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

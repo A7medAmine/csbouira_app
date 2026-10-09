@@ -330,7 +330,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get favoritesTitle => 'المفضلة';
 
   @override
-  String get favoritesSavedModules => 'المقاييس المحفوظة';
+  String get favoritesSavedModules => 'المجلدات المحفوظة';
 
   @override
   String get favoritesSavedFiles => 'الملفات المحفوظة';
@@ -350,7 +350,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get favoritesTabModules => 'المقاييس';
+  String get favoritesTabModules => 'المجلدات';
 
   @override
   String get favoritesTabFiles => 'الملفات';
@@ -362,10 +362,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get removedFromFavorites => 'تمت الازالة من المفضلة';
 
   @override
-  String get noModulesSaved => 'لا توجد مقاييس محفوظة';
+  String get noModulesSaved => 'لا توجد مجلدات محفوظة';
 
   @override
-  String get noModulesSavedHint => 'قم بتمييز مقياس بنجمة لحفظه هنا\nللوصول السريع.';
+  String get noModulesSavedHint => 'قم بتمييز سنة او سداسي او مقياس بنجمة\nلحفظه هنا للوصول السريع.';
 
   @override
   String get noFilesSaved => 'لا توجد ملفات محفوظة';
@@ -1371,4 +1371,35 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get profileSettingShareApp => 'شارك التطبيق';
+
+  @override
+  String get profileWidgetSource => 'محتوى ودجت الشاشة الرئيسية';
+
+  @override
+  String get widgetSourceRecent => 'الملفات الاخيرة';
+
+  @override
+  String get widgetSourceFavorites => 'المفضلة';
+
+  @override
+  String favoritesSemesterCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count سداسيات',
+      one: '$count سداسي',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String favoritesModuleCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count مقاييس',
+      one: '$count مقياس',
+    );
+    return '$_temp0';
+  }
 }

@@ -32,6 +32,41 @@ void main() {
       expect(routeForLink(const FileLink('abcdefghijkl')), '/open/file/abcdefghijkl');
       expect(routeForLink(const WhatsNewLink()), '/whats-new');
     });
+
+    test('maps browse links to year, semester and module routes', () {
+      expect(routeForLink(const BrowseLink('Licence 3 SI')), '/year/Licence%203%20SI');
+      expect(
+        routeForLink(const BrowseLink('Licence 1', semester: '2024-2025>subfolders>S1')),
+        '/year/Licence%201/semester/2024-2025%3Esubfolders%3ES1',
+      );
+      expect(
+        routeForLink(const BrowseLink('Licence 3 SI', semester: 'S05', module: 'Génie Logiciel')),
+        '/year/Licence%203%20SI/semester/S05/module/G%C3%A9nie%20Logiciel',
+      );
+    });
+  });
+
+  group('browseDeepLink', () {
+    test('round-trips through parseAppLink', () {
+      const cases = [
+        BrowseLink('Licence 3 SI'),
+        BrowseLink('Licence 1', semester: '2024-2025>subfolders>S1'),
+        BrowseLink('Master 1 IA', semester: 'S07', module: 'Machine Learning & IA'),
+      ];
+      for (final link in cases) {
+        final uri = Uri.parse(browseDeepLink(
+          link.year,
+          semester: link.semester,
+          module: link.module,
+        ));
+        expect(parseAppLink(uri), link);
+      }
+    });
+
+    test('rejects empty or too deep paths', () {
+      expect(parseAppLink(Uri.parse('csbouira://browse')), isNull);
+      expect(parseAppLink(Uri.parse('csbouira://browse/a/b/c/d')), isNull);
+    });
   });
 
   group('DeepLinkService', () {

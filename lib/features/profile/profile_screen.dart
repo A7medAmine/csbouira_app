@@ -20,6 +20,8 @@ import 'package:csbouira_app/l10n/app_localizations.dart';
 import 'package:csbouira_app/core/providers/locale_provider.dart';
 import 'package:csbouira_app/core/providers/theme_mode_provider.dart';
 import 'package:csbouira_app/core/providers/widget_cat_provider.dart';
+import 'package:csbouira_app/core/providers/home_widget_provider.dart';
+import 'package:csbouira_app/data/services/home_widget_service.dart' show WidgetSource;
 import '../../core/crash_reporting.dart';
 import '../../core/theme/app_surfaces.dart';
 
@@ -318,6 +320,62 @@ class _ThemePickerRow extends ConsumerWidget {
                               option == mode ? const Icon(Icons.check) : null,
                           onTap: () {
                             ref.read(themeModeProvider.notifier).set(option);
+                            Navigator.of(ctx).pop();
+                          },
+                        ),
+                    ],
+                  ),
+                ),
+          ),
+    );
+  }
+}
+
+// ── Widget source ───────────────────────────────────────────────────────────
+
+class _WidgetSourceRow extends ConsumerWidget {
+  final ThemeData theme;
+
+  const _WidgetSourceRow({required this.theme});
+
+  String _label(AppLocalizations l10n, WidgetSource source) => switch (source) {
+    WidgetSource.recent => l10n.widgetSourceRecent,
+    WidgetSource.favorites => l10n.widgetSourceFavorites,
+  };
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final source = ref.watch(widgetSourceProvider);
+    return _SettingsRow(
+      theme: theme,
+      icon: Icons.widgets_outlined,
+      label: l10n.profileWidgetSource,
+      trailing: Text(
+        _label(l10n, source),
+        style: theme.textTheme.bodyMedium?.copyWith(
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
+      ),
+      onTap:
+          () => showModalBottomSheet(
+            context: context,
+            backgroundColor: theme.colorScheme.surfaceContainer,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            ),
+            builder:
+                (ctx) => SafeArea(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      for (final option in WidgetSource.values)
+                        ListTile(
+                          title: Text(_label(l10n, option)),
+                          trailing:
+                              option == source ? const Icon(Icons.check) : null,
+                          onTap: () {
+                            ref.read(widgetSourceProvider.notifier).set(option);
                             Navigator.of(ctx).pop();
                           },
                         ),
@@ -771,6 +829,8 @@ class _GuestProfileShellState extends ConsumerState<_GuestProfileShell> {
                       _ThemePickerRow(theme: theme),
                       if (Platform.isAndroid) ...[
                         const SizedBox(height: AppSpacing.stackSm),
+                        _WidgetSourceRow(theme: theme),
+                        const SizedBox(height: AppSpacing.stackSm),
                         _WidgetCatRow(theme: theme),
                       ],
                       if (crashReportingAvailable) ...[
@@ -998,6 +1058,8 @@ class _LoggedInProfileShell extends ConsumerWidget {
                         const SizedBox(height: AppSpacing.stackSm),
                         _ThemePickerRow(theme: theme),
                         if (Platform.isAndroid) ...[
+                          const SizedBox(height: AppSpacing.stackSm),
+                          _WidgetSourceRow(theme: theme),
                           const SizedBox(height: AppSpacing.stackSm),
                           _WidgetCatRow(theme: theme),
                         ],

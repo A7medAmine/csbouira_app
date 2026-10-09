@@ -5,7 +5,6 @@ import '../models/catalog_file.dart';
 import '../services/catalog_index.dart';
 import '../services/catalog_seen_store.dart';
 import '../services/followed_modules_store.dart';
-import '../services/home_widget_service.dart';
 import '../services/new_files_checker.dart';
 import '../services/notification_service.dart';
 import '../services/recent_files_store.dart';
@@ -100,22 +99,15 @@ class RecentFilesNotifier extends AsyncNotifier<List<RecentFile>> {
   final _store = RecentFilesStore();
 
   @override
-  Future<List<RecentFile>> build() async {
-    final items = await _store.getAll();
-    // Keeps the home screen widget in sync after app updates.
-    HomeWidgetService.updateRecentFiles(items);
-    return items;
-  }
+  Future<List<RecentFile>> build() => _store.getAll();
 
   Future<void> add(RecentFile file) async {
     final items = await _store.add(file);
     state = AsyncData(items);
-    await HomeWidgetService.updateRecentFiles(items);
   }
 
   Future<void> clear() async {
     await _store.clear();
     state = const AsyncData([]);
-    await HomeWidgetService.updateRecentFiles(const []);
   }
 }

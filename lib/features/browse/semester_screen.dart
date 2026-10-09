@@ -124,6 +124,11 @@ class SemesterScreen extends ConsumerWidget {
                           ),
                         ),
                       ),
+                      FavoriteStar(
+                        itemType: 'year',
+                        itemPath: year,
+                        displayName: year,
+                      ),
                     ],
                   ),
                 ),
